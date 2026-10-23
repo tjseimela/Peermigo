@@ -1,0 +1,56 @@
+/* 2026-10-23: clear compatibility scores, real connection requests, group contrast. */
+.directory-card .directory-status.match-score{
+ display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border:1px solid #c7b6ff;
+ background:#ede7ff;color:#4934a5;font-size:12px;font-weight:900;letter-spacing:-.01em;
+ box-shadow:0 3px 9px rgba(96,59,198,.10);flex:none;max-width:calc(100% - 72px)
+}
+.directory-card .match-score .match-number{font-size:16px;line-height:1}
+.directory-card .match-score .match-label{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.directory-card .match-score.match-high{background:#dcfce8;border-color:#8adbb0;color:#126645}
+.directory-card .match-score.match-mid{background:#e6e2ff;border-color:#ada2f5;color:#4933a6}
+.directory-card .match-score.match-low{background:#e2f0ff;border-color:#a8caff;color:#1c5b97}
+.directory-card .peer-card-actions .connect-btn{background:#5649d8;color:#fff;border:1px solid #5649d8;font-weight:800;cursor:pointer}
+.directory-card .peer-card-actions .connect-btn:hover{background:#4135ba;border-color:#4135ba;color:#fff}
+.directory-card .peer-card-actions .connect-btn:focus-visible,.student-actions .pm-connect-profile:focus-visible,.pm-request-actions button:focus-visible{outline:3px solid #bfb6ff;outline-offset:3px}
+.directory-card .peer-card-actions .connect-btn[disabled]{background:#eef0f6;border:1px solid #dde0ed;color:#555e77;cursor:default;opacity:1}
+.directory-card .peer-card-actions .connect-btn[data-connect-state="received"]{background:#e9e6ff;border-color:#bab3ec;color:#41319f}
+.student-actions .pm-connect-profile{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:normal}
+.student-actions .pm-connect-profile[disabled]{opacity:1;cursor:default;background:#eeeef9;color:#56527f;border-color:#d4d4ea}
+.student-actions .pm-connect-profile[data-connect-state="received"]{background:#e9e5ff;color:#4733ac;border-color:#bcb0ff}
+.pm-request-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.pm-request-actions button{min-height:36px;padding:8px 14px;border:1px solid #6558d6;border-radius:9px;background:#6254ce;color:white;font-weight:800;cursor:pointer}
+.pm-request-actions button[data-request-action="decline"]{background:transparent;color:#65627a;border-color:#cdd0dd}
+.pm-request-actions button:disabled{opacity:.65;cursor:wait}
+.notification-item:has(.pm-request-actions){align-items:start}
+html[data-theme="dark"] .directory-card .directory-status.match-score.match-high{background:#164a39;border-color:#327d61;color:#a2f2c8}
+html[data-theme="dark"] .directory-card .directory-status.match-score.match-mid{background:#383066;border-color:#7060ca;color:#dfd9ff}
+html[data-theme="dark"] .directory-card .directory-status.match-score.match-low{background:#203d60;border-color:#396a9f;color:#b5ddff}
+html[data-theme="dark"] .directory-card .peer-card-actions .connect-btn{background:#7767ee;border-color:#7767ee;color:#fff}
+html[data-theme="dark"] .directory-card .peer-card-actions .connect-btn:hover{background:#9084ff}
+html[data-theme="dark"] .directory-card .peer-card-actions .connect-btn[disabled]{background:#30394b;color:#cbd4ed;border-color:#4b5774}
+html[data-theme="dark"] .directory-card .peer-card-actions .connect-btn[data-connect-state="received"]{background:#393264;color:#e1daff;border-color:#7266cf}
+html[data-theme="dark"] .student-actions .pm-connect-profile[disabled]{background:#313b52;color:#d6dcf2;border-color:#505974}
+html[data-theme="dark"] .student-actions .pm-connect-profile[data-connect-state="received"]{background:#383267;color:#e7deff;border-color:#6e64c6}
+html[data-theme="dark"] .pm-request-actions button{background:#7666e7;border-color:#9588ef;color:#fff}
+html[data-theme="dark"] .pm-request-actions button[data-request-action="decline"]{background:#28334e;border-color:#57617e;color:#e7ebfa}
+/* Override text overrides from older light-mode group-card CSS. */
+#groupsGrid .platform-card h3{color:#222a45!important;overflow-wrap:anywhere}
+#groupsGrid .platform-card p{color:#66708c}
+#groupsGrid .platform-card small{color:#5c6682}
+#groupsGrid .platform-card .platform-card-meta span{color:#5c4dbb}
+html[data-theme="dark"] #groupsGrid .platform-card{background:#1e2a42;border-color:#414b66}
+html[data-theme="dark"] #groupsGrid .platform-card h3{color:#f3f4ff!important}
+html[data-theme="dark"] #groupsGrid .platform-card p{color:#c2cbe2!important}
+html[data-theme="dark"] #groupsGrid .platform-card small{color:#b2bdd8!important}
+html[data-theme="dark"] #groupsGrid .platform-card .platform-card-meta span{color:#ddd5ff;background:#303456;border-color:#50567e}
+html[data-theme="dark"] #groupRoom h2,html[data-theme="dark"] #groupAdminPanel h2,html[data-theme="dark"] #manageGroupName{color:#f4f5ff!important}
+@media(max-width:420px){.directory-card .directory-status.match-score{padding:7px 9px}.directory-card .match-score .match-number{font-size:15px}.directory-card .match-score .match-label{font-size:8px}.pm-request-actions button{flex:1}}
+/* Keep small notification links and response actions readable in dark mode and on phones. */
+html[data-theme="dark"] .notification-item .text-button{color:#cdc5ff!important}
+@media(max-width:620px){
+ .notification-item:has(.pm-request-actions){display:grid;grid-template-columns:43px minmax(0,1fr);align-items:start;column-gap:12px}
+ .notification-item:has(.pm-request-actions)>div{min-width:0}
+ .notification-item:has(.pm-request-actions)>.text-button{grid-column:2;justify-self:start;margin-left:0}
+ .notification-item:has(.pm-request-actions) .pm-request-actions{width:100%}
+ .notification-item:has(.pm-request-actions) .pm-request-actions button{flex:0 1 auto;white-space:nowrap}
+}

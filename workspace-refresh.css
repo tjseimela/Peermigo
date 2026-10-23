@@ -1,0 +1,40 @@
+/* Peer Match — clean student workspaces; remove redundant page-cover banners. */
+.pm-workspace-page>.app-section:first-child{padding-top:clamp(20px,3vw,34px)}
+.pm-workspace-page>.app-section:first-child>.container>.app-intro{margin-bottom:clamp(18px,2vw,28px)}
+.pm-workspace-page .app-intro h2{font-size:clamp(22px,3.1vw,32px);line-height:1.17;letter-spacing:-.045em}
+.pm-workspace-page .app-intro p{max-width:660px;font-size:13px;line-height:1.55}
+.pm-workspace-page .app-intro .overline{font-size:10px}
+.pm-workspace-page>.resources-section:first-child{padding-top:clamp(20px,3vw,38px)}
+.pm-workspace-page>.platforms-section:first-child{padding-top:clamp(20px,3vw,38px)}
+.pm-workspace-page>.app-section:first-child .section-row{margin-top:0}
+.pm-workspace-page>.app-section:first-child .notes-layout{margin-top:0}
+/* Reduce decorative marketing blocks on functional informational pages without hiding document titles. */
+.legal-hero{padding:clamp(18px,2.8vw,30px) 0!important}
+.legal-hero h1{font-size:clamp(25px,3vw,38px)!important;letter-spacing:-.045em}
+.pm-faq-hero-grid{padding-top:clamp(20px,3vw,32px)!important;padding-bottom:clamp(20px,3vw,32px)!important}
+.pm-faq-hero-card{max-height:160px}
+.pm-why-hero{padding-block:clamp(20px,3vw,32px)!important}
+.pm-settings-intro{padding-block:clamp(16px,2vw,24px)!important}
+/* Premium solid crescent, while preserving the original sun graphic and behavior. */
+.site-header .theme-toggle{isolation:isolate}
+.site-header .theme-toggle .theme-moon{width:23px;height:23px;color:#4e40c7;filter:drop-shadow(0 1px 1px rgba(97,70,187,.13));transform-origin:center}
+.site-header .theme-toggle:hover .theme-moon{transform:rotate(-8deg) scale(1.05)}
+html[data-theme="dark"] .site-header .theme-toggle .theme-moon{display:none}
+html[data-theme="dark"] .site-header .theme-toggle .theme-sun{display:block}
+@media(max-width:600px){
+ .pm-workspace-page>.app-section:first-child{padding-top:16px}
+ .pm-workspace-page .app-intro h2{font-size:clamp(21px,6vw,28px)}
+ .pm-workspace-page>.resources-section:first-child{padding-top:16px}
+ .legal-hero{padding:19px 0!important}
+ .pm-why-hero{padding-block:17px!important}
+ .pm-faq-hero-grid{padding-top:18px!important;padding-bottom:18px!important}
+}
+@media(prefers-reduced-motion:reduce){.site-header .theme-toggle .theme-moon{transition:none}}
+
+/* Find Peers already has its own advanced peer filters. On phones, avoid a duplicate top search. */
+@media(max-width:720px){
+ html.pm-find-peers-view.pm-member-header .nav-shell{grid-template-rows:48px;padding-bottom:11px}
+ html.pm-find-peers-view.pm-member-header .pm-global-search,
+ html.pm-find-peers-view.pm-member-header .pm-mobile-filter-wrap{display:none!important}
+}
+@media(max-width:360px){html.pm-find-peers-view.pm-member-header .nav-shell{grid-template-rows:43px}}

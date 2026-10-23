@@ -1,0 +1,29 @@
+/* Owner-focused student profile, visitor presentation remains unchanged. */
+.pm-profile-panel-head{display:flex;align-items:start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pm-profile-panel-head h2{margin-top:9px}
+.pm-owner-inline-link{display:inline-flex;align-items:center;gap:5px;text-decoration:none;color:#6152d5;font-size:12px;font-weight:750;padding:8px 0;white-space:normal;line-height:1.4}
+.pm-owner-inline-link:hover{text-decoration:underline}
+.pm-owner-inline-link:focus-visible{outline:2px solid #6658e8;outline-offset:3px;border-radius:5px}
+.pm-owner-inline-link .pm-icon{width:15px;height:15px}
+.pm-profile-bio{white-space:pre-wrap;overflow-wrap:anywhere}
+.pm-owner-prompt{padding:15px 16px;background:#f8f7ff;border:1px solid #e9e5ff;border-radius:14px;margin-top:5px}
+.pm-owner-prompt p{font-size:13px;line-height:1.65;margin:0 0 14px;color:var(--social-sub)}
+.pm-owner-prompt .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;font-size:12px}
+.pm-owner-prompt .pm-icon{width:15px;height:15px}
+.pm-profile-note-list .pm-owner-empty{padding:22px;border-radius:15px}
+.pm-owner-empty>.pm-icon{width:26px;height:26px;color:#6e5cdc;margin-bottom:9px}
+.pm-owner-empty h3{margin:0 0 7px}
+.pm-owner-empty p{font-size:13px;line-height:1.7;margin:0 0 17px}
+.pm-owner-empty .btn{display:inline-flex;align-items:center;gap:8px;font-size:12px}
+.pm-owner-empty .btn .pm-icon{width:16px;height:16px}
+.pm-profile-owner-view .profile-detail-chips{margin-bottom:17px}
+.pm-profile-owner-view .pm-save-btn{display:none}
+html[data-theme=dark] .pm-owner-prompt{background:#242b4b;border-color:#414367}
+html[data-theme=dark] .pm-owner-inline-link{color:#b7aaff}
+html[data-theme=dark] .pm-owner-empty>.pm-icon{color:#b6a9ff}
+@media(max-width:650px){
+ .pm-profile-panel-head{align-items:start}
+ .pm-profile-panel-head h2{font-size:22px}
+ .pm-owner-prompt{padding:13px}
+ .pm-owner-empty .btn{max-width:100%;justify-content:center}
+}

@@ -1,0 +1,93 @@
+/* Peer Match — compact, extensible Settings hub. */
+.pm-settings-container{max-width:1000px}
+.pm-settings-page{min-height:65vh;background:var(--canvas,#f7f8fe)}
+.pm-settings-intro{padding:39px 0 19px}
+.pm-settings-eyebrow{display:inline-block;margin-bottom:10px;color:#6554e1;font:800 10px/1.4 var(--font-head,"Plus Jakarta Sans",sans-serif);letter-spacing:.13em}
+.pm-settings-intro h1{font:800 clamp(29px,3.5vw,39px)/1.2 var(--font-head,"Plus Jakarta Sans",sans-serif);letter-spacing:-.055em;color:#252945;margin:0 0 11px}
+.pm-settings-period{color:#6856eb}
+.pm-settings-intro p{margin:0;max-width:640px;font-size:13px;line-height:1.75;color:#777f98}
+.pm-settings-section{padding:11px 0 74px}
+.pm-settings-panel{border:1px solid #e6e7f3;border-radius:22px;background:#fff;box-shadow:0 14px 40px rgba(33,37,79,.04);overflow:hidden}
+.pm-settings-section-heading{display:flex;gap:15px;align-items:center;padding:27px 30px 21px}
+.pm-settings-section-icon{width:49px;height:49px;flex:none;display:grid;place-items:center;border-radius:15px;background:#f1efff;color:#6554e1}
+.pm-settings-section-icon svg{width:24px;height:24px}
+.pm-settings-section-heading h2{font:800 19px/1.3 var(--font-head,"Plus Jakarta Sans",sans-serif);letter-spacing:-.04em;color:#292c4a;margin:0 0 7px}
+.pm-settings-section-heading p{font-size:12px;line-height:1.65;margin:0;color:#798099;max-width:680px}
+.pm-settings-links{padding:0 16px 16px}
+.pm-settings-link{display:flex;gap:17px;align-items:center;min-width:0;padding:19px 15px;border-top:1px solid #eff0f7;text-decoration:none;color:#2e3152;border-radius:9px;transition:background .16s,color .16s}
+.pm-settings-link:hover{background:#f6f4ff;color:#5b49d0}
+.pm-settings-link:focus-visible{outline:3px solid #8b7bf0;outline-offset:-2px;background:#f6f4ff}
+.pm-settings-link-icon{flex:none;display:grid;place-items:center;width:41px;height:41px;border-radius:12px;background:#f3f1ff;color:#6757d8}
+.pm-settings-link-icon svg{width:20px;height:20px}
+.pm-settings-link-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.pm-settings-link-copy strong{font:800 13px/1.3 var(--font-head,"Plus Jakarta Sans",sans-serif);color:inherit}
+.pm-settings-link-copy small{font-size:11px;line-height:1.6;color:#7c829b}
+.pm-settings-arrow{width:19px;height:19px;flex:none;color:#a0a4b8}
+html[data-theme="dark"] .pm-settings-page{background:#121a2d}
+html[data-theme="dark"] .pm-settings-eyebrow{color:#aa9bff}
+html[data-theme="dark"] .pm-settings-intro h1{color:#f0efff}
+html[data-theme="dark"] .pm-settings-intro p{color:#a9b4d1}
+html[data-theme="dark"] .pm-settings-panel{background:#1d273e;border-color:#394562;box-shadow:none}
+html[data-theme="dark"] .pm-settings-section-icon,html[data-theme="dark"] .pm-settings-link-icon{background:#302c51;color:#b4aaff}
+html[data-theme="dark"] .pm-settings-section-heading h2,html[data-theme="dark"] .pm-settings-link{color:#eef0ff}
+html[data-theme="dark"] .pm-settings-section-heading p,html[data-theme="dark"] .pm-settings-link-copy small{color:#a8b4d0}
+html[data-theme="dark"] .pm-settings-link{border-top-color:#35415c}
+html[data-theme="dark"] .pm-settings-link:hover,html[data-theme="dark"] .pm-settings-link:focus-visible{background:#2b3150;color:#c2b9ff}
+html[data-theme="dark"] .pm-settings-arrow{color:#929eba}
+@media(max-width:600px){
+  .pm-settings-intro{padding:25px 0 12px}
+  .pm-settings-intro h1{font-size:30px;margin-bottom:9px}
+  .pm-settings-intro p{font-size:12px}
+  .pm-settings-section{padding:10px 0 48px}
+  .pm-settings-panel{border-radius:17px}
+  .pm-settings-section-heading{gap:12px;padding:23px 17px 17px;align-items:flex-start}
+  .pm-settings-section-icon{width:42px;height:42px;border-radius:12px}
+  .pm-settings-section-heading h2{font-size:17px}
+  .pm-settings-section-heading p{font-size:11px}
+  .pm-settings-links{padding:0 7px 10px}
+  .pm-settings-link{gap:12px;padding:16px 10px}
+  .pm-settings-link-icon{width:37px;height:37px;border-radius:11px}
+  .pm-settings-link-copy strong{font-size:12px}
+  .pm-settings-link-copy small{font-size:10px}
+  .pm-settings-arrow{width:17px;height:17px}
+}
+@media(prefers-reduced-motion:reduce){.pm-settings-link{transition:none}}
+
+/* The Notifications page is an inbox; preferences belong in Settings. */
+#notifications{scroll-margin-top:100px}
+.pm-settings-notifications{padding-bottom:10px}
+.pm-settings-notifications .pm-settings-panel{overflow:visible}
+.pm-settings-notification-body{display:grid;gap:20px;padding:0 25px 25px}
+.pm-settings-notification-body .pm-notification-preference-group,.pm-settings-notification-body .email-panel{min-width:0;border:1px solid #e8e8f4;border-radius:16px;background:#fbfbff;padding:22px 25px;box-shadow:none;margin:0;max-width:none}
+.pm-settings-notification-body .pm-preference-heading{margin-bottom:12px}
+.pm-settings-notification-body .pm-preference-heading .social-eyebrow{font-size:10px;letter-spacing:.13em}
+.pm-settings-notification-body .pm-preference-heading h3{margin:6px 0 4px;font-size:18px;line-height:1.35;letter-spacing:-.03em;color:#2b3050}
+.pm-settings-notification-body .pm-preference-heading p{color:#77819b;font-size:12px;line-height:1.6;margin:0}
+.pm-settings-notification-body .email-panel .social-panel-head{padding:0;margin-bottom:12px}
+.pm-settings-notification-body .email-panel .social-panel-head h2{font-size:18px}
+.pm-settings-notification-body .email-panel .email-icon{font-size:23px}
+.pm-settings-notification-body .pm-switch{min-height:68px;gap:12px}
+.pm-settings-notification-body .email-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.pm-settings-notification-body .email-actions button{font-size:12px}
+.pm-settings-notification-body .pm-preference-note{font-size:11px;line-height:1.7;margin:13px 0 0;color:#7c86a1}
+.pm-settings-notification-body .email-delivery-tip{margin:15px 0}
+.pm-settings-notification-body #emailDeliveryTip[hidden]{display:none!important}
+html[data-theme="dark"] .pm-settings-notification-body .pm-notification-preference-group,html[data-theme="dark"] .pm-settings-notification-body .email-panel{background:#202b43;border-color:#3b4866;color:#edf1ff}
+html[data-theme="dark"] .pm-settings-notification-body .pm-preference-heading h3{color:#f0efff}
+html[data-theme="dark"] .pm-settings-notification-body .pm-preference-heading p,html[data-theme="dark"] .pm-settings-notification-body .pm-preference-note{color:#aab7d6}
+@media(max-width:600px){
+ #notifications{scroll-margin-top:80px}
+ .pm-settings-notification-body{padding:0 12px 13px;gap:12px}
+ .pm-settings-notification-body .pm-notification-preference-group,.pm-settings-notification-body .email-panel{padding:18px 15px;border-radius:12px}
+ .pm-settings-notification-body .pm-switch{min-height:64px}
+ .pm-settings-notification-body .email-actions button{width:auto;max-width:100%}
+}
+
+.pm-settings-jump-links{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:16px}
+.pm-settings-jump-links a{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:9px 13px;border-radius:12px;border:1px solid #e2e4f2;text-decoration:none;font:700 11px/1.3 'Plus Jakarta Sans','DM Sans',sans-serif;background:#fff;color:#6554d7;transition:background .18s,border-color .18s}
+.pm-settings-jump-links a:hover,.pm-settings-jump-links a:focus-visible{background:#f1eeff;border-color:#c2bafa}
+.pm-settings-jump-links svg{height:15px;width:15px}
+#privacy-safety{scroll-margin-top:95px}
+html[data-theme="dark"] .pm-settings-jump-links a{background:#222d43;color:#c4b9ff;border-color:#444c6c}
+html[data-theme="dark"] .pm-settings-jump-links a:hover{background:#34305e}
+@media(max-width:400px){.pm-settings-jump-links{gap:7px}.pm-settings-jump-links a{padding:9px 10px;font-size:10px}}

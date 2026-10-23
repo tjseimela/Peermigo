@@ -1,0 +1,38 @@
+/* Public information page: why we ask for student details */
+.pm-why-page{background:#fafbff;color:#202845}
+.pm-why-hero{padding:66px 0 55px;background:linear-gradient(125deg,#f1efff,#f8faff 68%,#eef7ff)}
+.pm-why-hero-inner{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.65fr);align-items:center;gap:48px}
+.pm-why-eyebrow{display:block;color:#6453df;letter-spacing:.15em;font-size:11px;font-weight:800;margin-bottom:13px}
+.pm-why-hero h1{font-size:clamp(30px,4vw,54px);line-height:1.12;letter-spacing:-.05em;max-width:700px;margin:0 0 18px;color:#182443}
+.pm-why-hero p{color:#69748f;font-size:15px;line-height:1.75;max-width:600px;margin:0 0 22px}
+.pm-why-back{color:#5143d0;font-weight:750;font-size:13px;text-decoration:none}
+.pm-why-back:hover{text-decoration:underline}
+.pm-why-aside{border:1px solid #dcdcfb;background:#fff;border-radius:22px;padding:29px;box-shadow:0 18px 45px #32365910}
+.pm-why-aside-icon{display:grid;place-items:center;background:#f0edff;color:#604add;width:44px;height:44px;border-radius:12px;font-size:24px;margin-bottom:19px}
+.pm-why-aside h2{font-size:19px;line-height:1.25;margin:0 0 10px;letter-spacing:-.02em}
+.pm-why-aside p{font-size:13px;line-height:1.7;margin:0;color:#68738f}
+.pm-why-content{padding:54px 0 75px}
+.pm-why-section-head h2{font-size:clamp(24px,2.6vw,33px);margin:0 0 8px;letter-spacing:-.035em}
+.pm-why-section-head p{color:#717b95;font-size:14px;margin:0 0 23px}
+.pm-why-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.pm-why-card{background:#fff;border:1px solid #e1e5f3;border-radius:18px;padding:24px;min-width:0}
+.pm-why-card-icon{display:grid;place-items:center;width:39px;height:39px;background:#f0edff;border-radius:12px;color:#6354db;font-size:12px;font-weight:800;margin-bottom:15px}
+.pm-why-card h3{font-size:17px;letter-spacing:-.02em;margin:0 0 8px}
+.pm-why-card p{font-size:13px;line-height:1.7;color:#6e7892;margin:0}
+.pm-why-note{display:flex;align-items:center;justify-content:space-between;gap:24px;background:#f1efff;border:1px solid #dfdcff;border-radius:18px;padding:26px;margin:23px 0 26px}
+.pm-why-note h2{font-size:20px;margin:0 0 8px}.pm-why-note p{font-size:13px;color:#6d7491;line-height:1.7;margin:0}.pm-why-note .btn{white-space:nowrap}
+.pm-why-privacy{max-width:940px}.pm-why-privacy h2{font-size:23px;letter-spacing:-.02em;margin:0 0 13px}
+.pm-why-privacy p{font-size:13px;line-height:1.85;color:#6e7892;margin:0 0 14px}
+.pm-why-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:19px}
+.pm-why-links a{font-size:12px;font-weight:800;color:#5545d1;text-decoration:none}
+.pm-why-links a:hover{text-decoration:underline}
+html[data-theme="dark"] .pm-why-page{background:#121a2d;color:#f0f1fc}
+html[data-theme="dark"] .pm-why-hero{background:linear-gradient(125deg,#242448,#17223a 72%,#1b2d43)}
+html[data-theme="dark"] .pm-why-hero h1{color:#f2f3ff}
+html[data-theme="dark"] .pm-why-hero p,html[data-theme="dark"] .pm-why-aside p,html[data-theme="dark"] .pm-why-section-head p,html[data-theme="dark"] .pm-why-card p,html[data-theme="dark"] .pm-why-note p,html[data-theme="dark"] .pm-why-privacy p{color:#b9c2d9}
+html[data-theme="dark"] .pm-why-aside,html[data-theme="dark"] .pm-why-card{background:#1c2740;border-color:#3e4864}
+html[data-theme="dark"] .pm-why-note{background:#252446;border-color:#49466c}
+html[data-theme="dark"] .pm-why-aside-icon,html[data-theme="dark"] .pm-why-card-icon{background:#343052;color:#c3b5ff}
+html[data-theme="dark"] .pm-why-back,html[data-theme="dark"] .pm-why-links a,html[data-theme="dark"] .pm-why-eyebrow{color:#b3a5ff}
+@media(max-width:760px){.pm-why-hero{padding:36px 0 34px}.pm-why-hero-inner{grid-template-columns:1fr;gap:21px}.pm-why-aside{padding:21px}.pm-why-grid{grid-template-columns:1fr}.pm-why-content{padding:32px 0 54px}.pm-why-note{flex-direction:column;align-items:flex-start;padding:22px}.pm-why-note .btn{white-space:normal}.pm-why-card{padding:22px}}
+@media(max-width:340px){.pm-why-links{flex-direction:column;gap:12px}.pm-why-card{padding:18px}}

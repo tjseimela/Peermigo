@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en" data-access="student" class="pm-find-peers-view">
+<head>
+<meta charset="utf-8"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#f7f9fc" name="theme-color"/>
+<meta content="Peer Match helps students meet study partners, connect at the same campus, join groups and schedule study sessions." name="description"/>
+<title>Peer Match | Find study partners</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<link href="theme.css" rel="stylesheet"/>
+<link href="access.css" rel="stylesheet"/>
+<link href="legal.css" rel="stylesheet"/>
+<script src="theme.js"></script>
+<link href="social.css" rel="stylesheet"/>
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="refinements.css"/>
+<link rel="stylesheet" href="mobile-dock.css"/>
+<link rel="stylesheet" href="top-nav.css"/>
+<link rel="stylesheet" href="saved.css"/>
+<link rel="stylesheet" href="compact-headers.css"/>
+<link rel="stylesheet" href="directory.css"/>
+<link rel="stylesheet" href="mobile-header-refresh.css"/>
+<link rel="stylesheet" href="workspace-refresh.css"/>
+<link rel="stylesheet" href="compact-finder.css"/>
+<link rel="stylesheet" href="connection-ui.css"/>
+</head>
+<body>
+<div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peer Match account</span><a href="account.html">Go to Sign In</a></div>
+<header class="site-header">
+<div class="container nav-shell">
+<a aria-label="Peer Match home" class="brand" href="index.html"><span aria-hidden="true" class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+<nav aria-label="Primary navigation" class="main-nav" id="primaryNav">
+<a class="nav-link" data-page="index.html" href="index.html">Home</a>
+<a class="nav-link" data-page="about.html" href="about.html">About</a>
+
+<a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
+<a class="nav-account" data-page="account.html" id="authNavLink" href="account.html">Sign in</a>
+<a class="nav-cta join-nav" href="account.html?mode=signup">Join Peer Match <span aria-hidden="true">↗</span></a>
+</nav>
+<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewBox="0 0 24 24" width="21"><path fill="currentColor" d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z"/><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span class="menu-unread-dot" id="mobileUnreadDot" aria-hidden="true" hidden></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+</header>
+<main id="mainContent" class="pm-workspace-page">
+<section class="app-section"><div class="container">
+<div class="pm-find-heading"><div><h1>Find Peers</h1><p>Discover students to study and collaborate with.</p></div><a class="pm-find-all-link" href="#directoryResultsHeading">All students <span aria-hidden="true">→</span></a></div>
+<section class="finder-panel pm-compact-finder" aria-label="Find students and filter results">
+  <div class="pm-finder-toolbar">
+    <label class="pm-finder-search" for="searchInput">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      <input aria-label="Search study partners" id="searchInput" placeholder="Search students, courses or institutions…" type="search" maxlength="64" autocomplete="off" />
+    </label>
+    <div class="pm-finder-popup-anchor">
+      <button type="button" class="pm-finder-icon-button" id="openPeerFilters" aria-label="Advanced student filters" title="Advanced filters" aria-controls="peerAdvancedFilters" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="var(--pm-filter-surface,#fff)"/><circle cx="16" cy="17" r="2.5" fill="var(--pm-filter-surface,#fff)"/></svg>
+        <span class="pm-filter-active-dot" id="activePeerFilterDot" hidden></span>
+      </button>
+    </div>
+    <div class="pm-finder-popup-anchor">
+      <button type="button" class="pm-finder-icon-button pm-finder-sort-button" id="openPeerSort" aria-label="Sort students" title="Sort students" aria-controls="peerSortOptions" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m7 4 0 16m-3-3 3 3 3-3M17 20V4m-3 3 3-3 3 3"/></svg>
+      </button>
+      <div class="pm-finder-popover pm-finder-sort-popover" id="peerSortOptions" hidden>
+        <label for="sortFilter">Sort student directory</label>
+        <select id="sortFilter" aria-label="Sort student directory">
+          <option value="az">Name: A to Z</option>
+          <option value="za">Name: Z to A</option>
+          <option value="newest">Newest students</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="pm-finder-chips" role="group" aria-label="Quick peer filters">
+    <button type="button" class="pm-filter-chip is-active" data-peer-quick="all" aria-pressed="true">All</button>
+    <button type="button" class="pm-filter-chip" data-peer-quick="campus" aria-pressed="false">Same campus</button>
+    <button type="button" class="pm-filter-chip" data-peer-quick="course" aria-pressed="false">Same course</button>
+    <button type="button" class="pm-filter-chip pm-filter-chip-more" id="peerMoreFilters" aria-controls="peerAdvancedFilters" aria-expanded="false">More <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
+  </div>
+  <div class="pm-finder-advanced" id="peerAdvancedFilters" hidden>
+    <div class="pm-finder-advanced-heading"><div><strong>Refine your search</strong><p>Choose what matters to your study routine.</p></div><button type="button" class="pm-finder-close" id="closePeerFilters" aria-label="Close filters">×</button></div>
+    <div class="finder-controls">
+      <label class="pm-finder-field">Institution
+        <input aria-label="Filter by institution" id="institutionFilter" type="search" list="peerInstitutionSuggestions" placeholder="All institutions" autocomplete="off" />
+        <datalist id="peerInstitutionSuggestions"></datalist>
+      </label>
+      <label class="pm-finder-field">Study format
+        <select aria-label="Study method" id="methodFilter"><option value="">Any study format</option><option value="campus">On campus</option><option value="virtual">Online</option><option value="hybrid">Hybrid</option></select>
+      </label>
+      <label class="pm-finder-field">Availability
+        <select aria-label="Availability" id="timeFilter"><option value="">Any availability</option><option value="mornings">Mornings</option><option value="afternoons">Afternoons</option><option value="evenings">Evenings</option><option value="weekends">Weekends</option><option value="flexible">Flexible</option></select>
+      </label>
+    </div>
+    <div class="finder-bottom">
+      <button class="text-button" id="clearFilters" type="button">Reset all filters</button>
+    </div>
+  </div>
+  <p class="pm-finder-context" id="peerFilterStatus" role="status" aria-live="polite" hidden></p>
+</section>
+<div class="section-row"><div><h2>Recommended peers <span class="count-dot" id="resultCount">0</span></h2><p id="matchingDescription">Browse profiles, or save yours to rank your best fits.</p></div><span class="meta-badge" id="directoryBadge">STUDENT DIRECTORY</span></div>
+<div class="peer-grid upgraded-grid" id="matchesGrid"></div>
+<section class="all-peers-section"><div class="section-row" id="directoryResultsHeading"><div><span class="social-eyebrow">THE WHOLE COMMUNITY</span><h2>Explore all students <span class="count-dot" id="allPeersCount">0</span></h2><p>Discover students beyond your matches. Browse everyone who has opted into discovery.</p></div><span class="meta-badge">ALL STUDENTS</span></div><div id="allPeersGrid" class="peer-grid upgraded-grid" aria-live="polite"></div><nav class="directory-pager" id="directoryPagination" aria-label="Student directory pages" hidden><button id="prevPeers" type="button" class="btn btn-secondary" disabled aria-label="Previous page">← Previous</button><div class="directory-pager-info"><strong id="directoryPageLabel">Page 1</strong><small id="directoryRange" aria-live="polite"></small></div><button id="nextPeers" type="button" class="btn btn-secondary" aria-label="Next page">Next →</button></nav><p class="directory-single-range" id="directorySingleRange"><span class="sr-only">Directory results</span></p></section><div class="empty-panel hidden" id="noResults"><span class="empty-illustration">⌕</span><h3>No peers found</h3><p>Try a broader search or another campus.</p><button class="btn btn-primary" id="emptyReset" type="button">Clear filters</button></div>
+<div class="safe-strip"><span>♧</span><div><b>A safer way to connect</b><p>Start with a private message. Plan face-to-face study sessions only in public areas on campus. Never share your home address.</p></div></div>
+</div></section></main>
+<footer class="site-footer">
+  <div class="container footer-upper">
+    <div class="footer-identity">
+      <a class="brand footer-brand" href="index.html" aria-label="Peer Match home"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+      <p>Find your people. Learn better together.</p>
+      <a class="footer-contact" href="mailto:peermatchstudents@gmail.com" aria-label="Email Peer Match support">peermatchstudents@gmail.com</a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+<a href="about.html">About</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a><a href="faq.html">FAQs</a><a href="guidelines.html">Guidelines</a>
+</nav>
+  </div>
+  <div class="container footer-bottom">
+    <div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
+    <nav class="footer-legal-links" aria-label="Legal and help links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
+    <span class="footer-credit">Built by tjseimela</span>
+  </div>
+</footer>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer src="connections.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
+</html>

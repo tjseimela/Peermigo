@@ -1,0 +1,49 @@
+/* Student quick dock, based on the compact floating-pill navigation reference. */
+.pm-student-dock[hidden],.pm-dock-more-panel[hidden],.pm-dock-message-count[hidden]{display:none!important}
+.pm-student-dock{display:none}
+.pm-password-field{position:relative;width:100%;min-width:0}
+.pm-password-field>input{width:100%;padding-right:54px!important}
+.pm-password-toggle{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:10px;background:transparent;color:#69708a;display:grid;place-items:center;cursor:pointer;z-index:1}
+.pm-password-toggle:hover{background:#f0edff;color:#5344cf}
+.pm-password-toggle:focus-visible{outline:3px solid #8172e9;outline-offset:0}
+.pm-password-toggle .pm-icon{width:20px;height:20px}
+html[data-theme="dark"] .pm-password-toggle{color:#b4bdd9}
+html[data-theme="dark"] .pm-password-toggle:hover{background:#33315b;color:#e7e2ff}
+@media(max-width:720px){
+  body.pm-dock-visible{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+  .pm-student-dock:not([hidden]){display:block;position:fixed;z-index:980;left:50%;transform:translateX(-50%);bottom:calc(13px + env(safe-area-inset-bottom,0px));width:max-content;max-width:calc(100vw - 24px);pointer-events:none}
+  .pm-dock-row{display:flex;align-items:center;justify-content:center;gap:clamp(1px,1.1vw,6px);padding:7px 9px;border:1px solid rgba(222,225,235,.98);border-radius:999px;background:rgba(255,255,255,.97);box-shadow:0 14px 42px rgba(21,25,61,.18),0 2px 8px rgba(21,25,61,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);pointer-events:auto}
+  .pm-dock-item{position:relative;display:flex;align-items:center;justify-content:center;width:clamp(39px,12vw,51px);height:clamp(42px,12.8vw,50px);border:0;border-radius:50%;background:transparent;color:#646b7d;text-decoration:none;flex:none;cursor:pointer;transition:background .18s,color .18s,transform .18s}
+  .pm-dock-item .pm-icon{width:21px;height:21px;stroke-width:1.85}
+  .pm-dock-item:hover,.pm-dock-item:focus-visible{background:#efedff;color:#5448db}
+  .pm-dock-item:focus-visible,.pm-dock-more-link:focus-visible{outline:3px solid #8073ec;outline-offset:2px}
+  .pm-dock-item.is-active,.pm-dock-item.is-open{background:#5e50e5;color:#fff;box-shadow:0 4px 12px #6657d54a}
+  .pm-dock-message-count{position:absolute;right:-3px;top:-3px;min-width:18px;height:18px;border-radius:999px;padding:0 4px;background:#ee4869;color:white;display:flex;align-items:center;justify-content:center;font:800 9px/1 system-ui,sans-serif;border:2px solid #fff;white-space:nowrap}
+  .pm-dock-more-wrap{position:relative;display:flex}
+  .pm-dock-more-panel{position:absolute;bottom:calc(100% + 14px);right:0;width:195px;max-width:calc(100vw - 28px);padding:8px;background:#fff;border:1px solid #e7e7f1;border-radius:18px;box-shadow:0 15px 50px #141a3b30;display:grid;gap:2px}
+  .pm-dock-more-link{display:flex;align-items:center;gap:12px;min-height:44px;padding:9px 11px;border-radius:11px;font-size:12px;font-weight:700;color:#555b74;text-decoration:none;white-space:nowrap}
+  .pm-dock-more-link .pm-icon{width:19px;height:19px;color:#7065d5}
+  .pm-dock-more-link:hover,.pm-dock-more-link.is-active{background:#f0edff;color:#4d40b8}
+  /* Make chat composer fully reachable above fixed dock; dock auto-hides while typing. */
+  body.pm-dock-visible .messaging-layout.chat-open .chat-window{height:min(740px,calc(100svh - 170px))}
+  body.pm-dock-typing .pm-student-dock{display:none!important}
+  html[data-theme="dark"] .pm-dock-row{background:rgba(28,36,56,.97);border-color:#3e4768;box-shadow:0 12px 45px #0008}
+  html[data-theme="dark"] .pm-dock-item{color:#c1c9e0}
+  html[data-theme="dark"] .pm-dock-item:hover,html[data-theme="dark"] .pm-dock-item:focus-visible{background:#38345e;color:#fff}
+  html[data-theme="dark"] .pm-dock-item.is-active,html[data-theme="dark"] .pm-dock-item.is-open{background:#7767f0;color:#fff}
+  html[data-theme="dark"] .pm-dock-message-count{border-color:#1c2438}
+  html[data-theme="dark"] .pm-dock-more-panel{background:#212a42;border-color:#414b6e}
+  html[data-theme="dark"] .pm-dock-more-link{color:#cbd2e8}
+  html[data-theme="dark"] .pm-dock-more-link:hover,html[data-theme="dark"] .pm-dock-more-link.is-active{background:#39355b;color:#fff}
+}
+@media(max-width:330px){.pm-dock-row{gap:0;padding:5px 7px}.pm-dock-item{width:40px;height:44px}}
+@media(prefers-reduced-motion:reduce){.pm-dock-item{transition:none}}
+
+/* Frosted glass mobile student dock; keep controls readable in both themes. */
+@media(max-width:720px){
+ .pm-dock-row{background:rgba(255,255,255,.78);border-color:rgba(223,227,241,.78);backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%);box-shadow:0 12px 38px rgba(18,23,63,.13),inset 0 1px 0 rgba(255,255,255,.65)}
+ html[data-theme="dark"] .pm-dock-row{background:rgba(27,36,58,.76);border-color:rgba(113,129,175,.34);box-shadow:0 13px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
+ @media(max-width:720px){.pm-dock-row{background:#f7f7ff}html[data-theme="dark"] .pm-dock-row{background:#27334a}}
+}

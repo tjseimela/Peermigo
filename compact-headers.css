@@ -1,0 +1,78 @@
+/* Peer Match — concise secondary-page intros, October 2026.
+   The public marketing homepage and member dashboard remain unchanged. */
+.page-hero.compact {
+  padding: 29px 0 31px;
+}
+.page-hero.compact h1 {
+  font-size: clamp(29px, 3.2vw, 39px);
+  line-height: 1.17;
+  margin: 9px 0 8px;
+  letter-spacing: -.055em;
+}
+.page-hero.compact p {
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 720px;
+}
+.page-hero.compact .section-kicker { font-size: 9px; }
+
+/* Messages and Notifications do not need a duplicate introduction above their working UI. */
+.app-section.pm-immediate-page { padding-top: 24px; }
+
+/* Informational sections keep their identity but no longer take a full screen. */
+.legal-hero { padding: 34px 0 37px; }
+.legal-hero h1 {
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.15;
+  margin: 11px 0 8px;
+}
+.legal-hero p { font-size: 13px; line-height: 1.65; }
+.legal-updated { margin-top: 13px; }
+.pm-faq-hero-grid {
+  min-height: 0;
+  padding-top: 34px;
+  padding-bottom: 34px;
+  gap: 32px;
+}
+.pm-faq-hero-content h1 {
+  font-size: clamp(32px, 3.8vw, 47px);
+  line-height: 1.12;
+  margin: 12px 0 9px;
+}
+.pm-faq-hero-content>p { font-size: 13px; line-height: 1.6; }
+.pm-faq-hero-actions { margin-top: 17px; }
+.pm-faq-hero-card {
+  height: 206px;
+  max-width: 320px;
+  border-radius: 20px;
+}
+.pm-faq-hero-card-caption { bottom: 17px; }
+
+@media (max-width: 600px) {
+  .page-hero.compact { padding: 22px 0 24px; }
+  .page-hero.compact h1 {
+    font-size: clamp(26px, 7.5vw, 33px);
+    margin: 7px 0 8px;
+    line-height: 1.16;
+  }
+  .page-hero.compact p { font-size: 12px; line-height: 1.55; }
+  .app-section.pm-immediate-page { padding-top: 16px; }
+  .legal-hero { padding: 26px 0 28px; }
+  .legal-hero h1 { font-size: clamp(28px, 8vw, 35px); margin: 9px 0 7px; }
+  .legal-hero p { font-size: 12px; line-height: 1.6; }
+  .legal-updated { margin-top: 10px; }
+  .pm-faq-hero-grid {
+    padding-top: 26px;
+    padding-bottom: 28px;
+    gap: 13px;
+  }
+  .pm-faq-hero-content h1 { font-size: clamp(30px, 8vw, 35px); margin: 9px 0; }
+  .pm-faq-hero-content>p { font-size: 12px; }
+  .pm-faq-hero-actions { margin-top: 14px; }
+  .pm-faq-hero-card { display: none; }
+}
+/* At tablet widths, show the FAQ answers sooner instead of stacking a decorative card. */
+@media (min-width: 601px) and (max-width: 850px) {
+  .pm-faq-hero-card { display: none; }
+  .pm-faq-hero-grid { padding-top: 30px; padding-bottom: 30px; gap: 0; }
+}

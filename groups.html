@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html lang="en" data-access="student">
+<head>
+<meta charset="utf-8"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#f7f9fc" name="theme-color"/>
+<meta content="Peer Match helps students meet study partners, connect at the same campus, join groups and schedule study sessions." name="description"/>
+<title>Peer Match | Study groups</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<link href="theme.css" rel="stylesheet"/>
+<link href="access.css" rel="stylesheet"/>
+<link href="legal.css" rel="stylesheet"/>
+<link href="admin.css" rel="stylesheet"/>
+<script src="theme.js"></script>
+<link href="social.css" rel="stylesheet"/>
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="refinements.css"/>
+<link rel="stylesheet" href="mobile-dock.css"/>
+<link rel="stylesheet" href="top-nav.css"/>
+<link rel="stylesheet" href="saved.css"/>
+<link rel="stylesheet" href="compact-headers.css"/>
+<link rel="stylesheet" href="mobile-header-refresh.css"/>
+<link rel="stylesheet" href="workspace-refresh.css"/>
+<link rel="stylesheet" href="connection-ui.css"/>
+</head>
+<body>
+<div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peer Match account</span><a href="account.html">Go to Sign In</a></div>
+<header class="site-header">
+<div class="container nav-shell">
+<a aria-label="Peer Match home" class="brand" href="index.html"><span aria-hidden="true" class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+<nav aria-label="Primary navigation" class="main-nav" id="primaryNav">
+<a class="nav-link" data-page="index.html" href="index.html">Home</a>
+<a class="nav-link" data-page="about.html" href="about.html">About</a>
+
+<a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
+<a class="nav-account" data-page="account.html" id="authNavLink" href="account.html">Sign in</a>
+<a class="nav-cta join-nav" href="account.html?mode=signup">Join Peer Match <span aria-hidden="true">↗</span></a>
+</nav>
+<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewBox="0 0 24 24" width="21"><path fill="currentColor" d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z"/><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span class="menu-unread-dot" id="mobileUnreadDot" aria-hidden="true" hidden></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+</header>
+<main id="mainContent" class="pm-workspace-page">
+<section class="app-section"><div class="container"><div class="app-intro"><div><span class="overline">STUDY GROUPS</span><h2>Good things happen in groups.</h2><p>Find a circle that makes difficult topics feel doable.</p></div><button class="btn btn-primary" id="openGroupForm" type="button">+ Create a group</button></div>
+<form class="panel-form hidden" id="groupForm"><div class="panel-form-title"><h3>Start a study group</h3><button class="text-button" id="closeGroupForm" type="button">Close ×</button></div><div class="form-row"><div class="form-group"><label for="groupName">Group name</label><input id="groupName" maxlength="80" placeholder="e.g. VUT Programming Circle" required=""/></div><div class="form-group"><label for="groupModule">Subject / module</label><input id="groupModule" maxlength="100" placeholder="e.g. Java Programming" required=""/></div></div><div class="form-row"><div class="form-group"><label for="groupInstitution">Institution</label><input id="groupInstitution" maxlength="120" placeholder="Your university, college or school" required=""/></div><div class="form-group"><label for="groupCampus">Campus</label><input id="groupCampus" maxlength="100" placeholder="Optional"/></div></div><div class="form-group"><label for="groupDescription">What will your group work on?</label><textarea id="groupDescription" maxlength="400" placeholder="Tell people what to expect" rows="2"></textarea></div><button class="btn btn-dark" type="submit">Create group →</button></form>
+<div class="finder-panel compact-finder"><div class="finder-search"><span>⌕</span><input aria-label="Search groups" id="groupSearch" placeholder="Search groups, modules or institutions..." type="search"/></div><label class="toggle-label"><input id="myGroupsOnly" type="checkbox"/><span class="toggle-track"></span> My groups only</label></div>
+<div class="section-row"><div><h2>Explore study groups</h2><p id="groupCount">Find your community</p></div><span class="meta-badge">LEARN TOGETHER</span></div><div class="app-card-grid" id="groupsGrid"></div><div class="empty-panel hidden" id="groupsEmpty"><h3>No matching groups</h3><p>Try another search or start a new one.</p></div>
+<section aria-label="Group administrator controls" class="admin-panel hidden" id="groupAdminPanel">
+<div class="admin-panel-heading"><div><span class="admin-kicker">GROUP OWNER · ADMIN TOOLS</span><h2 id="manageGroupName">Manage your group</h2><p>Edit details, review members and moderate discussion. Only the group's creator has access.</p></div><button class="text-button" id="closeGroupAdmin" type="button">Close ×</button></div>
+<div class="admin-layout"><form class="admin-card" id="editGroupForm"><div class="admin-card-header"><span class="admin-card-icon">✎</span><div><h3>Group details</h3><p>Keep information accurate for new members.</p></div></div>
+<div class="form-row"><div class="form-group"><label for="adminGroupName">Group name</label><input id="adminGroupName" maxlength="80" minlength="3" required></div><div class="form-group"><label for="adminGroupModule">Subject / module</label><input id="adminGroupModule" maxlength="100" required></div></div><div class="form-row"><div class="form-group"><label for="adminGroupInstitution">Institution</label><input id="adminGroupInstitution" maxlength="120" required></div><div class="form-group"><label for="adminGroupCampus">Campus</label><input id="adminGroupCampus" maxlength="100"></div></div><div class="form-group"><label for="adminGroupDescription">Description</label><textarea id="adminGroupDescription" maxlength="400" rows="3"></textarea></div>
+<button class="btn btn-primary admin-save" type="submit">Save group changes →</button></form>
+<div class="admin-card"><div class="admin-card-header"><span class="admin-card-icon">♧</span><div><h3>Manage members <span id="adminMemberCount" class="admin-count"></span></h3><p>Remove members and prevent them rejoining until you allow it. Group creators can't remove themselves.</p></div></div><div class="admin-member-list" id="adminMemberList"><p>Loading members…</p></div><div class="admin-ban-list" id="adminBanSection"><h4>Restricted members <span id="adminBanCount" class="admin-count">0</span></h4><p class="admin-ban-intro">Removed members cannot rejoin until you allow them.</p><div id="adminBanList"></div></div><div class="admin-danger-zone"><div><strong>Delete this group</strong><p>Removes the group, posts, sessions and RSVPs. This cannot be undone.</p></div><button class="admin-danger-button" id="deleteGroup" type="button">Delete group</button></div></div></div>
+</section>
+<section aria-live="polite" class="room-panel hidden" id="groupRoom"><div class="room-panel-head"><div><span class="overline">GROUP DISCUSSION</span><h2 id="roomTitle">Your group</h2><p>Only group members can read or write here in live mode.</p></div><button class="text-button" id="closeGroupRoom" type="button">Close ×</button></div><div class="post-list" id="groupPostList"></div><form class="message-composer" id="groupPostForm"><input id="groupPostBody" maxlength="1500" placeholder="Share a question, study tip or file..."/><label class="attachment-picker" title="Attach a study file" aria-label="Attach a study file"><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m21.4 11.6-8.5 8.5a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7L10 17.3a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg><input type="file" id="groupPostFiles" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></label><span class="picked-files" id="groupFilesChosen" aria-live="polite"></span><button class="btn btn-primary" type="submit">Post →</button></form></section>
+</div></section></main>
+<footer class="site-footer">
+  <div class="container footer-upper">
+    <div class="footer-identity">
+      <a class="brand footer-brand" href="index.html" aria-label="Peer Match home"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+      <p>Find your people. Learn better together.</p>
+      <a class="footer-contact" href="mailto:peermatchstudents@gmail.com" aria-label="Email Peer Match support">peermatchstudents@gmail.com</a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+<a href="about.html">About</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a><a href="faq.html">FAQs</a><a href="guidelines.html">Guidelines</a>
+</nav>
+  </div>
+  <div class="container footer-bottom">
+    <div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
+    <nav class="footer-legal-links" aria-label="Legal and help links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
+    <span class="footer-credit">Built by tjseimela</span>
+  </div>
+</footer>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
+</html>

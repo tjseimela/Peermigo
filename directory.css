@@ -1,0 +1,126 @@
+/* Scalable student directory — tidy cards and accessible page navigation. */
+#directoryResultsHeading{scroll-margin-top:115px}
+#matchesGrid,#allPeersGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.directory-card{display:flex;flex-direction:column;gap:0;min-width:0;min-height:335px;padding:20px!important;border:1px solid #e6e8f3;border-radius:18px;background:#fff;box-shadow:0 7px 24px #1c22400a;overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .2s}
+.directory-card:hover{border-color:#c8c5f8;box-shadow:0 16px 32px #28225613;transform:translateY(-2px)}
+.directory-card .peer-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;min-width:0}
+.directory-card .pm-avatar.card-avatar{width:56px;height:56px;min-width:56px;font-size:17px;border:3px solid white;background:#ece8ff}
+.directory-avatar-link{display:inline-flex;flex:none;align-items:center}
+.directory-status{display:inline-flex;max-width:calc(100% - 74px);align-items:center;justify-content:center;padding:7px 10px;border:1px solid #dcd9ff;border-radius:100px;background:#f1efff;color:#6051cf;font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.directory-status.is-new{background:#e8f7f3;border-color:#d5f0e9;color:#147e68}
+.directory-card .directory-main{min-width:0;flex:0 0 auto}
+.directory-card .directory-main h3{margin:0 0 7px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:17px;letter-spacing:-.025em;overflow-wrap:anywhere}
+.directory-card .directory-main h3 .verified-label{display:inline-flex;align-items:center;gap:4px;font-size:10px}
+.directory-card .verified-label .pm-icon{width:13px;height:13px}
+.directory-card .directory-course{margin:0 0 12px;line-height:1.5;font-size:12px;color:#79829d;min-height:18px}
+.directory-card .directory-institution{display:flex;align-items:flex-start;gap:7px;min-height:37px;margin:0 0 12px;font-size:11px;line-height:1.55;color:#6254cb;overflow-wrap:anywhere}
+.directory-card .directory-institution .pm-icon{width:15px;height:15px;min-width:15px;margin-top:1px}
+.directory-card .directory-topics{display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px;min-height:52px;margin:0 0 5px}
+.directory-card .directory-topics span,.directory-card .directory-tags span{display:inline-flex;align-items:center;max-width:100%;font-size:10px;font-weight:700;line-height:1.3;padding:7px 9px;border-radius:9px;background:#f0efff;color:#6354c8;overflow-wrap:anywhere}
+.directory-card .directory-tags{display:flex;flex-wrap:wrap;gap:6px;padding-top:8px;padding-bottom:14px}
+.directory-card .directory-tags span{background:#f3f4f9;color:#646d88}
+.directory-card .directory-welcome{font-size:11px;line-height:1.6;margin:0 0 14px;color:#75809a;min-height:52px}
+.directory-card .peer-card-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 40px 40px;gap:6px;align-items:stretch;margin-top:auto;padding-top:14px;border-top:1px solid #eef0f6}
+.directory-card .peer-card-actions>*{height:39px;min-height:39px!important;min-width:0!important;margin:0!important;padding:8px!important;font-size:11px!important;line-height:1.25;border-radius:10px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-align:center}
+.directory-card .peer-card-actions .pm-icon{width:14px;height:14px;flex:none}
+.directory-card .directory-share,.directory-card .directory-report{width:40px;background:#f7f7fb;border:1px solid #e7e8f3;color:#646b89}
+.directory-card .directory-share:hover,.directory-card .directory-report:hover{background:#eeeaff}
+#institutionFilter{font:inherit;color:var(--ink,#202845);border:1px solid #e4e5f1;background:#fff;min-width:0;max-width:100%;width:100%;height:44px;border-radius:11px;padding:0 12px;outline-offset:2px}
+#institutionFilter:focus-visible{outline:2px solid #6f60dd}
+.peer-directory-loading{padding:40px 18px;border:1px dashed #deddf4;border-radius:16px;display:flex;gap:12px;align-items:center;justify-content:center;font-size:13px;color:#6b7595}
+.peer-directory-loading .access-spinner{width:25px;height:25px;flex:none}
+.directory-pager{display:flex;align-items:center;justify-content:center;gap:15px;flex-wrap:wrap;margin:26px auto 8px;padding:10px 0}
+.directory-pager[hidden]{display:none!important}
+.directory-pager-info{min-width:132px;text-align:center;display:flex;flex-direction:column;gap:4px;color:#232b48;font-size:12px}
+.directory-pager-info small{font-size:10px;color:#777f96}
+.directory-pager button{font-size:12px;padding:10px 14px;min-height:40px;min-width:100px}
+.directory-pager button:disabled{opacity:.45;cursor:not-allowed}
+.directory-single-range{margin:5px 0 0;color:#7b8398;font-size:11px;text-align:center}
+html[data-theme="dark"] .directory-card{background:#1c263e;border-color:#39465f;box-shadow:none}
+html[data-theme="dark"] .directory-card:hover{border-color:#665bc2}
+html[data-theme="dark"] .directory-card .directory-main h3,html[data-theme="dark"] .directory-pager-info{color:#f2f3ff}
+html[data-theme="dark"] .directory-card .directory-course,html[data-theme="dark"] .directory-card .directory-welcome,html[data-theme="dark"] .directory-pager-info small{color:#a7b1d0}
+html[data-theme="dark"] .directory-card .directory-institution{color:#bcb1ff}
+html[data-theme="dark"] .directory-card .directory-topics span,html[data-theme="dark"] .directory-status{background:#36325f;border-color:#4c4784;color:#cec7ff}
+html[data-theme="dark"] .directory-status.is-new{background:#1c413c;border-color:#285e52;color:#9ee8d0}
+html[data-theme="dark"] .directory-card .directory-tags span,html[data-theme="dark"] .directory-card .directory-share,html[data-theme="dark"] .directory-card .directory-report{background:#26324e;color:#bdc8e2;border-color:#46516c}
+html[data-theme="dark"] .directory-card .peer-card-actions{border-color:#39465f}
+html[data-theme="dark"] #institutionFilter{background:#1b263c;border-color:#45516a;color:#e9eeff}
+html[data-theme="dark"] .peer-directory-loading{color:#adb8d2;border-color:#485572}
+@media(max-width:1050px){#matchesGrid,#allPeersGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:660px){#matchesGrid,#allPeersGrid{grid-template-columns:1fr;gap:13px}.directory-card{min-height:0;padding:17px!important}.directory-card .directory-topics{min-height:0;margin-bottom:6px}.directory-card .directory-welcome{min-height:0}.directory-card .directory-institution{min-height:0}.directory-pager{gap:8px}.directory-pager-info{min-width:96px}.directory-pager button{min-width:82px;padding:9px 10px}.all-peers-section{margin-top:44px;padding-top:32px}}
+@media(max-width:340px){.directory-card .peer-card-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 35px 35px;gap:5px}.directory-card .peer-card-actions>*{font-size:10px!important;padding:6px!important}.directory-card .directory-share,.directory-card .directory-report{width:35px}.directory-pager{gap:5px}.directory-pager-info{min-width:85px}.directory-pager button{min-width:78px}}
+@media(prefers-reduced-motion:reduce){.directory-card{transition:none}.directory-card:hover{transform:none}}
+
+/* Explicit module labels; no redundant study-time/availability chips on cards. */
+.directory-card .directory-subjects{margin:0 0 10px;min-height:65px}
+.directory-card .directory-field-label{margin:0 0 8px;color:#868ea6;font:800 10px/1.4 'Plus Jakarta Sans','DM Sans',sans-serif;letter-spacing:.095em;text-transform:uppercase}
+.directory-card .directory-subjects .directory-topics{min-height:0;margin:0;gap:7px}
+.directory-card .directory-subjects-empty{margin:0;font:500 11px/1.5 'DM Sans',sans-serif;color:#9ba3b6}
+html[data-theme="dark"] .directory-card .directory-field-label{color:#adb6d2}
+html[data-theme="dark"] .directory-card .directory-subjects-empty{color:#9daac7}
+@media(max-width:660px){.directory-card .directory-subjects{min-height:0;margin-bottom:12px}}
+
+/* Labeled study details: compact, quiet typography and restored availability. */
+.directory-card .directory-field-label{
+  margin:0 0 5px;
+  color:#9299aa;
+  font:700 9px/1.35 'Plus Jakarta Sans','DM Sans',sans-serif;
+  letter-spacing:.065em;
+  text-transform:uppercase;
+}
+.directory-card .directory-detail-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:12px 14px;
+  padding:0 0 15px;
+  margin:1px 0 14px;
+  border-bottom:1px solid #eff0f7;
+}
+.directory-card .directory-detail{min-width:0}
+.directory-card .directory-detail-value{
+  margin:0;
+  font-size:11px;
+  font-weight:650;
+  line-height:1.5;
+  color:#394363;
+  min-height:0;
+  overflow-wrap:anywhere;
+}
+.directory-card .directory-institution{display:block;color:#685bd2;font-size:11px;line-height:1.5;min-height:0;margin:0}
+.directory-card .directory-campus{grid-column:1/-1}
+.directory-card .directory-detail-value.is-empty,.directory-card .directory-pref-value.is-empty{color:#969eaf;font-weight:500}
+.directory-card .directory-subjects{margin:0 0 14px;min-height:0}
+.directory-card .directory-subjects .directory-topics{min-height:0;margin:0;gap:6px}
+.directory-card .directory-subjects .directory-topics span{padding:6px 8px;font-size:10px;font-weight:650;line-height:1.35}
+.directory-card .directory-subjects-empty{font-size:11px;line-height:1.4}
+.directory-card .directory-preferences{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  padding:13px 0 15px;
+  border-top:1px solid #eff0f7;
+  margin-top:0;
+}
+.directory-card .directory-preference{min-width:0}
+.directory-card .directory-pref-value{
+  display:inline-flex;
+  align-items:center;
+  max-width:100%;
+  padding:6px 9px;
+  border-radius:8px;
+  background:#f4f5f9;
+  color:#5c6480;
+  font-size:10px;
+  font-weight:650;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+.directory-card .directory-welcome{min-height:0;margin:0 0 12px}
+html[data-theme="dark"] .directory-card .directory-field-label{color:#a0aabe}
+html[data-theme="dark"] .directory-card .directory-detail-value{color:#e0e5f6}
+html[data-theme="dark"] .directory-card .directory-institution{color:#c4baff}
+html[data-theme="dark"] .directory-card .directory-detail-value.is-empty,html[data-theme="dark"] .directory-card .directory-pref-value.is-empty{color:#9da9c0}
+html[data-theme="dark"] .directory-card .directory-detail-grid,html[data-theme="dark"] .directory-card .directory-preferences{border-color:#38445e}
+html[data-theme="dark"] .directory-card .directory-pref-value{background:#29354d;color:#c9d2e6}
+@media(max-width:340px){.directory-card .directory-detail-grid{gap:10px}.directory-card .directory-preferences{gap:8px}}

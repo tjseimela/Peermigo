@@ -1,0 +1,64 @@
+/* Peer Match — secure account and blocking settings */
+#your-account,#blocking{scroll-margin-top:96px}
+.pm-account-section,.pm-blocking-section{padding-bottom:12px}
+.pm-account-body{padding:0 25px 25px}
+.pm-account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.pm-account-tile{min-width:0;padding:22px;border:1px solid #e6e7f2;border-radius:15px;background:#fbfbff;display:flex;flex-direction:column;align-items:stretch;gap:9px}
+.pm-tile-title{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.pm-account-tile-icon{flex:none;width:37px;height:37px;border-radius:11px;display:grid;place-items:center;font-weight:800;color:#6653de;background:#eeeafe}
+.pm-tile-title h3,.pm-account-management h3{margin:0 0 5px;font:800 14px/1.4 'Plus Jakarta Sans','DM Sans',sans-serif;color:#292d4d}
+.pm-tile-title p,.pm-account-management p{margin:0;font:400 11px/1.65 'DM Sans',sans-serif;color:#78829d;max-width:575px}
+.pm-account-tile label,.pm-delete-confirm label:not(.pm-account-check){font:700 11px/1.4 'DM Sans',sans-serif;color:#46506c;margin-top:2px}
+.pm-account-input{display:block;width:100%;min-width:0;border:1px solid #dfe2f0;border-radius:11px;padding:12px 14px;color:#252a45;background:#fff;font:500 13px/1.45 'DM Sans',sans-serif;min-height:44px;outline:none}
+.pm-account-input:focus{border-color:#705df1;box-shadow:0 0 0 3px rgba(106,91,236,.13)}
+.pm-account-input[readonly]{background:#f2f3fa;color:#747e99}
+.pm-account-actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:auto;padding-top:9px}
+.pm-account-actions button{font-size:11px;min-height:42px}
+.pm-account-actions span,.pm-delete-confirm span{font-size:11px;line-height:1.5;color:#6c728d}
+.pm-account-actions .pm-error,.pm-delete-confirm .pm-error{color:#be3150}
+.pm-account-management{margin-top:16px;border:1px solid #e7e8f3;border-radius:15px;padding:19px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.pm-account-management .btn{flex-shrink:0;min-height:42px;font-size:11px}
+.pm-account-danger{border-color:#f0d6dc;background:#fffafa}
+.pm-account-danger h3{color:#af344d}
+.pm-danger-trigger,.pm-danger-button{background:#fff;color:#bd344e;border:1px solid #ebb7c3;border-radius:11px;padding:12px 17px;cursor:pointer;font:800 11px/1.3 'Plus Jakarta Sans',sans-serif;white-space:nowrap}
+.pm-danger-trigger{list-style:none;text-align:center}.pm-danger-trigger::-webkit-details-marker{display:none}
+.pm-danger-trigger:hover,.pm-danger-button:hover{background:#fff0f3}
+.pm-danger-button{color:#fff;background:#bc3150;border-color:#bc3150;white-space:normal}
+.pm-danger-button:hover{color:#fff;background:#9c2440}
+.pm-delete-confirm{display:grid;gap:9px;min-width:min(280px,100%);margin-top:12px;max-width:320px}
+.pm-delete-confirm p{max-width:300px}
+.pm-delete-confirm .pm-account-check{display:flex;align-items:flex-start;gap:9px;font-size:11px;line-height:1.6;color:#48516c;margin:4px 0}
+.pm-account-check input{margin-top:3px;accent-color:#6556e5}
+.pm-account-paused{display:flex;align-items:center;justify-content:space-between;gap:15px;background:#fff4df;border:1px solid #f0d3a1;border-radius:13px;padding:16px 20px;margin-bottom:17px}
+.pm-account-paused strong{font-size:13px;color:#805515}.pm-account-paused p{font-size:11px;margin:4px 0 0;color:#8b682e;line-height:1.55}
+.pm-block-list{padding:0 25px 25px}.pm-list-loading,.pm-empty-blocks{border:1px dashed #dfe2f2;border-radius:13px;padding:23px;text-align:center;color:#818aa3;font-size:12px;line-height:1.6}
+.pm-block-row{display:flex;align-items:center;gap:14px;padding:15px 4px;border-top:1px solid #ecedf6}
+.pm-block-avatar{width:43px;height:43px;flex:none;border-radius:50%;display:grid;place-items:center;color:#6455cd;background:#eae6ff;font-size:13px;font-weight:800;overflow:hidden}
+.pm-block-avatar img{width:100%;height:100%;object-fit:cover}
+.pm-block-detail{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.pm-block-detail strong{font:800 12px/1.4 'Plus Jakarta Sans',sans-serif;overflow-wrap:anywhere}
+.pm-block-detail small{font-size:11px;line-height:1.5;color:#8890a6;overflow-wrap:anywhere}
+.pm-unblock-btn{flex:none;cursor:pointer;border:1px solid #e0dbfa;background:#f6f4ff;color:#6350d2;border-radius:10px;padding:11px 13px;font-weight:800;font-size:11px}
+.pm-unblock-btn:hover{background:#ece8ff}
+.pm-account-management details{max-width:100%}.pm-account-management details[open]{min-width:245px}
+html[data-theme="dark"] .pm-account-tile{background:#232d45;border-color:#3c4765}
+html[data-theme="dark"] .pm-tile-title h3,html[data-theme="dark"] .pm-account-management h3,html[data-theme="dark"] .pm-block-detail strong{color:#edf0ff}
+html[data-theme="dark"] .pm-tile-title p,html[data-theme="dark"] .pm-account-management p{color:#a9b6d1}
+html[data-theme="dark"] .pm-account-tile-icon{background:#302b59;color:#c8bcff}
+html[data-theme="dark"] .pm-account-tile label,html[data-theme="dark"] .pm-delete-confirm label{color:#cbd5ed}
+html[data-theme="dark"] .pm-account-input{background:#182238;border-color:#46516d;color:#f1f1ff}
+html[data-theme="dark"] .pm-account-input[readonly]{background:#28324b;color:#adb8d0}
+html[data-theme="dark"] .pm-account-management{border-color:#404b66}
+html[data-theme="dark"] .pm-account-danger{background:#301f31;border-color:#714052}
+html[data-theme="dark"] .pm-account-danger h3{color:#ffc0cf}
+html[data-theme="dark"] .pm-danger-trigger{background:#361f30;border-color:#90556a;color:#ffbacc}
+html[data-theme="dark"] .pm-block-row{border-top-color:#3c4761}
+html[data-theme="dark"] .pm-empty-blocks,html[data-theme="dark"] .pm-list-loading{border-color:#45516c;color:#b1bcd2}
+html[data-theme="dark"] .pm-unblock-btn{background:#363255;color:#d3c8ff;border-color:#54497d}
+html[data-theme="dark"] .pm-account-paused{background:#39301e;border-color:#816c3a}
+html[data-theme="dark"] .pm-account-paused strong,html[data-theme="dark"] .pm-account-paused p{color:#ffe1a8}
+@media(max-width:720px){.pm-account-grid{grid-template-columns:1fr}.pm-account-management{align-items:flex-start;flex-direction:column}.pm-account-management details{width:100%}.pm-account-management details[open]{min-width:0}.pm-account-paused{align-items:flex-start;flex-direction:column}}
+@media(max-width:420px){.pm-account-body{padding:0 12px 13px}.pm-account-tile{padding:16px 13px}.pm-account-management{padding:17px 14px}.pm-block-list{padding:0 12px 15px}.pm-unblock-btn{padding:10px}.pm-block-row{gap:9px}.pm-block-avatar{width:36px;height:36px}}
+@media(prefers-reduced-motion:reduce){.pm-account-input{scroll-behavior:auto}}
+/* Honor HTML visibility regardless of flex/grid declarations above. */
+#pmAccountPaused[hidden],#pmAccountManagement[hidden],#pmDeleteDetails[hidden]{display:none!important}
