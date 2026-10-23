@@ -88,3 +88,13 @@ html[data-theme="dark"] .site-header .theme-toggle:hover{background:#38325a;colo
  html[data-theme="dark"].pm-member-header .pm-search-input-wrap input{background:transparent!important;color:#eff1ff!important;}
  html[data-theme="dark"].pm-member-header .pm-search-input-wrap input::placeholder{color:#a7b3d1!important;}
 }
+
+
+@media(max-width:720px){
+ html.pm-member-header:not(.pm-mobile-home-search) .nav-shell{grid-template-rows:48px;row-gap:0;padding-bottom:11px}
+ html.pm-member-header:not(.pm-mobile-home-search) .pm-global-search,
+ html.pm-member-header:not(.pm-mobile-home-search) .pm-mobile-filter-wrap{display:none!important}
+}
+@media(max-width:360px){
+ html.pm-member-header:not(.pm-mobile-home-search) .nav-shell{grid-template-rows:43px;padding-bottom:9px}
+}

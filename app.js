@@ -230,7 +230,10 @@
   }
  }
  function updateMode(){
-  document.documentElement.classList.toggle('pm-member-header',Boolean(db.user));if(topHub)topHub.hidden=!db.user;const profileMenu=$('pmTopProfileMenu');if(profileMenu)profileMenu.hidden=!db.user;if(!db.user)closeTopProfileMenu();
+  const currentPage=location.pathname.split('/').pop()||'index.html';
+  document.documentElement.classList.toggle('pm-member-header',Boolean(db.user));
+  document.documentElement.classList.toggle('pm-mobile-home-search',currentPage==='index.html');
+  if(topHub)topHub.hidden=!db.user;const profileMenu=$('pmTopProfileMenu');if(profileMenu)profileMenu.hidden=!db.user;if(!db.user)closeTopProfileMenu();
   const nav=$('primaryNav'),foot=document.querySelector('.footer-nav');
   if(nav){nav.innerHTML=db.user?memberNav:guestNav;const file=location.pathname.split('/').pop()||'index.html';nav.querySelectorAll('[data-page]').forEach(a=>{if(a.dataset.page===file){a.classList.add('active');a.setAttribute('aria-current','page')}});}
   if(foot)foot.innerHTML=db.user?'<a href="matches.html">Find peers</a><a href="groups.html">Study groups</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="saved.html">Saved items</a><a href="resources.html">Resources</a><a href="faq.html">FAQs</a><a href="student.html">My profile</a>':'<a href="about.html">About</a><a href="resources.html">Resources</a><a href="faq.html">FAQs</a><a href="contact.html">Contact</a><a href="guidelines.html">Guidelines</a>';
@@ -478,6 +481,16 @@
   $('prevPeers')?.addEventListener('click',()=>{if(page>0){page--;load(true)}});
   $('nextPeers')?.addEventListener('click',()=>{if((page+1)*PAGE_SIZE<count){page++;load(true)}});
   const handleCardAction=async e=>{
+   const expand=e.target.closest('[data-peer-expand]');
+   if(expand){
+    const card=expand.closest('.directory-card');
+    if(!card)return;
+    const open=!card.classList.contains('is-expanded');
+    card.classList.toggle('is-expanded',open);
+    expand.setAttribute('aria-expanded',String(open));
+    expand.setAttribute('aria-label',open?'Hide student details':'Show student details');
+    return;
+   }
    const connect=e.target.closest('[data-connect]'),report=e.target.closest('[data-report]');
    if(connect){
     const id=connect.dataset.connect;if(!validPeerId(id)||connect.disabled)return;
@@ -529,7 +542,7 @@
   return `<article class="peer-card peer-card-v2 directory-card">
    <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<span class="directory-status match-score ${matchTier}" aria-label="${score} percent compatibility score"><span class="match-number">${score}%</span><span class="match-label">match</span></span>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peer Match'}</span>`}</div>
    <div class="directory-main"><h3><a class="profile-name-link" href="student.html?id=${encodeURIComponent(p.id)}">${esc(name)}</a>${p.is_verified?`<span class="verified-label" title="Institution reviewed by administrator">${PM.icon('shield')} Verified</span>`:''}</h3></div>
-   <div class="directory-detail-grid">
+   <div class="directory-expandable" id="peer-details-${esc(p.id)}"><div class="directory-detail-grid">
      <div class="directory-detail"><p class="directory-field-label">${courseLabel}</p><p class="directory-detail-value${!p.course?' is-empty':''}">${esc(PM.formatStudyText(p.course)||'Not added yet')}</p></div>
      <div class="directory-detail"><p class="directory-field-label">Institution</p><p class="directory-detail-value directory-institution${!p.institution?' is-empty':''}">${esc(PM.formatStudyText(p.institution)||'Not added yet')}</p></div>
      ${p.campus?`<div class="directory-detail directory-campus"><p class="directory-field-label">Campus</p><p class="directory-detail-value">${esc(PM.formatStudyText(p.campus))}</p></div>`:''}
@@ -543,7 +556,8 @@
      <div class="directory-preference"><p class="directory-field-label">Availability</p><span class="directory-pref-value${!timeLabels[p.availability]?' is-empty':''}">${esc(availability)}</span></div>
    </div>
    ${!complete?'<p class="directory-welcome">This student is getting started. You can still say hello!</p>':''}
-   <div class="peer-card-actions"><a class="view-profile-btn" href="student.html?id=${encodeURIComponent(p.id)}">${PM.icon('user')} Profile</a><button type="button" class="connect-btn" data-connect="${esc(p.id)}" data-connect-state="${connection.state}" ${connection.disabled?'disabled':''}>${PM.icon(connection.state==='accepted'||connection.state==='pending'?'check':'users')} ${connection.label}</button><button type="button" class="small-ghost directory-share" data-share-profile="${esc(p.id)}" title="Share ${esc(name)}'s profile" aria-label="Share profile for ${esc(name)}">${PM.icon('share')}</button><button type="button" class="small-ghost directory-report" title="Report profile" aria-label="Report ${esc(name)}" data-report="${esc(p.id)}">${PM.icon('more')}</button></div>
+   </div>
+   <div class="peer-card-actions"><a class="view-profile-btn" href="student.html?id=${encodeURIComponent(p.id)}">${PM.icon('user')} Profile</a><button type="button" class="connect-btn" data-connect="${esc(p.id)}" data-connect-state="${connection.state}" ${connection.disabled?'disabled':''}>${PM.icon(connection.state==='accepted'||connection.state==='pending'?'check':'users')} ${connection.label}</button><button type="button" class="directory-expand-button" data-peer-expand aria-controls="peer-details-${esc(p.id)}" aria-label="Show student details" aria-expanded="false" title="Show more student details">${PM.icon('chevron-down')}</button><button type="button" class="small-ghost directory-share" data-share-profile="${esc(p.id)}" title="Share ${esc(name)}'s profile" aria-label="Share profile for ${esc(name)}">${PM.icon('share')}</button><button type="button" class="small-ghost directory-report" title="Report profile" aria-label="Report ${esc(name)}" data-report="${esc(p.id)}">${PM.icon('more')}</button></div>
   </article>`;
  }
  const loadFailure=(title)=>`<div class="empty-panel" style="grid-column:1/-1" role="alert"><h3>${esc(title)}</h3><p>Check your connection and try again. Your saved information has not been changed.</p><button type="button" class="btn btn-secondary" onclick="location.reload()">Retry loading</button></div>`;
@@ -564,16 +578,36 @@
    const display=groupsCache.filter(g=>[g.name,g.description,g.module,g.institution,g.campus].some(x=>PM.normalize(x).includes(q))&&(!only||memberships.some(m=>m.group_id===g.id)||g.created_by===db.identity()));
    $('groupsGrid').innerHTML=display.map(g=>{
     const joined=memberships.some(m=>m.group_id===g.id),byMe=g.created_by===db.identity();
-    return `<article class="platform-card"><div class="platform-card-top"><span class="platform-card-icon">${PM.icon("users")}</span><span class="meta-badge ${byMe?'admin-owner-badge':''}">${byMe?'OWNER':joined?'JOINED':esc(g.module)}</span></div><h3>${esc(g.name)}</h3><p>${esc(g.description||'A friendly place to learn together.')}</p><small>⌂ ${esc(g.institution)}${g.campus?' · '+esc(g.campus):''}</small><div class="platform-card-meta"><span>◈ ${esc(g.module)}</span>${''}</div><div class="platform-card-bottom admin-card-actions">${byMe?`<button type="button" class="btn btn-secondary owner-button" disabled title="The group owner cannot leave; delete the group to close it.">Group owner</button>`:`<button type="button" class="btn ${joined?'btn-secondary':'btn-primary'}" data-join="${esc(g.id)}">${joined?'Leave group':'Join group'} ${joined?'↗':'+'}</button>`}${joined?`<button type="button" class="small-ghost" data-room="${esc(g.id)}">Discussion →</button>`:''}${byMe?`<button type="button" class="small-ghost manage-action" data-manage="${esc(g.id)}">${PM.icon("edit")} Manage</button>`:''}</div></article>`;
+    const badge=byMe?'OWNER':joined?'JOINED':PM.formatStudyText(g.module)||'Study group';
+    const location=[PM.formatStudyText(g.institution),PM.formatStudyText(g.campus)].filter(Boolean).join(' · ');
+    return `<article class="platform-card group-directory-card">
+      <div class="group-card-summary">
+        <div class="platform-card-top group-card-top"><span class="platform-card-icon">${PM.icon("users")}</span><span class="meta-badge ${byMe?'admin-owner-badge':''}">${esc(badge)}</span></div>
+        <h3>${esc(g.name)}</h3>
+        <p class="group-card-summary-line">${esc(PM.formatStudyText(g.module)||'Study group')} · ${esc(location||'Campus community')}</p>
+      </div>
+      <div class="group-card-expandable" id="group-details-${esc(g.id)}">
+        <p>${esc(g.description||'A friendly place to learn together.')}</p>
+        <div class="platform-card-meta group-card-meta"><span>Module: ${esc(PM.formatStudyText(g.module)||'Not set')}</span>${g.institution?`<span>School: ${esc(PM.formatStudyText(g.institution))}</span>`:''}${g.campus?`<span>Campus: ${esc(PM.formatStudyText(g.campus))}</span>`:''}</div>
+      </div>
+      <div class="platform-card-bottom admin-card-actions group-card-actions">${byMe?`<button type="button" class="btn btn-secondary owner-button" disabled title="The group owner cannot leave; delete the group to close it.">Group owner</button>`:`<button type="button" class="btn ${joined?'btn-secondary':'btn-primary'}" data-join="${esc(g.id)}">${joined?'Leave group':'Join group'} ${joined?'↗':'+'}</button>`}${joined?`<button type="button" class="small-ghost" data-room="${esc(g.id)}">Discussion →</button>`:''}${byMe?`<button type="button" class="small-ghost manage-action" data-manage="${esc(g.id)}">${PM.icon("edit")} Manage</button>`:''}<button type="button" class="small-ghost group-card-toggle" data-group-expand aria-controls="group-details-${esc(g.id)}" aria-expanded="false" aria-label="Show group details">${PM.icon('chevron-down')}</button></div>
+    </article>`;
    }).join('');
    $('groupsEmpty').classList.toggle('hidden',display.length>0);
    $('groupCount').textContent=`${display.length} ${display.length===1?'group':'groups'} found`;
   };
   $('groupSearch')?.addEventListener('input',render);$('myGroupsOnly')?.addEventListener('input',render);
   $('groupsGrid').addEventListener('click',async e=>{
-   const manage=e.target.closest('[data-manage]'),room=e.target.closest('[data-room]'),btn=e.target.closest('[data-join]');
+   const manage=e.target.closest('[data-manage]'),room=e.target.closest('[data-room]'),toggle=e.target.closest('[data-group-expand]'),btn=e.target.closest('[data-join]');
    if(manage){await openAdmin(manage.dataset.manage);return;}
    if(room){await openRoom(room.dataset.room);return;}
+   if(toggle){
+     const card=toggle.closest('.group-directory-card');
+     const expanded=card?.classList.toggle('is-expanded');
+     toggle.setAttribute('aria-expanded',String(Boolean(expanded)));
+     toggle.setAttribute('aria-label',expanded?'Hide group details':'Show group details');
+     return;
+   }
    if(!btn||!requireSignedIn())return;
    const groupId=btn.dataset.join;
    if(ownsGroup(groupId)){notify('Group owners cannot leave their own group. Use Manage to delete it.');return;}
@@ -592,6 +626,7 @@
    groupOpened=id;const g=groupsCache.find(x=>x.id===id);
    if(!g||!memberships.some(m=>m.group_id===id)){groupOpened=null;return;}
    const room=$('groupRoom');room.classList.remove('hidden');$('roomTitle').textContent=g.name;
+   if($('roomSubtitle'))$('roomSubtitle').textContent=`Group chat · ${PM.formatStudyText(g.module)||'Study group'}${g.campus?` · ${PM.formatStudyText(g.campus)}`:''}`;
    await reloadPosts();room.scrollIntoView({block:'start',behavior:'smooth'});
   }
   async function reloadPosts(){
@@ -753,7 +788,7 @@
   $('chatMobileBack')?.addEventListener('click',()=>{$('conversationList')?.closest('.messaging-layout')?.classList.remove('chat-open');selectedPeer=null;closeEmojiPicker();if($('emojiPickerToggle'))$('emojiPickerToggle').disabled=true;});
   function renderContacts(ids){$('conversationList').innerHTML=ids.map(id=>{const p=inboxPeers.find(x=>x.id===id);if(!p)return '';return `<button type="button" class="conversation-item ${id===selectedPeer?'selected':''}" data-peer="${esc(id)}">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}<span><strong>${esc(PM.formatPersonName(p.full_name))}</strong><small>${esc(PM.formatStudyText(p.institution))}</small></span></button>`}).join('');$('conversationList').querySelectorAll('[data-peer]').forEach(btn=>btn.addEventListener('click',()=>openChat(btn.dataset.peer)))}
   async function openChat(id){const p=inboxPeers.find(x=>x.id===id);if(!p||blocked.includes(id))return;selectedPeer=id;const layout=$('conversationList').closest('.messaging-layout');layout?.classList.add('chat-open');if(matchMedia('(max-width:720px)').matches)requestAnimationFrame(()=>layout?.scrollIntoView({block:'start'}));
-   $('conversationList').querySelectorAll('[data-peer]').forEach(el=>el.classList.toggle('selected',el.dataset.peer===id));$('chatHeader').innerHTML=`<a href="student.html?id=${encodeURIComponent(p.id)}" aria-label="Open ${esc(PM.formatPersonName(p.full_name))} profile">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}</a><div><strong>${esc(PM.formatPersonName(p.full_name))} ${p.is_verified?'✓':''}</strong><small>${esc(PM.formatStudyText(p.institution))} · ${esc(PM.formatStudyText(p.campus)||'Campus not listed')}</small>${p.show_activity!==false?`<small class="activity-status" id="peerActivity">${esc(PM.ui.status(p))}</small>`:''}</div><a class="text-button" href="student.html?id=${encodeURIComponent(p.id)}">Profile ↗</a><button class="text-button" type="button" id="safetyOptions">Safety ⋯</button>`;
+   $('conversationList').querySelectorAll('[data-peer]').forEach(el=>el.classList.toggle('selected',el.dataset.peer===id));$('chatHeader').innerHTML=`<a href="student.html?id=${encodeURIComponent(p.id)}" class="pm-chat-header-avatar-link" aria-label="Open ${esc(PM.formatPersonName(p.full_name))} profile">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}</a><div class="pm-chat-header-main"><span class="pm-chat-header-kicker">DIRECT MESSAGE</span><strong>${esc(PM.formatPersonName(p.full_name))} ${p.is_verified?'✓':''}</strong><small>School: ${esc(PM.formatStudyText(p.institution)||'Not listed')}</small><small>Campus: ${esc(PM.formatStudyText(p.campus)||'Not listed')}</small>${p.show_activity!==false?`<small class="activity-status" id="peerActivity">${esc(PM.ui.status(p))}</small>`:''}</div><a class="text-button" href="student.html?id=${encodeURIComponent(p.id)}">Profile ↗</a><button class="text-button" type="button" id="safetyOptions">Safety ⋯</button>`;
    $('messageBody').disabled=false;$('sendMessageBtn').disabled=false;$('emojiPickerToggle').disabled=false;
    $('safetyOptions').addEventListener('click',async()=>{const choice=prompt('Type BLOCK to stop future messages, or REPORT to flag abuse.');if(!choice)return;if(choice.toUpperCase()==='BLOCK'){if(!confirm('Block this account? You will no longer be able to message each other.'))return;try{await db.blockPeer(id);blocked.push(id);notify('Student blocked. ');location.href='messages.html'}catch(e){handleError(e)}}else if(choice.toUpperCase()==='REPORT'){const reason=prompt('Describe the issue (5–500 characters):');if(reason?.trim().length>=5&&reason.trim().length<=500)try{await db.reportPeer(id,reason.trim());notify('Report recorded. ')}catch(e){handleError(e)}else notify('Please enter a reason between 5 and 500 characters.')}});
    await reloadThread();
@@ -800,13 +835,13 @@
   $('messageForm').addEventListener('submit',async e=>{
     e.preventDefault();if(!selectedPeer||!requireSignedIn())return;
     const body=val('messageBody'),files=$('chatFileInput')?.files;if(!body&&!files?.length)return;
-    const btn=$('sendMessageBtn');btn.disabled=true;btn.textContent='Sending…';
+    const btn=$('sendMessageBtn'),originalSendMarkup=btn.innerHTML;btn.disabled=true;btn.textContent='Sending…';
     try{const message=await db.sendMessage(selectedPeer,body||'Shared an attachment');
-      $('messageBody').value='';
+      $('messageBody').value='';$('messageBody').dispatchEvent(new Event('input',{bubbles:true}));
       if(files?.length){try{await db.uploadAttachments('message',message.id,files)}catch(err){await reloadThread();handleError(new Error('Message sent, but the file was not attached: '+err.message));return}}
       if($('chatFileInput'))$('chatFileInput').value='';if($('chatFilesChosen'))$('chatFilesChosen').textContent='';
       await reloadThread();notify('Message sent!');
-    }catch(err){handleError(err)}finally{btn.disabled=false;btn.textContent='Send ↗'}
+    }catch(err){handleError(err)}finally{btn.disabled=false;btn.innerHTML=originalSendMarkup}
   });
   if(db.client&&db.user)setInterval(async()=>{
     if(!selectedPeer||document.visibilityState!=='visible')return;

@@ -154,7 +154,12 @@
     <section class="social-panel" aria-label="${self?'About me':'About the student'}">
      <div class="pm-profile-panel-head"><div><span class="social-eyebrow">${self?'YOUR PROFILE':'ABOUT'}</span><h2>${self?'About me':'Get to know '+esc(firstName)}</h2></div>${aboutLinks}</div>
      ${aboutBody}
-     <div class="profile-detail-chips"><span>◈ ${esc(PM.formatStudyText(p.institution)||'Institution not added')}</span><span>⌁ ${esc(p.availability||'Flexible')}</span><span>◐ ${esc(p.study_method||'Hybrid')}</span></div>
+     <div class="profile-detail-chips profile-detail-labelled">
+       <span><strong>${esc(p.institution_type==='school'?'School':'Institution')}</strong><small>${esc(PM.formatStudyText(p.institution)||'Not added')}</small></span>
+       <span><strong>Available times</strong><small>${esc(PM.formatStudyText(p.availability)||'Flexible')}</small></span>
+       <span><strong>Study format</strong><small>${esc(PM.formatStudyText(p.study_method)||'Hybrid')}</small></span>
+       ${p.campus?`<span><strong>Campus</strong><small>${esc(PM.formatStudyText(p.campus))}</small></span>`:''}
+     </div>
      <h3>Modules &amp; interests</h3><div class="profile-detail-chips">${modulesContent}</div>
      ${self&&!modules.length?'<a class="pm-owner-inline-link" href="profile.html">Add subjects or modules →</a>':''}
     </section>

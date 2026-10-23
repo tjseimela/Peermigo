@@ -3,7 +3,7 @@
   'use strict';
   const destinations = [
     ['index.html', 'Home', 'home'],
-    ['matches.html', 'Find peers', 'search'],
+    ['matches.html', 'Find Peers', 'users-plus'],
     ['groups.html', 'Study groups', 'users'],
     ['messages.html', 'Messages', 'message'],
     ['notes.html', 'Notes', 'book']

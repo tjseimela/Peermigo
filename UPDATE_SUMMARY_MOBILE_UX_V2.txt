@@ -1,0 +1,36 @@
+Peer Match mobile UX update v2
+
+Implemented changes:
+1. Group cards are now foldable on mobile.
+   - Compact summary view by default.
+   - Expand/collapse button added.
+   - Expanded state reveals description + module/school/campus details.
+
+2. Inbox / direct messages header improved.
+   - Student profile picture remains visible at the top of the open chat.
+   - Header now clearly shows student name, school, campus, and activity status.
+
+3. Group discussion header improved.
+   - Group name is shown clearly at the top.
+   - Subtitle now updates with group/module context.
+
+4. Mobile search bar behavior adjusted.
+   - The mobile search bar and mobile search filter now stay on Home only.
+   - Other mobile pages keep the cleaner single-row header.
+
+5. Student profile labels improved.
+   - Chips now clearly label School/Institution, Available times, Study format, and Campus.
+
+Files mainly updated:
+- app.js
+- features.js
+- peer-mobile-upgrade.css
+- mobile-header-refresh.css
+- social.css
+- groups.html
+- student.html
+
+Preview images included separately in /mnt/data:
+- Peer-Match-Mobile-UX-v2-Profile-Labels-Preview.png
+- Peer-Match-Mobile-UX-v2-Group-Cards-Preview.png
+- Peer-Match-Mobile-UX-v2-Chat-Headers-Preview.png

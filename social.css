@@ -59,6 +59,12 @@
 .student-actions{display:flex;gap:10px;flex-wrap:wrap}.student-profile-info{display:grid;grid-template-columns:.74fr 1.26fr;gap:24px}
 .student-profile-info .social-panel{height:fit-content}.student-profile-info .social-panel>p{font-size:13px;line-height:1.9}
 .profile-detail-chips{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 30px}.profile-detail-chips span{font-size:11px;background:#f0efff;padding:8px 11px;border-radius:8px;color:#5449a8;font-weight:700}
+.profile-detail-chips.profile-detail-labelled span{display:flex;flex-direction:column;gap:4px;align-items:flex-start;min-width:120px;padding:10px 12px}
+.profile-detail-chips.profile-detail-labelled span strong{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6d63b2}
+.profile-detail-chips.profile-detail-labelled span small{font-size:12px;line-height:1.35;color:#5449a8;font-weight:700}
+html[data-theme=dark] .profile-detail-chips.profile-detail-labelled span strong{color:#b9afff}
+html[data-theme=dark] .profile-detail-chips.profile-detail-labelled span small{color:#ece9ff}
+
 .student-profile-info .note-post{box-shadow:none;margin-top:16px;padding:19px;border-radius:14px}
 .email-panel{margin-top:29px}.email-icon{display:inline-flex;justify-content:center;align-items:center;border-radius:16px;width:54px;height:54px;background:#eeecff;color:#6758d6;font-size:25px}
 .email-actions{display:flex;gap:18px;align-items:center;margin-top:24px;font-size:12px;color:#438e70}.email-disclaimer{font-size:11px!important;line-height:1.7;margin-top:20px}
