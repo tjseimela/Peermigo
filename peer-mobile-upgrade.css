@@ -96,3 +96,9 @@
   .group-directory-card .group-card-actions{grid-template-columns:minmax(0,1fr) auto auto;grid-auto-flow:row}
   .group-directory-card .group-card-actions .small-ghost.manage-action{grid-column:2}
 }
+/* Group details: labels are visibly quieter than the values they describe. */
+.group-directory-card .group-card-meta .pm-group-fact{display:flex;flex-direction:column;align-items:flex-start;gap:5px;background:transparent!important;border:0!important;border-radius:0;padding:0 14px 5px 0;max-width:100%;min-width:110px;color:inherit!important}
+.group-directory-card .group-card-meta .pm-group-fact small{font-size:10px;line-height:1.4;font-weight:800;letter-spacing:.07em;color:#97a1b6!important}
+.group-directory-card .group-card-meta .pm-group-fact b{font-size:12px;font-weight:700;line-height:1.45;color:#43506a;overflow-wrap:anywhere}
+html[data-theme="dark"] .group-directory-card .group-card-meta .pm-group-fact small{color:#a8b5d2!important}
+html[data-theme="dark"] .group-directory-card .group-card-meta .pm-group-fact b{color:#eef0ff}

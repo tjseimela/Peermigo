@@ -238,12 +238,12 @@
   if(nav){nav.innerHTML=db.user?memberNav:guestNav;const file=location.pathname.split('/').pop()||'index.html';nav.querySelectorAll('[data-page]').forEach(a=>{if(a.dataset.page===file){a.classList.add('active');a.setAttribute('aria-current','page')}});}
   if(foot)foot.innerHTML=db.user?'<a href="matches.html">Find peers</a><a href="groups.html">Study groups</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="saved.html">Saved items</a><a href="resources.html">Resources</a><a href="faq.html">FAQs</a><a href="student.html">My profile</a>':'<a href="about.html">About</a><a href="resources.html">Resources</a><a href="faq.html">FAQs</a><a href="contact.html">Contact</a><a href="guidelines.html">Guidelines</a>';
  }
- const privatePaths=new Set(['matches.html','groups.html','sessions.html','messages.html','notes.html','notifications.html','profile.html','student.html','saved.html','settings.html']);
+ const privatePaths=new Set(['matches.html','groups.html','sessions.html','messages.html','group-chat.html','notes.html','notifications.html','profile.html','student.html','saved.html','settings.html']);
  function safeNext(){
   const wanted=new URLSearchParams(location.search).get('next');if(!wanted||wanted.startsWith('//')||wanted.includes('\\'))return null;
   try{const u=new URL(wanted,location.href);const page=u.pathname.split('/').pop();if(u.pathname!=='/'+page||wanted.includes('..')||u.origin!==location.origin||!privatePaths.has(page)||u.username||u.password)return null;
    // Only return to known student pages and preserve benign query parameters.
-   const safeQuery=new URLSearchParams();for(const key of (page==='student.html'?['id','note']:page==='messages.html'?['peer']:page==='groups.html'?['group']:page==='matches.html'?['institution']:[])){
+   const safeQuery=new URLSearchParams();for(const key of (page==='student.html'?['id','note']:page==='messages.html'?['peer']:page==='groups.html'||page==='group-chat.html'?['group']:page==='matches.html'?['institution']:[])){
     const value=u.searchParams.get(key);if(value&&value.length<=150&&/^[a-zA-Z0-9_ .-]+$/.test(value))safeQuery.set(key,value);
    }
    return page+(safeQuery.size?'?'+safeQuery.toString():'');
@@ -562,7 +562,7 @@
  }
  const loadFailure=(title)=>`<div class="empty-panel" style="grid-column:1/-1" role="alert"><h3>${esc(title)}</h3><p>Check your connection and try again. Your saved information has not been changed.</p><button type="button" class="btn btn-secondary" onclick="location.reload()">Retry loading</button></div>`;
  const gateMarkup=(title)=>`<div class="empty-panel" style="grid-column:1/-1"><h3>${esc(title)}</h3><p>This directory is available to authenticated students only.</p><a href="account.html" class="btn btn-primary">Sign in / Create account</a></div>`;
- let groupsCache=[],memberships=[],groupOpened=null,groupPeers=[],managingGroup=null;
+ let groupsCache=[],memberships=[],managingGroup=null;
  async function initGroups(){
   if(!$('groupsGrid'))return;
   if(!db.user){$('groupsGrid').innerHTML=gateMarkup('Sign in to join study groups');return;}
@@ -588,9 +588,9 @@
       </div>
       <div class="group-card-expandable" id="group-details-${esc(g.id)}">
         <p>${esc(g.description||'A friendly place to learn together.')}</p>
-        <div class="platform-card-meta group-card-meta"><span>Module: ${esc(PM.formatStudyText(g.module)||'Not set')}</span>${g.institution?`<span>School: ${esc(PM.formatStudyText(g.institution))}</span>`:''}${g.campus?`<span>Campus: ${esc(PM.formatStudyText(g.campus))}</span>`:''}</div>
+        <div class="platform-card-meta group-card-meta"><span class="pm-group-fact"><small>MODULE</small><b>${esc(PM.formatStudyText(g.module)||'Not set')}</b></span>${g.institution?`<span class="pm-group-fact"><small>INSTITUTION</small><b>${esc(PM.formatStudyText(g.institution))}</b></span>`:''}${g.campus?`<span class="pm-group-fact"><small>CAMPUS</small><b>${esc(PM.formatStudyText(g.campus))}</b></span>`:''}</div>
       </div>
-      <div class="platform-card-bottom admin-card-actions group-card-actions">${byMe?`<button type="button" class="btn btn-secondary owner-button" disabled title="The group owner cannot leave; delete the group to close it.">Group owner</button>`:`<button type="button" class="btn ${joined?'btn-secondary':'btn-primary'}" data-join="${esc(g.id)}">${joined?'Leave group':'Join group'} ${joined?'↗':'+'}</button>`}${joined?`<button type="button" class="small-ghost" data-room="${esc(g.id)}">Discussion →</button>`:''}${byMe?`<button type="button" class="small-ghost manage-action" data-manage="${esc(g.id)}">${PM.icon("edit")} Manage</button>`:''}<button type="button" class="small-ghost group-card-toggle" data-group-expand aria-controls="group-details-${esc(g.id)}" aria-expanded="false" aria-label="Show group details">${PM.icon('chevron-down')}</button></div>
+      <div class="platform-card-bottom admin-card-actions group-card-actions">${byMe?`<button type="button" class="btn btn-secondary owner-button" disabled title="The group owner cannot leave; delete the group to close it.">Group owner</button>`:`<button type="button" class="btn ${joined?'btn-secondary':'btn-primary'}" data-join="${esc(g.id)}">${joined?'Leave group':'Join group'} ${joined?'↗':'+'}</button>`}${joined?`<button type="button" class="small-ghost" data-room="${esc(g.id)}">Open chat →</button>`:''}${byMe?`<button type="button" class="small-ghost manage-action" data-manage="${esc(g.id)}">${PM.icon("edit")} Manage</button>`:''}<button type="button" class="small-ghost group-card-toggle" data-group-expand aria-controls="group-details-${esc(g.id)}" aria-expanded="false" aria-label="Show group details">${PM.icon('chevron-down')}</button></div>
     </article>`;
    }).join('');
    $('groupsEmpty').classList.toggle('hidden',display.length>0);
@@ -600,7 +600,7 @@
   $('groupsGrid').addEventListener('click',async e=>{
    const manage=e.target.closest('[data-manage]'),room=e.target.closest('[data-room]'),toggle=e.target.closest('[data-group-expand]'),btn=e.target.closest('[data-join]');
    if(manage){await openAdmin(manage.dataset.manage);return;}
-   if(room){await openRoom(room.dataset.room);return;}
+   if(room){location.href='group-chat.html?group='+encodeURIComponent(room.dataset.room);return;}
    if(toggle){
      const card=toggle.closest('.group-directory-card');
      const expanded=card?.classList.toggle('is-expanded');
@@ -612,7 +612,6 @@
    const groupId=btn.dataset.join;
    if(ownsGroup(groupId)){notify('Group owners cannot leave their own group. Use Manage to delete it.');return;}
    try{if(memberships.some(m=>m.group_id===groupId))await db.leaveGroup(groupId);else await db.joinGroup(groupId);
-     if(groupOpened===groupId){$('groupRoom').classList.add('hidden');groupOpened=null;}
      await load();notify('Group membership updated. ');}
    catch(err){handleError(err);}
   });
@@ -620,38 +619,6 @@
    const group={name:val('groupName'),module:val('groupModule'),institution:val('groupInstitution'),campus:val('groupCampus'),description:val('groupDescription')};
    try{await db.createGroup(group);f.reset();f.classList.add('hidden');await load();notify('Your study group is ready! ');}
    catch(err){handleError(err);}
-  });
-  $('closeGroupRoom')?.addEventListener('click',()=>{$('groupRoom').classList.add('hidden');groupOpened=null;});
-  async function openRoom(id){
-   groupOpened=id;const g=groupsCache.find(x=>x.id===id);
-   if(!g||!memberships.some(m=>m.group_id===id)){groupOpened=null;return;}
-   const room=$('groupRoom');room.classList.remove('hidden');$('roomTitle').textContent=g.name;
-   if($('roomSubtitle'))$('roomSubtitle').textContent=`Group chat · ${PM.formatStudyText(g.module)||'Study group'}${g.campus?` · ${PM.formatStudyText(g.campus)}`:''}`;
-   await reloadPosts();room.scrollIntoView({block:'start',behavior:'smooth'});
-  }
-  async function reloadPosts(){
-   if(!groupOpened)return;
-   try{const posts=await db.groupPosts(groupOpened),owner=ownsGroup(groupOpened);
-    groupPeers=await db.profilesByIds([...new Set(posts.map(x=>x.author_id))]);
-    $('groupPostList').innerHTML=posts.length?posts.map(p=>{const author=groupPeers.find(x=>x.id===p.author_id);
-     return `<div class="post-card"><div class="admin-post-head"><div class="post-author">${PM.ui.avatar(author?.full_name||'Student',author?.avatar_path,'post-avatar')}<strong><a href="student.html?id=${encodeURIComponent(p.author_id)}">${esc(PM.formatPersonName(author?.full_name)||'Group member')}</a></strong><small>${esc(prettyDate(p.created_at))}</small></div>${owner?`<button type="button" class="text-button post-remove" data-remove-post="${esc(p.id)}" aria-label="Remove this group post">Remove</button>`:''}</div><p>${esc(p.body)}</p><div class="post-files" data-post-files="${esc(p.id)}"></div></div>`;
-    }).join(''):'<p class="loading-state">No posts yet. Start the conversation!</p>';
-    const postContainers=[...$('groupPostList').querySelectorAll('[data-post-files]')];const postAttachments=await db.attachmentsForMany('post',postContainers.map(x=>x.dataset.postFiles));await Promise.all(postContainers.map(item=>PM.ui.showFiles(item,'post',item.dataset.postFiles,false,postAttachments[item.dataset.postFiles]||[])));
-   }catch(err){handleError(err);}
-  }
-  $('groupPostList')?.addEventListener('click',async e=>{
-   const btn=e.target.closest('[data-remove-post]');if(!btn||!groupOpened||!ownsGroup(groupOpened)||!requireSignedIn())return;
-   if(!confirm('Remove this discussion post? This cannot be undone.'))return;
-   try{await db.deleteGroupPost(groupOpened,btn.dataset.removePost);await reloadPosts();notify('Discussion post removed.');}catch(err){handleError(err);}
-  });
-  $('groupPostForm')?.addEventListener('submit',async e=>{e.preventDefault();if(!groupOpened||!requireSignedIn())return;
-   const body=val('groupPostBody');const files=$('groupPostFiles')?.files;if(!body&&!files?.length)return;
-   const submit=$('groupPostForm').querySelector('button[type="submit"]');submit.disabled=true;
-   try{const post=await db.addGroupPost(groupOpened,body||'Shared an attachment');
-    if(files?.length){try{await db.uploadAttachments('post',post.id,files)}catch(err){await reloadPosts();handleError(new Error('Post saved, but the attachment failed: '+err.message));return}}
-    $('groupPostBody').value='';if($('groupPostFiles'))$('groupPostFiles').value='';if($('groupFilesChosen'))$('groupFilesChosen').textContent='';await reloadPosts();
-   }catch(err){handleError(err)}finally{submit.disabled=false}
-
   });
   $('closeGroupAdmin')?.addEventListener('click',()=>{admin.classList.add('hidden');managingGroup=null;});
   async function openAdmin(id){
@@ -701,7 +668,7 @@
   $('editGroupForm')?.addEventListener('submit',async e=>{
    e.preventDefault();if(!managingGroup||!ownsGroup(managingGroup)||!e.currentTarget.reportValidity()||!requireSignedIn())return;
    const changes={name:val('adminGroupName'),module:val('adminGroupModule'),institution:val('adminGroupInstitution'),campus:val('adminGroupCampus'),description:val('adminGroupDescription')};
-   try{await db.editGroup(managingGroup,changes);await load();$('manageGroupName').textContent=changes.name;if(groupOpened===managingGroup)$('roomTitle').textContent=changes.name;notify('Group details updated. ');}
+   try{await db.editGroup(managingGroup,changes);await load();$('manageGroupName').textContent=changes.name;notify('Group details updated. ');}
    catch(err){handleError(err);}
   });
   $('deleteGroup')?.addEventListener('click',async()=>{
@@ -709,12 +676,10 @@
    const g=groupsCache.find(x=>x.id===managingGroup);
    if(!confirm(`Permanently delete “${g?.name||'this group'}” and all its posts, study sessions and RSVPs? This cannot be undone.`))return;
    try{const id=managingGroup;await db.deleteGroup(id);managingGroup=null;admin.classList.add('hidden');
-    if(groupOpened===id){groupOpened=null;$('groupRoom').classList.add('hidden');}
     await load();notify('Study group deleted. ');}
    catch(err){handleError(err);}
   });
-  if(db.client&&db.user){db.client.channel('group-post-events').on('postgres_changes',{event:'INSERT',schema:'public',table:'group_posts'},()=>{if(groupOpened)reloadPosts();}).subscribe();}
-  try{await load();const requested=new URLSearchParams(location.search).get('group');if(requested)await openRoom(requested);}catch(err){handleError(err);$('groupsGrid').innerHTML=loadFailure('Could not load study groups.');}
+  try{await load();const requested=new URLSearchParams(location.search).get('group');if(requested && /^[0-9a-f-]{36}$/i.test(requested))location.replace('group-chat.html?group='+encodeURIComponent(requested));}catch(err){handleError(err);$('groupsGrid').innerHTML=loadFailure('Could not load study groups.');}
  }
  async function initSessions(){
   if(!$('sessionsGrid'))return;

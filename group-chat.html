@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html data-access="student" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="noindex,nofollow" name="robots"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
+<meta content="#f7f9fc" name="theme-color"/>
+<meta content="Peer Match helps students meet study partners, connect at the same campus, join groups and schedule study sessions." name="description"/>
+<title>Peer Match | Group discussion</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<link href="theme.css" rel="stylesheet"/>
+<link href="access.css" rel="stylesheet"/>
+<link href="legal.css" rel="stylesheet"/>
+<script src="theme.js"></script>
+<link href="social.css" rel="stylesheet"/>
+<link crossorigin="" href="https://esm.sh" rel="preconnect"/>
+<link href="refinements.css" rel="stylesheet">
+<link href="mobile-dock.css" rel="stylesheet"/>
+<link href="top-nav.css" rel="stylesheet"/>
+<link href="saved.css" rel="stylesheet"/>
+<link href="compact-headers.css" rel="stylesheet"/>
+<link href="mobile-header-refresh.css" rel="stylesheet"/>
+<link href="workspace-refresh.css" rel="stylesheet"/>
+<link href="peer-mobile-upgrade.css" rel="stylesheet"/>
+</link><link href="group-chat.css" rel="stylesheet"/></head>
+<body class="pm-group-chat-page">
+<div aria-live="polite" class="access-check" id="accessCheck" role="status"><span aria-hidden="true" class="access-spinner"></span><strong>Opening your student space…</strong><span>Checking your Peer Match account</span><a href="account.html">Go to Sign In</a></div>
+<header class="site-header">
+<div class="container nav-shell">
+<a aria-label="Peer Match home" class="brand" href="index.html"><span aria-hidden="true" class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+<nav aria-label="Primary navigation" class="main-nav" id="primaryNav">
+<a class="nav-link" data-page="index.html" href="index.html">Home</a>
+<a class="nav-link" data-page="about.html" href="about.html">About</a>
+<a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
+<a class="nav-account" data-page="account.html" href="account.html" id="authNavLink">Sign in</a>
+<a class="nav-cta join-nav" href="account.html?mode=signup">Join Peer Match <span aria-hidden="true">↗</span></a>
+</nav>
+<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewbox="0 0 24 24" width="21"><path d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z" fill="currentColor"></path><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-linecap="round" stroke-width="1.25"></path></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg></button>
+<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span aria-hidden="true" class="menu-unread-dot" hidden="" id="mobileUnreadDot"></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+</header>
+<main class="pm-group-chat-main" id="mainContent">
+<div class="pm-group-chat-layout" id="pmGroupChatLayout">
+<aside aria-label="Your group chats" class="pm-group-chat-sidebar">
+<div class="pm-group-sidebar-head"><h2>Group inbox</h2><a class="pm-sidebar-group-link" href="groups.html">All groups ↗</a></div>
+<div class="pm-group-chat-list" id="pmGroupChatList"><p class="pm-group-loading">Loading your groups…</p></div>
+</aside>
+<section aria-label="Group discussion" class="pm-group-chat-window">
+<div class="pm-group-chat-header" id="pmGroupChatHeader">
+<a aria-label="Back to study groups" class="pm-group-back" href="groups.html">←</a>
+<span aria-hidden="true" class="pm-group-room-icon">👥</span>
+<div class="pm-group-header-text"><span class="pm-group-chat-kicker">GROUP DISCUSSION</span><h1 id="pmGroupChatTitle">Opening group…</h1><p id="pmGroupChatMeta">Your study community</p></div>
+</div>
+<div aria-live="polite" class="pm-group-chat-status" id="pmGroupChatStatus" role="status"></div>
+<div aria-label="Group messages" aria-live="off" class="pm-group-chat-history" id="pmGroupChatHistory" role="log" tabindex="0"><p class="pm-group-loading">Loading messages…</p></div>
+<form autocomplete="off" class="pm-group-chat-composer" id="pmGroupChatForm">
+<label aria-label="Attach a study file" class="pm-group-attach" for="pmGroupChatFiles" title="Attach a file"><svg aria-hidden="true" class="pm-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="m21.4 11.6-8.5 8.5a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7L10 17.3a2 2 0 0 1-2.8-2.8l8.5-8.5"></path></svg><input accept=".jpg,.jpeg,.png,.webp,.pdf,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx" id="pmGroupChatFiles" multiple="" type="file"/></label>
+<label class="sr-only" for="pmGroupChatBody">Message your group</label><textarea disabled="" enterkeyhint="enter" id="pmGroupChatBody" maxlength="1500" placeholder="Message your group…" rows="1"></textarea>
+<button aria-label="Send group message" class="pm-group-send" disabled="" id="pmGroupChatSend" title="Send message" type="submit"><svg aria-hidden="true" class="pm-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7ZM11 13 22 2"></path></svg></button>
+<span aria-live="polite" class="pm-group-file-summary" id="pmGroupFilesChosen"></span>
+</form>
+</section>
+</div>
+</main>
+<footer class="site-footer">
+<div class="container footer-upper">
+<div class="footer-identity">
+<a aria-label="Peer Match home" class="brand footer-brand" href="index.html"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+<p>Find your people. Learn better together.</p>
+<a aria-label="Email Peer Match support" class="footer-contact" href="mailto:peermatchstudents@gmail.com">peermatchstudents@gmail.com</a>
+</div>
+<nav aria-label="Footer navigation" class="footer-nav">
+<a href="about.html">About</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a><a href="faq.html">FAQs</a><a href="guidelines.html">Guidelines</a>
+</nav>
+</div>
+<div class="container footer-bottom">
+<div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
+<nav aria-label="Legal and help links" class="footer-legal-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
+<span class="footer-credit">Built by tjseimela</span>
+</div>
+</footer>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="group-chat.js"></script></body>
+</html>

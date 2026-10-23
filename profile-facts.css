@@ -1,0 +1,18 @@
+/* Readable, differentiated labels and values for student profiles. */
+.pm-profile-facts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;margin:18px 0 12px}
+.pm-profile-facts .pm-fact{padding:13px 0;min-width:0;border-bottom:1px solid #e9edf5}
+.pm-profile-facts .pm-fact-full{grid-column:1/-1}
+.pm-profile-facts .pm-fact:nth-last-child(-n+2){border-bottom:0;padding-bottom:3px}
+.pm-fact-label{display:block;font-size:10px;line-height:1.4;font-weight:800;letter-spacing:.075em;color:#909cb1;margin:0 0 7px}
+.pm-fact-text{font-size:13px;line-height:1.5;font-weight:750;color:#414e69;display:block;overflow-wrap:anywhere}
+.pm-fact-tags{display:flex;gap:8px;flex-wrap:wrap}
+.pm-fact-tags span{display:inline-block;background:#efedff;color:#6556d5;font-size:11px;line-height:1.5;font-weight:750;border-radius:10px;padding:7px 10px;overflow-wrap:anywhere}
+.pm-fact-pill{display:inline-block;background:#f0f2f7;color:#47536c;font-size:12px;font-weight:700;line-height:1.5;padding:7px 11px;border-radius:10px;overflow-wrap:anywhere}
+.pm-message-student.btn{background:#5b4af0!important;border-color:#5b4af0!important;color:#fff!important;box-shadow:0 9px 24px rgba(89,75,230,.22);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+.pm-message-student.btn:hover{background:#4835e8!important;border-color:#4835e8!important;box-shadow:0 11px 27px rgba(89,75,230,.31)}
+html[data-theme="dark"] .pm-profile-facts .pm-fact{border-color:#35425c}
+html[data-theme="dark"] .pm-fact-label{color:#a2afc7}
+html[data-theme="dark"] .pm-fact-text{color:#e2e9f9}
+html[data-theme="dark"] .pm-fact-tags span{background:#353158;color:#d2c9ff}
+html[data-theme="dark"] .pm-fact-pill{background:#2c354e;color:#dbe4fb}
+@media(max-width:480px){.pm-profile-facts{column-gap:13px}.pm-fact-tags span{font-size:10px}}
