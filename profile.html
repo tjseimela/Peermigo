@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-
-<html lang="en" data-access="student">
+<html data-access="student" lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="robots" content="noindex,nofollow"/>
+<meta content="noindex,nofollow" name="robots"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="#f7f9fc" name="theme-color"/>
 <meta content="Peer Match helps students meet study partners, connect at the same campus, join groups and schedule study sessions." name="description"/>
-<title>Peer Match | My profile</title>
+<title>Peer Match | Edit profile</title>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -18,73 +17,70 @@
 <link href="legal.css" rel="stylesheet"/>
 <script src="theme.js"></script>
 <link href="social.css" rel="stylesheet"/>
-<link rel="preconnect" href="https://esm.sh" crossorigin>
-<link rel="stylesheet" href="refinements.css"/>
-<link rel="stylesheet" href="mobile-dock.css"/>
-<link rel="stylesheet" href="top-nav.css"/>
-<link rel="stylesheet" href="saved.css"/>
-<link rel="stylesheet" href="compact-headers.css"/>
-<link rel="stylesheet" href="mobile-header-refresh.css"/>
-<link rel="stylesheet" href="workspace-refresh.css"/><link rel="stylesheet" href="profile-reminder.css"/>
-</head>
+<link crossorigin="" href="https://esm.sh" rel="preconnect"/>
+<link href="refinements.css" rel="stylesheet"/>
+<link href="mobile-dock.css" rel="stylesheet"/>
+<link href="top-nav.css" rel="stylesheet"/>
+<link href="saved.css" rel="stylesheet"/>
+<link href="compact-headers.css" rel="stylesheet"/>
+<link href="mobile-header-refresh.css" rel="stylesheet"/>
+<link href="workspace-refresh.css" rel="stylesheet"/><link href="profile-reminder.css" rel="stylesheet"/>
+<link href="account-profile-refresh.css" rel="stylesheet"/></head>
 <body>
-<div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peer Match account</span><a href="account.html">Go to Sign In</a></div>
+<div aria-live="polite" class="access-check" id="accessCheck" role="status"><span aria-hidden="true" class="access-spinner"></span><strong>Opening your student space…</strong><span>Checking your Peer Match account</span><a href="account.html">Go to Sign In</a></div>
 <header class="site-header">
 <div class="container nav-shell">
 <a aria-label="Peer Match home" class="brand" href="index.html"><span aria-hidden="true" class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
 <nav aria-label="Primary navigation" class="main-nav" id="primaryNav">
 <a class="nav-link" data-page="index.html" href="index.html">Home</a>
 <a class="nav-link" data-page="about.html" href="about.html">About</a>
-
 <a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
-<a class="nav-account" data-page="account.html" id="authNavLink" href="account.html">Sign in</a>
+<a class="nav-account" data-page="account.html" href="account.html" id="authNavLink">Sign in</a>
 <a class="nav-cta join-nav" href="account.html?mode=signup">Join Peer Match <span aria-hidden="true">↗</span></a>
 </nav>
-<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewBox="0 0 24 24" width="21"><path fill="currentColor" d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z"/><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
-<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span class="menu-unread-dot" id="mobileUnreadDot" aria-hidden="true" hidden></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewbox="0 0 24 24" width="21"><path d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z" fill="currentColor"></path><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-linecap="round" stroke-width="1.25"></path></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg></button>
+<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span aria-hidden="true" class="menu-unread-dot" hidden="" id="mobileUnreadDot"></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
 </div>
 </header>
-<main id="mainContent" class="pm-workspace-page">
-<section class="app-section"><div class="container profile-layout"><div class="form-card upgraded-form"><div class="form-head"><div class="form-head-icon">✦</div><div><h2>Your study profile</h2><p>Help your campus community find you.</p></div></div><div class="form-feedback hidden" id="profileFeedback" role="status"></div>
-<div class="social-panel avatar-upload-panel"><div class="social-panel-head"><div><span class="social-eyebrow">YOUR PHOTO</span><h3>Make your profile yours.</h3><p>Choose a JPG, PNG, or WebP image (up to 3 MB), then drag and zoom to center it.</p></div><div class="avatar-photo-holder" id="photoCurrent"><span class="pm-avatar large"><span>PM</span></span></div></div><form id="avatarForm" class="photo-actions"><input type="file" id="avatarFile" accept="image/jpeg,image/png,image/webp" aria-label="Choose profile photo"/><img id="avatarCropReady" class="pm-avatar-ready" alt="Your adjusted photo" hidden/><button class="btn btn-secondary" type="submit" id="savePhotoButton">Save profile photo</button><button class="text-button" type="button" id="removePhoto">Remove</button></form><small id="photoHelp" class="text-muted">Visible to signed-in students who can view your profile.</small></div>
+<main class="pm-workspace-page" id="mainContent">
+<section class="app-section"><div class="container profile-layout"><div class="form-card upgraded-form"><div class="form-head"><div class="form-head-icon">✎</div><div><h2>Edit your profile</h2><p>Update your study details whenever things change.</p></div></div><div class="pm-edit-intro"><div aria-hidden="true" class="pm-edit-intro-icon">✓</div><div><strong>Your profile is already set up</strong><p>Change only what you want to update. Optional details can be added later. You're not creating another account.</p></div><a class="pm-edit-preview-link" href="student.html">View my profile ↗</a></div>
+<div class="social-panel avatar-upload-panel"><div class="social-panel-head"><div><span class="social-eyebrow">YOUR PHOTO</span><h3>Make your profile yours.</h3><p>Choose a JPG, PNG, or WebP image (up to 3 MB), then drag and zoom to center it.</p></div><div class="avatar-photo-holder" id="photoCurrent"><span class="pm-avatar large"><span>PM</span></span></div></div><form class="photo-actions" id="avatarForm"><input accept="image/jpeg,image/png,image/webp" aria-label="Choose profile photo" id="avatarFile" type="file"/><img alt="Your adjusted photo" class="pm-avatar-ready" hidden="" id="avatarCropReady"/><button class="btn btn-secondary" id="savePhotoButton" type="submit">Save profile photo</button><button class="text-button" id="removePhoto" type="button">Remove</button></form><small class="text-muted" id="photoHelp">Visible to signed-in students who can view your profile.</small></div>
 <form class="styled-form" id="profileForm">
-<div class="form-row"><div class="form-group"><label for="studentName">Full name <span>*</span></label><input autocomplete="name" id="studentName" maxlength="80" minlength="2" placeholder="e.g. Jane Mokoena" required=""/><span class="field-hint">Names are displayed in consistent capitalization (e.g. Mpho Mampa).</span></div><div class="form-group"><label for="institutionType">Institution type <span>*</span></label><select id="institutionType" required=""><option value="">Select one</option><option value="university">University</option><option value="college">College / TVET</option><option value="school">School</option></select></div></div>
-<div class="form-group"><label for="institutionName">University, college or school <span>*</span></label><input id="institutionName" list="institutionSuggestions" maxlength="120" minlength="2" placeholder="Select a suggestion or type your institution" required=""/><datalist id="institutionSuggestions"></datalist><span class="field-hint">Can't see yours? Just type it. Institution names are matched without case sensitivity.</span></div>
-<div class="form-row"><div class="form-group"><label for="campus">Campus / branch</label><input id="campus" maxlength="100" placeholder="e.g. Vanderbijlpark campus"/></div><div class="form-group" id="profileCourseGroup"><label for="course">Course / programme</label><input id="course" maxlength="100" placeholder="e.g. Information Technology"/></div><div class="form-group hidden" id="profileGradeGroup"><label for="profileGrade">School grade <span aria-hidden="true">*</span></label><select id="profileGrade" disabled><option value="">Select grade</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option></select></div></div>
-<div class="form-group"><label for="modules">Subjects or modules <span class="pm-optional">Complete your profile</span></label><input id="modules" maxlength="350" placeholder="Web Development, Databases, Mathematics"/><span class="field-hint">Add up to 10 subjects or modules, separated by commas. If you leave this blank, you’ll receive a profile completion reminder.</span></div>
-<div class="form-row"><div class="form-group"><label for="availability">When you're free <span>*</span></label><select id="availability" required=""><option value="">Choose availability</option><option value="mornings">Mornings</option><option value="afternoons">Afternoons</option><option value="evenings">Evenings</option><option value="weekends">Weekends</option><option value="flexible">Flexible</option></select></div><div class="form-group"><label for="studyMethod">Preferred study format <span>*</span></label><select id="studyMethod" required=""><option value="campus">On campus</option><option value="virtual">Online</option><option value="hybrid">Hybrid / both</option></select></div></div>
+<div class="pm-edit-section"><span aria-hidden="true" class="pm-edit-section-symbol">01</span><div><h3>Basic details</h3><p>How other students recognize you.</p></div></div><div class="form-row"><div class="form-group"><label for="studentName">Display name </label><input autocomplete="name" id="studentName" maxlength="80" minlength="2" placeholder="e.g. Jane Mokoena"/><span class="field-hint">Use your real name. Leave this unchanged if you only want to edit other details.</span></div><div class="form-group"><label for="institutionType">Institution type</label><select id="institutionType"><option value="">Select one</option><option value="university">University</option><option value="college">College / TVET</option><option value="school">School</option></select></div></div>
+<div class="form-group"><label for="institutionName">University, college or school</label><input id="institutionName" list="institutionSuggestions" maxlength="120" minlength="2" placeholder="Select a suggestion or type your institution"/><datalist id="institutionSuggestions"></datalist><span class="field-hint">Can't see yours? Just type it. Institution names are matched without case sensitivity.</span></div>
+<div class="form-row"><div class="form-group"><label for="campus">Campus / branch</label><input id="campus" maxlength="100" placeholder="e.g. Vanderbijlpark campus"/></div><div class="form-group" id="profileCourseGroup"><label for="course">Course / programme</label><input id="course" maxlength="100" placeholder="e.g. Information Technology"/></div><div class="form-group hidden" id="profileGradeGroup"><label for="profileGrade">School grade</label><select disabled="" id="profileGrade"><option value="">Select grade</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option></select></div></div>
+<div class="pm-edit-section"><span aria-hidden="true" class="pm-edit-section-symbol">02</span><div><h3>Study preferences</h3><p>These help us recommend the right study partners.</p></div></div><div class="form-group"><label for="modules">Subjects or modules <span class="pm-optional">Complete your profile</span></label><input id="modules" maxlength="350" placeholder="Web Development, Databases, Mathematics"/><span class="field-hint">Optional. Add up to 10 subjects or modules separated by commas. Missing details may trigger a gentle completion reminder.</span></div>
+<div class="form-row"><div class="form-group"><label for="availability">When you’re free</label><select id="availability"><option value="">Choose availability</option><option value="mornings">Mornings</option><option value="afternoons">Afternoons</option><option value="evenings">Evenings</option><option value="weekends">Weekends</option><option value="flexible">Flexible</option></select></div><div class="form-group"><label for="studyMethod">Preferred study format</label><select id="studyMethod"><option value="campus">On campus</option><option value="virtual">Online</option><option value="hybrid">Hybrid / both</option></select></div></div>
 <div class="form-group"><label for="about">A little about yourself</label><textarea id="about" maxlength="400" placeholder="What kind of study partner are you looking for?" rows="3"></textarea></div>
-<label class="consent-line"><input id="adultConfirm" required="" type="checkbox"/><span>I confirm I am 18 or older and agree to use the platform respectfully.</span></label>
-<button class="btn btn-primary submit-btn" type="submit">Save my profile <span>→</span></button><p class="form-privacy" id="profilePrivacy">Your profile is visible to signed-in students according to your privacy settings. Your email address is not displayed on your profile.</p>
-</form><div class="social-panel privacy-panel"><span class="social-eyebrow">PROFILE PRIVACY</span><h3>Choose how students find you</h3><form id="privacyForm"><label class="pm-switch"><span><strong>Appear in Find Peers</strong><small>Allow other students to discover your profile.</small></span><input type="checkbox" id="discoverableSetting" checked/></label><label class="pm-switch"><span><strong>Show last seen</strong><small>Others can see your recent activity in chats.</small></span><input type="checkbox" id="activitySetting" checked/></label><button type="submit" class="btn btn-secondary">Save privacy settings</button></form></div></div><aside class="profile-aside"><div class="aside-highlight"><span class="aside-icon">✧</span><h3>Your next great study session starts here.</h3><p>A complete profile helps us suggest people in your institution, on your campus, and in the same modules.</p><div class="aside-line"></div><div class="aside-benefit">✓ Your institution and campus</div><div class="aside-benefit">✓ Subjects you want to master</div><div class="aside-benefit">✓ Your preferred times and format</div></div><div class="aside-help"><div class="aside-help-icon">♧</div><div><strong>About verification</strong><p>A verification badge is assigned by an administrator after reviewing institutional evidence. Anyone can enter an institution name; that alone does not verify them.</p></div></div><div class="aside-help"><div class="aside-help-icon">⌕</div><div><strong>Privacy comes first</strong><p>Your email is used only for sign-in. Public student profiles do not display email addresses.</p></div></div></aside></div></section><section class="app-section notes-on-profile"><div class="container"><div class="section-row"><div><span class="social-eyebrow">MY STUDY JOURNAL</span><h2>Your notes & posts</h2><p>Your private notes stay yours; public notes appear on your student profile.</p></div><a href="notes.html" class="btn btn-primary">Manage notes ↗</a></div><div id="profileNotesList" class="notes-feed"></div></div></section></main>
 
-<div class="pm-crop-dialog" id="avatarCropDialog" hidden role="dialog" aria-modal="true" aria-labelledby="avatarCropTitle">
- <div class="pm-crop-card">
-  <h2 id="avatarCropTitle">Position your profile photo</h2>
-  <p>Drag to reposition your photo, then zoom until it looks right inside the circle.</p>
-  <div class="pm-crop-frame"><canvas id="avatarCropCanvas" width="360" height="360" aria-label="Drag photo to reposition it" tabindex="0"></canvas></div>
-  <label class="pm-crop-zoom" for="avatarZoom"><span>Zoom</span><input id="avatarZoom" type="range" min="1" max="2.8" step="0.01" value="1"/><span>+</span></label>
-  <div class="pm-crop-controls"><button class="btn btn-secondary" type="button" id="avatarCropCancel">Cancel</button><button class="btn btn-primary" type="button" id="avatarCropConfirm">Use this photo</button></div>
- </div>
+<button class="btn btn-primary submit-btn" id="saveProfileChanges" type="submit">Save changes →</button><div aria-live="polite" class="form-feedback hidden" id="profileFeedback" role="status" tabindex="-1"></div><p class="form-privacy" id="profilePrivacy">Changes appear on your student profile after you save. Email and password are managed separately in Settings.</p>
+</form><div class="social-panel privacy-panel"><span class="social-eyebrow">PROFILE PRIVACY</span><h3>Choose how students find you</h3><form id="privacyForm"><label class="pm-switch"><span><strong>Appear in Find Peers</strong><small>Allow other students to discover your profile.</small></span><input checked="" id="discoverableSetting" type="checkbox"/></label><label class="pm-switch"><span><strong>Show last seen</strong><small>Others can see your recent activity in chats.</small></span><input checked="" id="activitySetting" type="checkbox"/></label><button class="btn btn-secondary" type="submit">Save privacy settings</button></form></div></div><aside class="profile-aside"><div class="aside-highlight"><span class="aside-icon">✧</span><h3>Keep your study profile up to date.</h3><p>Your recommendations improve when your campus, subjects and availability reflect what you’re studying now.</p><div class="aside-line"></div><div class="aside-benefit">✓ Your institution and campus</div><div class="aside-benefit">✓ Subjects you want to master</div><div class="aside-benefit">✓ Your preferred times and format</div></div><div class="aside-help"><div class="aside-help-icon">♧</div><div><strong>About verification</strong><p>A verification badge is assigned by an administrator after reviewing institutional evidence. Anyone can enter an institution name; that alone does not verify them.</p></div></div><div class="aside-help"><div class="aside-help-icon">⌕</div><div><strong>Privacy comes first</strong><p>Your email is used only for sign-in. Public student profiles do not display email addresses.</p></div></div></aside></div></section><section class="app-section notes-on-profile"><div class="container"><div class="section-row"><div><span class="social-eyebrow">MY STUDY JOURNAL</span><h2>Your notes &amp; posts</h2><p>Your private notes stay yours; public notes appear on your student profile.</p></div><a class="btn btn-primary" href="notes.html">Manage notes ↗</a></div><div class="notes-feed" id="profileNotesList"></div></div></section></main>
+<div aria-labelledby="avatarCropTitle" aria-modal="true" class="pm-crop-dialog" hidden="" id="avatarCropDialog" role="dialog">
+<div class="pm-crop-card">
+<h2 id="avatarCropTitle">Position your profile photo</h2>
+<p>Drag to reposition your photo, then zoom until it looks right inside the circle.</p>
+<div class="pm-crop-frame"><canvas aria-label="Drag photo to reposition it" height="360" id="avatarCropCanvas" tabindex="0" width="360"></canvas></div>
+<label class="pm-crop-zoom" for="avatarZoom"><span>Zoom</span><input id="avatarZoom" max="2.8" min="1" step="0.01" type="range" value="1"/><span>+</span></label>
+<div class="pm-crop-controls"><button class="btn btn-secondary" id="avatarCropCancel" type="button">Cancel</button><button class="btn btn-primary" id="avatarCropConfirm" type="button">Use this photo</button></div>
 </div>
-
+</div>
 <footer class="site-footer">
-  <div class="container footer-upper">
-    <div class="footer-identity">
-      <a class="brand footer-brand" href="index.html" aria-label="Peer Match home"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
-      <p>Find your people. Learn better together.</p>
-      <a class="footer-contact" href="mailto:peermatchstudents@gmail.com" aria-label="Email Peer Match support">peermatchstudents@gmail.com</a>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
+<div class="container footer-upper">
+<div class="footer-identity">
+<a aria-label="Peer Match home" class="brand footer-brand" href="index.html"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+<p>Find your people. Learn better together.</p>
+<a aria-label="Email Peer Match support" class="footer-contact" href="mailto:peermatchstudents@gmail.com">peermatchstudents@gmail.com</a>
+</div>
+<nav aria-label="Footer navigation" class="footer-nav">
 <a href="about.html">About</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a><a href="faq.html">FAQs</a><a href="guidelines.html">Guidelines</a>
 </nav>
-  </div>
-  <div class="container footer-bottom">
-    <div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
-    <nav class="footer-legal-links" aria-label="Legal and help links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
-    <span class="footer-credit">Built by tjseimela</span>
-  </div>
+</div>
+<div class="container footer-bottom">
+<div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
+<nav aria-label="Legal and help links" class="footer-legal-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
+<span class="footer-credit">Built by tjseimela</span>
+</div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
 </html>

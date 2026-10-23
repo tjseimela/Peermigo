@@ -109,7 +109,7 @@
   const result=await this.requireClient().from('pm_attachments').delete().eq('id',item.id);if(result.error)throw result.error;
  };
  db.getEmailPreferences=async function(){
-  const defaults={messages:true,groups:true,sessions:true,notes:false};
+  const defaults={messages:false,groups:false,sessions:false,notes:false};
   
   this.requireUser();const {data,error}=await this.requireClient().from('notification_preferences').select('*').eq('user_id',this.user.id).maybeSingle();if(error)throw error;return {...defaults,...(data||{})};
  };

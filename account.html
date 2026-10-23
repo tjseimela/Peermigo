@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -17,16 +16,16 @@
 <link href="legal.css" rel="stylesheet"/>
 <script src="theme.js"></script>
 <link href="social.css" rel="stylesheet"/>
-<link rel="preconnect" href="https://esm.sh" crossorigin>
-<link rel="stylesheet" href="refinements.css"/>
-<link rel="stylesheet" href="mobile-dock.css"/>
-<link rel="stylesheet" href="top-nav.css"/>
-<link rel="stylesheet" href="saved.css"/>
-<link rel="stylesheet" href="compact-headers.css"/>
-<link rel="stylesheet" href="registration.css"/>
-<link rel="stylesheet" href="mobile-header-refresh.css"/>
-<link rel="stylesheet" href="workspace-refresh.css"/><link rel="stylesheet" href="profile-reminder.css"/>
-</head>
+<link crossorigin="" href="https://esm.sh" rel="preconnect"/>
+<link href="refinements.css" rel="stylesheet"/>
+<link href="mobile-dock.css" rel="stylesheet"/>
+<link href="top-nav.css" rel="stylesheet"/>
+<link href="saved.css" rel="stylesheet"/>
+<link href="compact-headers.css" rel="stylesheet"/>
+<link href="registration.css" rel="stylesheet"/>
+<link href="mobile-header-refresh.css" rel="stylesheet"/>
+<link href="workspace-refresh.css" rel="stylesheet"/><link href="profile-reminder.css" rel="stylesheet"/>
+<link href="account-profile-refresh.css" rel="stylesheet"/></head>
 <body>
 <header class="site-header">
 <div class="container nav-shell">
@@ -34,55 +33,54 @@
 <nav aria-label="Primary navigation" class="main-nav" id="primaryNav">
 <a class="nav-link" data-page="index.html" href="index.html">Home</a>
 <a class="nav-link" data-page="about.html" href="about.html">About</a>
-
 <a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
-<a class="nav-account" data-page="account.html" id="authNavLink" href="account.html">Sign in</a>
+<a class="nav-account" data-page="account.html" href="account.html" id="authNavLink">Sign in</a>
 <a class="nav-cta join-nav" href="account.html?mode=signup">Join Peer Match <span aria-hidden="true">↗</span></a>
 </nav>
-<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewBox="0 0 24 24" width="21"><path fill="currentColor" d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z"/><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
-<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span class="menu-unread-dot" id="mobileUnreadDot" aria-hidden="true" hidden></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewbox="0 0 24 24" width="21"><path d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z" fill="currentColor"></path><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-linecap="round" stroke-width="1.25"></path></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg></button>
+<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span aria-hidden="true" class="menu-unread-dot" hidden="" id="mobileUnreadDot"></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
 </div>
 </header>
-<main id="mainContent" class="pm-workspace-page">
-<section class="app-section"><div class="container auth-layout"><div class="form-card auth-card"><div class="hidden" id="authLoggedIn"><div class="auth-symbol">✓</div><h2>You’re signed in.</h2><p class="muted-text" id="authEmail"></p><p>Update your profile and discover students at your institution.</p><div class="auth-actions"><a class="btn btn-primary" id="accountContinueLink" href="index.html">Go to dashboard →</a><a class="btn btn-secondary" href="profile.html">My profile</a><button class="btn btn-secondary" id="signOutButton" type="button">Sign out</button></div></div><div id="authLoggedOut"><div class="auth-tabs" role="tablist"><button aria-selected="true" class="auth-tab active" id="tabSignIn" role="tab" type="button">Sign in</button><button aria-selected="false" class="auth-tab" id="tabSignUp" role="tab" type="button">Create account</button></div><h2 id="authTitle">Welcome back.</h2><p class="muted-text" id="authSubtitle">Sign in to continue growing together.</p><div class="form-feedback hidden" id="authFeedback" role="status"></div><form class="styled-form" id="authForm"><div class="pm-signup-fields hidden" id="authSignupFields" aria-labelledby="pmSignupHeading">
-  <div class="pm-signup-heading"><span class="pm-signup-step">YOUR STUDENT PROFILE</span><h3 id="pmSignupHeading">Tell us about yourself</h3><p>Help classmates find the right study partner from day one. Fields marked <span aria-hidden="true">*</span> are required.</p></div>
-  <div class="form-group pm-signup-name-group">
-    <label id="signupNameLabel">Name <span aria-hidden="true">*</span></label>
-    <div class="pm-signup-name-grid" role="group" aria-labelledby="signupNameLabel">
-      <input type="text" id="signupFirstName" name="given-name" placeholder="First name" aria-label="First name" autocomplete="given-name" maxlength="80" data-signup-required>
-      <input type="text" id="signupSurname" name="family-name" placeholder="Surname" aria-label="Surname" autocomplete="family-name" maxlength="80" data-signup-required>
-    </div>
-    <span class="field-hint">Include any additional given names or surnames in the relevant field.</span>
-  </div>
-  <div class="form-row pm-registration-row">
-    <div class="form-group"><label for="signupInstitutionType">Institution type <span aria-hidden="true">*</span></label><select id="signupInstitutionType" data-signup-required><option value="">Choose institution type</option><option value="university">University</option><option value="college">College / TVET</option><option value="school">School</option></select></div>
-    <div class="form-group"><label for="signupInstitution" id="signupInstitutionLabel">Institution name <span aria-hidden="true">*</span></label><input type="text" id="signupInstitution" placeholder="Start typing your institution" list="signupInstitutionSuggestions" autocomplete="organization" minlength="2" maxlength="120" data-signup-required><datalist id="signupInstitutionSuggestions"></datalist></div>
-  </div>
-  <div class="form-group" id="signupCampusGroup"><label for="signupCampus">Campus <span class="pm-optional">Optional</span></label><input type="text" id="signupCampus" placeholder="e.g. Vanderbijlpark Campus" maxlength="100"></div>
-  <div class="form-group" id="signupCourseGroup"><label for="signupCourse">Course or programme <span aria-hidden="true">*</span></label><input type="text" id="signupCourse" placeholder="e.g. Diploma in Information Technology" minlength="2" maxlength="100" data-signup-required></div>
-  <div class="form-group hidden" id="signupGradeGroup"><label for="signupGrade">School grade <span aria-hidden="true">*</span></label><select id="signupGrade" disabled><option value="">Select your grade</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option></select><span class="field-hint">Peer Match is currently for students aged 18 or older, including school learners.</span></div>
-  <div class="form-group" id="signupModulesGroup"><label for="signupModules" id="signupModulesLabel">Subjects or modules <span class="pm-optional">Optional</span></label><input type="text" id="signupModules" placeholder="e.g. Web Development, Business Analysis" maxlength="320"><span class="field-hint" id="signupModulesHint">You can add these later, but incomplete profiles receive a reminder. Separate subjects or modules with commas (up to 10).</span></div>
-  <a class="pm-why-link" href="why-we-ask.html" target="_blank" rel="noopener noreferrer" aria-label="Learn why Peer Match asks for your information (opens in a new tab)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9h.01"/></svg>Learn why we ask for your information <span aria-hidden="true">↗</span></a>
-  <div class="pm-signup-visibility"><label for="signupDiscoverable"><input type="checkbox" id="signupDiscoverable" checked><span><strong>Show my profile in Find Peers</strong><small>Only signed-in students can discover your name and study details. You can change this later.</small></span></label></div>
-  <p class="pm-name-format-note">Your name will appear with consistent capitalization, for example <strong>Mpho Mampa</strong>. Please use your real name.</p><div class="pm-signup-divider"><span>SECURE ACCOUNT DETAILS</span></div>
-</div><div class="form-group"><label for="authEmailInput">Email address</label><input autocomplete="email" id="authEmailInput" placeholder="you@example.com" required="" type="email"/></div><div class="form-group"><label for="authPassword">Password</label><input autocomplete="current-password" id="authPassword" minlength="6" placeholder="At least 6 characters" required="" type="password"/></div><div class="form-group pm-signup-confirm hidden" id="authConfirmGroup"><label for="authPasswordConfirm">Confirm password <span aria-hidden="true">*</span></label><input id="authPasswordConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="Enter your password again" /></div><div class="auth-utility"><a class="forgot-link" href="forgot-password.html" id="forgotPasswordLink">Forgot password?</a></div><label class="consent-line hidden" id="authAdult"><input id="authAdultCheck" type="checkbox"/><span>I am 18 or older and agree to respectful, safe use of Peer Match.</span></label><p class="signup-legal-note hidden" id="authLegalNote">New to Peer Match? Please review our <a href="terms.html" target="_blank" rel="noopener noreferrer">Terms</a>, <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="guidelines.html" target="_blank" rel="noopener noreferrer">Community Guidelines</a> before creating an account.</p><button class="btn btn-primary submit-btn" id="authSubmit" type="submit">Sign in →</button></form><p class="form-privacy" id="authDemoNote">Your email stays private. During registration, you choose whether signed-in students can discover your student profile.</p></div></div><aside class="auth-aside" aria-label="What you can do on Peer Match"><span class="section-kicker">STUDY BETTER TOGETHER</span><h2>Meet. Focus.<br/><em>Grow.</em></h2><p>Connect with students who share your interests, and get more out of every study session.</p><div class="auth-aside-features"><div class="auth-feature">Personalised peer recommendations</div><div class="auth-feature">Private student messaging</div><div class="auth-feature">Study groups and sessions</div></div><p class="auth-aside-footnote">Your study journey starts with a great connection.</p></aside></div></section></main>
+<main class="pm-workspace-page" id="mainContent">
+<section class="app-section"><div class="container auth-layout"><div class="form-card auth-card"><div class="hidden" id="authLoggedIn"><div class="auth-symbol">✓</div><h2>You’re signed in.</h2><p class="muted-text" id="authEmail"></p><p>Update your profile and discover students at your institution.</p><div class="auth-actions"><a class="btn btn-primary" href="index.html" id="accountContinueLink">Go to dashboard →</a><a class="btn btn-secondary" href="profile.html">My profile</a><button class="btn btn-secondary" id="signOutButton" type="button">Sign out</button></div></div><div id="authLoggedOut"><div class="auth-tabs" id="authTabs" role="tablist"><button aria-selected="true" class="auth-tab active" id="tabSignIn" role="tab" type="button">Sign in</button><button aria-selected="false" class="auth-tab" id="tabSignUp" role="tab" type="button">Create account</button></div><h2 id="authTitle">Welcome back.</h2><p class="muted-text" id="authSubtitle">Sign in to continue growing together.</p><div class="form-feedback hidden" id="authFeedback" role="status"></div><form class="styled-form" id="authForm"><div aria-labelledby="pmSignupHeading" class="pm-signup-fields hidden" id="authSignupFields">
+<div class="pm-signup-heading"><span class="pm-signup-step">YOUR STUDENT PROFILE</span><h3 id="pmSignupHeading">Tell us about yourself</h3><p>Help classmates find the right study partner from day one. Fields marked <span aria-hidden="true">*</span> are required.</p></div>
+<div class="form-group pm-signup-name-group">
+<label id="signupNameLabel">Name <span aria-hidden="true">*</span></label>
+<div aria-labelledby="signupNameLabel" class="pm-signup-name-grid" role="group">
+<input aria-label="First name" autocomplete="given-name" data-signup-required="" id="signupFirstName" maxlength="80" name="given-name" placeholder="First name" type="text"/>
+<input aria-label="Surname" autocomplete="family-name" data-signup-required="" id="signupSurname" maxlength="80" name="family-name" placeholder="Surname" type="text"/>
+</div>
+<span class="field-hint">Include any additional given names or surnames in the relevant field.</span>
+</div>
+<div class="form-row pm-registration-row">
+<div class="form-group"><label for="signupInstitutionType">Institution type <span aria-hidden="true">*</span></label><select data-signup-required="" id="signupInstitutionType"><option value="">Choose institution type</option><option value="university">University</option><option value="college">College / TVET</option><option value="school">School</option></select></div>
+<div class="form-group"><label for="signupInstitution" id="signupInstitutionLabel">Institution name <span aria-hidden="true">*</span></label><input autocomplete="organization" data-signup-required="" id="signupInstitution" list="signupInstitutionSuggestions" maxlength="120" minlength="2" placeholder="Start typing your institution" type="text"/><datalist id="signupInstitutionSuggestions"></datalist></div>
+</div>
+<div class="form-group" id="signupCampusGroup"><label for="signupCampus">Campus <span class="pm-optional">Optional</span></label><input id="signupCampus" maxlength="100" placeholder="e.g. Vanderbijlpark Campus" type="text"/></div>
+<div class="form-group" id="signupCourseGroup"><label for="signupCourse">Course or programme <span aria-hidden="true">*</span></label><input data-signup-required="" id="signupCourse" maxlength="100" minlength="2" placeholder="e.g. Diploma in Information Technology" type="text"/></div>
+<div class="form-group hidden" id="signupGradeGroup"><label for="signupGrade">School grade <span aria-hidden="true">*</span></label><select disabled="" id="signupGrade"><option value="">Select your grade</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option></select><span class="field-hint">Peer Match is currently for students aged 18 or older, including school learners.</span></div>
+<div class="form-group" id="signupModulesGroup"><label for="signupModules" id="signupModulesLabel">Subjects or modules <span class="pm-optional">Optional</span></label><input id="signupModules" maxlength="320" placeholder="e.g. Web Development, Business Analysis" type="text"/><span class="field-hint" id="signupModulesHint">You can add these later, but incomplete profiles receive a reminder. Separate subjects or modules with commas (up to 10).</span></div>
+<a aria-label="Learn why Peer Match asks for your information (opens in a new tab)" class="pm-why-link" href="why-we-ask.html" rel="noopener noreferrer" target="_blank"><svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-9h.01"></path></svg>Learn why we ask for your information <span aria-hidden="true">↗</span></a>
+<div class="pm-signup-visibility"><label for="signupDiscoverable"><input checked="" id="signupDiscoverable" type="checkbox"/><span><strong>Show my profile in Find Peers</strong><small>Only signed-in students can discover your name and study details. You can change this later.</small></span></label></div>
+<p class="pm-name-format-note">Your name will appear with consistent capitalization, for example <strong>Mpho Mampa</strong>. Please use your real name.</p><div class="pm-signup-divider"><span>SECURE ACCOUNT DETAILS</span></div>
+</div><div class="form-group"><label for="authEmailInput">Email address</label><input autocomplete="email" id="authEmailInput" placeholder="you@example.com" required="" type="email"/></div><div class="form-group"><label for="authPassword">Password</label><input autocomplete="current-password" id="authPassword" minlength="6" placeholder="At least 6 characters" required="" type="password"/></div><div class="form-group pm-signup-confirm hidden" id="authConfirmGroup"><label for="authPasswordConfirm">Confirm password <span aria-hidden="true">*</span></label><input autocomplete="new-password" id="authPasswordConfirm" minlength="6" placeholder="Enter your password again" type="password"/></div><div class="auth-utility"><a class="forgot-link" href="forgot-password.html" id="forgotPasswordLink">Forgot password?</a></div><label class="consent-line hidden" id="authAdult"><input id="authAdultCheck" type="checkbox"/><span>I am 18 or older and agree to respectful, safe use of Peer Match.</span></label><p class="signup-legal-note hidden" id="authLegalNote">New to Peer Match? Please review our <a href="terms.html" rel="noopener noreferrer" target="_blank">Terms</a>, <a href="privacy.html" rel="noopener noreferrer" target="_blank">Privacy Policy</a> and <a href="guidelines.html" rel="noopener noreferrer" target="_blank">Community Guidelines</a> before creating an account.</p><button class="btn btn-primary submit-btn" id="authSubmit" type="submit">Sign in →</button></form><section aria-live="polite" class="pm-signup-success hidden" id="signupSuccess" role="status" tabindex="-1"><div aria-hidden="true" class="pm-success-symbol"><svg fill="none" height="34" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 48 48" width="34"><rect height="27" rx="6" width="38" x="5" y="11"></rect><path d="m6 17 18 13 18-13"></path><circle cx="37" cy="11" fill="#ebf9f1" r="8" stroke="#2e936c"></circle><path d="m34 11 2 2 4-4" stroke="#2e936c"></path></svg></div><span class="pm-success-eyebrow">ONE MORE STEP</span><h3>Check your email to verify your account</h3><p>We've sent a verification link to <strong id="signupSuccessEmail"></strong>.</p><div class="pm-success-next"><strong>What happens next?</strong><p>Open the email and tap the verification link. Then come back to Peer Match and sign in to meet study partners.</p><p class="pm-success-hint">No email? Check Spam/Junk, and allow a few minutes for delivery.</p></div><button class="btn btn-primary" id="signupSuccessSignIn" type="button">Go to sign in →</button></section><p class="form-privacy" id="authDemoNote">Your email stays private. During registration, you choose whether signed-in students can discover your student profile.</p></div></div><aside aria-label="What you can do on Peer Match" class="auth-aside"><span class="section-kicker">STUDY BETTER TOGETHER</span><h2>Meet. Focus.<br/><em>Grow.</em></h2><p>Connect with students who share your interests, and get more out of every study session.</p><div class="auth-aside-features"><div class="auth-feature">Personalised peer recommendations</div><div class="auth-feature">Private student messaging</div><div class="auth-feature">Study groups and sessions</div></div><p class="auth-aside-footnote">Your study journey starts with a great connection.</p></aside></div></section></main>
 <footer class="site-footer">
-  <div class="container footer-upper">
-    <div class="footer-identity">
-      <a class="brand footer-brand" href="index.html" aria-label="Peer Match home"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
-      <p>Find your people. Learn better together.</p>
-      <a class="footer-contact" href="mailto:peermatchstudents@gmail.com" aria-label="Email Peer Match support">peermatchstudents@gmail.com</a>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
+<div class="container footer-upper">
+<div class="footer-identity">
+<a aria-label="Peer Match home" class="brand footer-brand" href="index.html"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">match</span><span class="brand-dot">.</span></span></a>
+<p>Find your people. Learn better together.</p>
+<a aria-label="Email Peer Match support" class="footer-contact" href="mailto:peermatchstudents@gmail.com">peermatchstudents@gmail.com</a>
+</div>
+<nav aria-label="Footer navigation" class="footer-nav">
 <a href="about.html">About</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a><a href="faq.html">FAQs</a><a href="guidelines.html">Guidelines</a>
 </nav>
-  </div>
-  <div class="container footer-bottom">
-    <div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
-    <nav class="footer-legal-links" aria-label="Legal and help links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
-    <span class="footer-credit">Built by tjseimela</span>
-  </div>
+</div>
+<div class="container footer-bottom">
+<div class="footer-bottom-main"><span>© 2026 Peer Match · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
+<nav aria-label="Legal and help links" class="footer-legal-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
+<span class="footer-credit">Built by tjseimela</span>
+</div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="password-visibility.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="password-visibility.js"></script></body>
 </html>

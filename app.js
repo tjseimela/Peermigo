@@ -299,7 +299,7 @@
    const school=typeInput.value==='school';
    $('profileCourseGroup').classList.toggle('hidden',school);
    $('profileGradeGroup').classList.toggle('hidden',!school);
-   schoolGrade.disabled=!school;schoolGrade.required=school;
+   schoolGrade.disabled=!school;schoolGrade.required=false;
    courseInput.disabled=school;
   };
   typeInput.addEventListener('change',updateProfileCourseGrade);
@@ -307,13 +307,28 @@
   if(!db.user){feedback('profileFeedback','Sign in or create an account before saving your profile.');const link=document.createElement('a');link.href='account.html';link.textContent=' Open account →';$('profileFeedback').append(link);}
   if($('profilePrivacy'))$('profilePrivacy').textContent='Your profile is shared with signed-in members only. Your sign-in email is never published. Verification badges are awarded by an administrator.';
   form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity()||!requireSignedIn())return;
+   const notice=$('profileFeedback'),submit=$('saveProfileChanges');
    const modules=val('modules').split(',').map(PM.formatStudyText).filter(Boolean).slice(0,10);
    const course=typeInput.value==='school'?schoolGrade.value:PM.formatStudyText(val('course'));
-   const newName=clean(val('studentName'));
-   if(!PM.validPersonName(newName)){feedback('profileFeedback','Use letters for your name (spaces, hyphens and apostrophes are fine). Avoid numbers, emojis and symbols.',true);$('studentName').focus();return;}
+   // A student editing another field is not forced to re-enter registration data.
+   // Retain their previously saved display name if the field was left empty.
+   const newName=clean(val('studentName'))||my?.full_name||'';
+   if(!PM.validPersonName(newName)){
+    feedback('profileFeedback','Please keep a valid display name. Names can contain letters, spaces, apostrophes and hyphens.',true);
+    notice.scrollIntoView({behavior:'smooth',block:'nearest'});return;
+   }
    const payload={full_name:PM.formatPersonName(newName),institution_type:val('institutionType'),institution:PM.formatStudyText(val('institutionName')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
-   try{await db.saveProfile(payload);window.dispatchEvent(new Event('pm-profile-saved'));feedback('profileFeedback','Your study profile is now available to signed-in students.');notify('Profile saved successfully!');}
-   catch(e){feedback('profileFeedback',e.message,true);handleError(e)}
+   submit.disabled=true;submit.textContent='Saving changes…';notice.classList.add('hidden');
+   try{
+    await db.saveProfile(payload);
+    window.dispatchEvent(new Event('pm-profile-saved'));
+    feedback('profileFeedback','✓ Changes saved! Your student profile has been updated.');
+    notice.scrollIntoView({behavior:'smooth',block:'nearest'});
+   }catch(error){
+    feedback('profileFeedback',error.message||'Unable to save your changes. Please try again.',true);
+    notice.scrollIntoView({behavior:'smooth',block:'nearest'});
+    console.error('Profile:',error);
+   }finally{submit.disabled=false;submit.textContent='Save changes →';}
   });
  }
  let peersCache=[],meCache=null,blocked=[],connectionRows=[];
@@ -880,6 +895,15 @@
    $('authDemoNote').classList.toggle('hidden',!v);
    $('authFeedback').classList.add('hidden');
   };
+  $('signupSuccessSignIn')?.addEventListener('click',()=>{
+    $('signupSuccess')?.classList.add('hidden');
+    document.documentElement.classList.remove('pm-signup-success-active');
+    $('authTabs')?.classList.remove('hidden');
+    $('authForm').classList.remove('hidden');
+    $('authPassword').value='';$('authPasswordConfirm').value='';
+    toggle(false);
+    $('authEmailInput').focus();
+  });
   $('tabSignIn').addEventListener('click',()=>toggle(false));
   $('tabSignUp').addEventListener('click',()=>toggle(true));
   toggle(new URLSearchParams(location.search).get('mode')==='signup');
@@ -930,7 +954,19 @@
     if(create){
       const result=await db.signUp(email,password,details);
       if(result.session){location.href=safeNext()||'index.html';return;}
-      feedback('authFeedback','Account request received. Check your email for a verification link (and Spam/Junk if needed), then sign in. Your student details will already be saved.');
+      // Hide the long signup form instead of showing its confirmation above the viewport.
+      // The email check message is the only screen users see after successful signup.
+      const success=$('signupSuccess');
+      $('signupSuccessEmail').textContent=email;
+      $('authTabs')?.classList.add('hidden');
+      $('authForm').classList.add('hidden');
+      $('authDemoNote')?.classList.add('hidden');
+      $('authFeedback')?.classList.add('hidden');
+      $('authTitle').textContent='You’re almost there.';
+      $('authSubtitle').textContent='Your registration was received successfully.';
+      success.classList.remove('hidden');
+      document.documentElement.classList.add('pm-signup-success-active');
+      requestAnimationFrame(()=>{success.scrollIntoView({behavior:'smooth',block:'center'});success.focus({preventScroll:true});});
     }else{await db.signIn(email,password);location.href=safeNext()||'index.html';}
    }catch(err){feedback('authFeedback',err.message||'Account request failed. Please try again.',true);console.warn('Account:',err.message);}
    finally{submitting=false;submit.disabled=false;submit.textContent=create?'Create account →':'Sign in →';}

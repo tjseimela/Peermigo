@@ -1,0 +1,50 @@
+/* Peer Match — better post-signup confirmation and focused profile editing.
+   Scoped to their respective pages; does not restyle the rest of the platform. */
+.pm-signup-success{max-width:570px;margin:12px auto 6px;padding:27px 6px 8px;text-align:center;outline:0}
+.pm-signup-success.hidden{display:none!important}
+.pm-success-symbol{width:76px;height:76px;display:grid;place-items:center;border-radius:22px;background:#effaf3;border:1px solid #d3eedb;color:#443c8e;margin:0 auto 20px}
+.pm-success-eyebrow{color:#228264;font-size:11px;letter-spacing:.13em;font-weight:800}
+.pm-signup-success h3{font-size:clamp(23px,3vw,30px);line-height:1.25;letter-spacing:-.045em;color:#222943;margin:9px auto 13px;max-width:460px}
+.pm-signup-success>p{font-size:13px;line-height:1.8;color:#6c738c;margin:0 auto 24px;overflow-wrap:anywhere}
+.pm-signup-success>p strong{color:#4e45c3;display:inline;font-weight:800}
+.pm-success-next{text-align:left;background:#f7f7fd;border:1px solid #e6e5f4;padding:20px 22px;border-radius:15px;margin:0 0 24px}
+.pm-success-next strong{font-size:13px;color:#242a49}
+.pm-success-next p{font-size:12px;line-height:1.7;color:#656d85;margin:6px 0 0}
+.pm-success-next .pm-success-hint{margin-top:13px;padding-top:12px;border-top:1px solid #e5e5f1;color:#7a8196;font-size:11px}
+.pm-signup-success .btn{width:100%;justify-content:center;min-height:50px}
+.pm-edit-intro{display:flex;align-items:center;gap:14px;background:#f4f9f7;border:1px solid #dbece5;border-radius:14px;padding:15px 18px;margin:-4px 0 26px}
+.pm-edit-intro-icon{display:grid;place-items:center;flex:none;width:37px;height:37px;border-radius:12px;background:#dcf5e8;color:#24865c;font-weight:900}
+.pm-edit-intro>div:nth-child(2){flex:1;min-width:0}
+.pm-edit-intro strong{font-size:12px;color:#214b3c}
+.pm-edit-intro p{font-size:11px;line-height:1.7;margin:3px 0 0;color:#647c70}
+.pm-edit-preview-link{font-size:11px;line-height:1.5;color:#4d46bf;font-weight:800;white-space:nowrap;text-decoration:none}
+.pm-edit-preview-link:hover{text-decoration:underline;text-underline-offset:3px}
+.pm-edit-section{display:flex;align-items:center;gap:12px;margin:19px 0 22px;padding:0 0 13px;border-bottom:1px solid #e9e9f2}
+.pm-edit-section:not(:first-child){margin-top:30px}
+.pm-edit-section-symbol{display:grid;place-items:center;border-radius:9px;width:33px;height:33px;background:#eeedff;color:#5b50cc;font-size:11px;font-weight:800;flex:none}
+.pm-edit-section h3{color:#292f4f;font-size:15px;margin:0 0 3px;letter-spacing:-.02em}
+.pm-edit-section p{color:#858ba4;font-size:10px;margin:0;line-height:1.6}
+#profileFeedback{margin:14px 0 3px;scroll-margin-top:100px;line-height:1.6}
+#profileFeedback.hidden{display:none!important}
+#saveProfileChanges:disabled{opacity:.75;cursor:wait}
+html[data-theme="dark"] .pm-success-symbol{background:#1b4035;border-color:#356657;color:#d8d0ff}
+html[data-theme="dark"] .pm-signup-success h3{color:#f0f2ff}
+html[data-theme="dark"] .pm-signup-success>p{color:#bdc4d9}
+html[data-theme="dark"] .pm-signup-success>p strong{color:#c4b8ff}
+html[data-theme="dark"] .pm-success-eyebrow{color:#9de5bc}
+html[data-theme="dark"] .pm-success-next{background:#232d44;border-color:#3c4866}
+html[data-theme="dark"] .pm-success-next strong{color:#f2f2ff}
+html[data-theme="dark"] .pm-success-next p{color:#bcc5dd}
+html[data-theme="dark"] .pm-success-next .pm-success-hint{border-color:#3a4862}
+html[data-theme="dark"] .pm-edit-intro{background:#1c382f;border-color:#3b5b4b}
+html[data-theme="dark"] .pm-edit-intro-icon{background:#294f3f;color:#a5f0c5}
+html[data-theme="dark"] .pm-edit-intro strong{color:#e4ffed}
+html[data-theme="dark"] .pm-edit-intro p{color:#afd0bb}
+html[data-theme="dark"] .pm-edit-preview-link{color:#beb4ff}
+html[data-theme="dark"] .pm-edit-section{border-color:#36405a}
+html[data-theme="dark"] .pm-edit-section h3{color:#f0f2ff}
+html[data-theme="dark"] .pm-edit-section p{color:#bac4da}
+html[data-theme="dark"] .pm-edit-section-symbol{background:#37345f;color:#cabfff}
+@media(max-width:600px){.pm-signup-success{padding:16px 0 8px}.pm-success-next{padding:18px}.pm-edit-intro{display:grid;grid-template-columns:37px 1fr;gap:9px 11px;padding:14px}.pm-edit-preview-link{grid-column:2}.pm-edit-section{margin-top:20px}}
+
+@media(max-width:600px){html.pm-signup-success-active #authTitle,html.pm-signup-success-active #authSubtitle{display:none!important}html.pm-signup-success-active .auth-card{padding-top:19px!important}}
