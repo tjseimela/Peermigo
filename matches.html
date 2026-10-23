@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="compact-finder.css"/>
 <link rel="stylesheet" href="connection-ui.css"/>
 <link rel="stylesheet" href="peer-mobile-upgrade.css"/>
+<link rel="stylesheet" href="desktop-peer-cards.css"/>
 </head>
 <body>
 <div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peer Match account</span><a href="account.html">Go to Sign In</a></div>
@@ -70,6 +71,7 @@
       <div class="pm-finder-popover pm-finder-sort-popover" id="peerSortOptions" hidden>
         <label for="sortFilter">Sort student directory</label>
         <select id="sortFilter" aria-label="Sort student directory">
+          <option value="match" selected>Highest match first</option>
           <option value="az">Name: A to Z</option>
           <option value="za">Name: Z to A</option>
           <option value="newest">Newest students</option>

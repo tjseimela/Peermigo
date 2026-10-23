@@ -1,0 +1,54 @@
+/* Peer Match — desktop folded group cards (721px+), October 2026.
+   Uses existing group member/admin logic; no backend changes. */
+.group-card-description-preview,.group-toggle-label{display:none}
+@media (min-width:721px){
+  #groupsGrid{align-items:start}
+  #groupsGrid .group-directory-card{
+    display:flex;flex-direction:column;gap:0;min-height:0!important;padding:22px!important;
+    min-width:0;transform:none;
+  }
+  #groupsGrid .group-card-summary{min-width:0}
+  #groupsGrid .group-card-top{margin-bottom:15px}
+  #groupsGrid .group-card-top .platform-card-icon{width:55px;height:55px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+  #groupsGrid .group-card-top .meta-badge{max-width:62%;white-space:normal;overflow-wrap:anywhere;text-align:right;font-size:10px}
+  #groupsGrid .group-card-summary h3{font-size:17px;line-height:1.35;margin:6px 0 10px;overflow-wrap:anywhere}
+  #groupsGrid .group-card-summary-line{color:#646e88;font-size:12px;line-height:1.6;overflow-wrap:anywhere;margin:0}
+  #groupsGrid .group-card-description-preview{
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+    line-clamp:2;overflow:hidden;min-height:39px;
+    font-size:12px;line-height:1.65;color:#6a7390;overflow-wrap:anywhere;
+    border-top:1px solid #eceef6;margin:15px 0 0;padding-top:12px;
+  }
+  #groupsGrid .group-directory-card:not(.is-expanded) .group-card-expandable{display:none!important}
+  #groupsGrid .group-directory-card.is-expanded .group-card-expandable{display:block;margin:17px 0 0;padding:14px 0 0;border-top:1px solid #eceef6;min-width:0}
+  #groupsGrid .group-directory-card.is-expanded .group-card-description-preview{display:none}
+  #groupsGrid .group-card-expandable>p{font-size:12px;line-height:1.65;overflow-wrap:anywhere;color:#57637e}
+  #groupsGrid .group-card-meta{display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px 14px;margin-top:14px}
+  #groupsGrid .group-card-meta .pm-group-fact{min-width:min(145px,100%);max-width:100%;flex:1 1 130px}
+  #groupsGrid .group-card-actions{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;
+    margin-top:auto;padding-top:17px;min-width:0;
+  }
+  #groupsGrid .group-card-actions .btn{flex:1 1 112px;min-width:0;min-height:44px!important;padding:9px 12px;font-size:12px;border-radius:12px}
+  #groupsGrid .group-card-actions .small-ghost:not(.group-card-toggle){min-height:44px;flex:1 1 92px;padding:9px 12px;border-radius:12px;font-size:12px;justify-content:center}
+  #groupsGrid .group-card-toggle{
+    order:10;display:flex!important;align-items:center;justify-content:center;
+    width:100%;min-width:100%;flex:1 0 100%;min-height:44px;
+    padding:10px 13px;border:1px solid #e4e4fa;border-radius:14px;
+    color:#5546da;background:#f5f4ff;
+    font:800 12px/1.25 'Plus Jakarta Sans','DM Sans',sans-serif;
+    cursor:pointer;gap:10px;transition:background .18s,border-color .18s;
+  }
+  #groupsGrid .group-card-toggle:hover{background:#ece9ff;border-color:#cbc4ff}
+  #groupsGrid .group-card-toggle:focus-visible{outline:3px solid #8a7cff;outline-offset:2px}
+  #groupsGrid .group-card-toggle .group-toggle-label{display:inline}
+  #groupsGrid .group-card-toggle .pm-icon{width:17px;height:17px;flex:none;transition:transform .18s}
+  #groupsGrid .group-directory-card.is-expanded .group-card-toggle .pm-icon{transform:rotate(180deg)}
+  html[data-theme="dark"] #groupsGrid .group-card-summary-line,html[data-theme="dark"] #groupsGrid .group-card-description-preview,html[data-theme="dark"] #groupsGrid .group-card-expandable>p{color:#c3cce1!important}
+  html[data-theme="dark"] #groupsGrid .group-card-description-preview,html[data-theme="dark"] #groupsGrid .group-directory-card.is-expanded .group-card-expandable{border-color:#3c4866}
+  html[data-theme="dark"] #groupsGrid .group-card-toggle{background:#303053;border-color:#4c4a75;color:#d2caff}
+  html[data-theme="dark"] #groupsGrid .group-card-toggle:hover{background:#3c3869;border-color:#7771b4}
+}
+@media (prefers-reduced-motion:reduce){
+  #groupsGrid .group-card-toggle,#groupsGrid .group-card-toggle .pm-icon{transition:none}
+}

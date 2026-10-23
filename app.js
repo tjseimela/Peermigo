@@ -14,14 +14,7 @@
  const handleError=e=>{console.error(e);notify(e?.message||'Something went wrong. Please try again.')};
  const getMe=async()=>{try{return await db.profile()}catch(e){handleError(e);return null}};
  const requireSignedIn=()=>{if(!db.user){notify('Please sign in first.');location.href='account.html';return false}if(!db.client){notify('Check your Supabase connection.');return false}return true};
- function rankPeer(p,me){if(!me||p.id===me.id||!me.institution||!p.institution)return 0;let n=0;
-  if(PM.institutionKey(p.institution)===PM.institutionKey(me.institution))n+=45;
-  if(p.campus&&me.campus&&PM.campusKey(p.campus)===PM.campusKey(me.campus)&&PM.institutionKey(p.institution)===PM.institutionKey(me.institution))n+=22;
-  const myModules=new Set((me.modules||[]).map(PM.normalize));n+=Math.min(24,(p.modules||[]).filter(m=>myModules.has(PM.normalize(m))).length*12);
-  if(p.availability===me.availability||p.availability==='flexible'||me.availability==='flexible')n+=6;
-  if(p.study_method===me.study_method||p.study_method==='hybrid'||me.study_method==='hybrid')n+=3;
-  return n;
- }
+ const rankPeer=(p,me)=>PM.scoreStudentMatch(p,me);
  const matchReason=(p,me)=>{if(!me||p.id===me.id)return 'Student profile';const s=rankPeer(p,me);if(s>=65)return 'Great campus fit';if(s>=45)return 'Same institution';if(s>=12)return 'Modules in common';return 'Explore profile';};
  const memberNav = `<a class="nav-link" data-page="index.html" href="index.html">Dashboard</a>
  <a class="nav-link" data-page="search.html" href="search.html">Search students & groups</a>
@@ -408,7 +401,7 @@
   });
   const currentFilters=()=>({
    search:val('searchInput'),institution:val('institutionFilter'),method:val('methodFilter'),
-   availability:val('timeFilter'),sameCampus:quickFilter==='campus',sameCourse:quickFilter==='course',sort:val('sortFilter')||'az',
+   availability:val('timeFilter'),sameCampus:quickFilter==='campus',sameCourse:quickFilter==='course',sort:val('sortFilter')||'match',
    me:meCache,excludedIds:blocked,page,pageSize:PAGE_SIZE
   });
   const paintSuggestions=()=>{
@@ -476,7 +469,7 @@
   $('sameCampusOnly')?.addEventListener('change',()=>{
    quickFilter=$('sameCampusOnly').checked?'campus':'all';reload();
   });
-  const reset=()=>{for(const id of ['searchInput','institutionFilter','methodFilter','timeFilter'])if($(id))$(id).value='';quickFilter='all';if($('sameCampusOnly'))$('sameCampusOnly').checked=false;if($('sortFilter'))$('sortFilter').value='az';toggleAdvanced(false);toggleSort(false);reload();};
+  const reset=()=>{for(const id of ['searchInput','institutionFilter','methodFilter','timeFilter'])if($(id))$(id).value='';quickFilter='all';if($('sameCampusOnly'))$('sameCampusOnly').checked=false;if($('sortFilter'))$('sortFilter').value='match';toggleAdvanced(false);toggleSort(false);reload();};
   $('clearFilters')?.addEventListener('click',reset);$('emptyReset')?.addEventListener('click',reset);
   $('prevPeers')?.addEventListener('click',()=>{if(page>0){page--;load(true)}});
   $('nextPeers')?.addEventListener('click',()=>{if((page+1)*PAGE_SIZE<count){page++;load(true)}});
@@ -487,8 +480,13 @@
     if(!card)return;
     const open=!card.classList.contains('is-expanded');
     card.classList.toggle('is-expanded',open);
-    expand.setAttribute('aria-expanded',String(open));
-    expand.setAttribute('aria-label',open?'Hide student details':'Show student details');
+    for(const button of card.querySelectorAll('[data-peer-expand]')){
+     button.setAttribute('aria-expanded',String(open));
+     button.setAttribute('aria-label',open?'Hide student details':'Show student details');
+     button.title=open?'Hide student details':'Show student details';
+     const label=button.querySelector('.directory-desktop-toggle-label');
+     if(label)label.textContent=open?'Hide details':'Show details';
+    }
     return;
    }
    const connect=e.target.closest('[data-connect]'),report=e.target.closest('[data-report]');
@@ -542,6 +540,10 @@
   return `<article class="peer-card peer-card-v2 directory-card">
    <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<span class="directory-status match-score ${matchTier}" aria-label="${score} percent compatibility score"><span class="match-number">${score}%</span><span class="match-label">match</span></span>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peer Match'}</span>`}</div>
    <div class="directory-main"><h3><a class="profile-name-link" href="student.html?id=${encodeURIComponent(p.id)}">${esc(name)}</a>${p.is_verified?`<span class="verified-label" title="Institution reviewed by administrator">${PM.icon('shield')} Verified</span>`:''}</h3></div>
+   <div class="directory-desktop-summary" aria-label="Student summary">
+     <p class="directory-desktop-summary-line"><span>${esc(PM.formatStudyText(p.course)||'Course not listed')}</span><span class="directory-summary-dot" aria-hidden="true"> · </span><span class="directory-summary-institution">${esc(PM.formatStudyText(p.institution)||'Institution not listed')}</span></p>
+     <p class="directory-desktop-bio">${esc(String(p.about||'').trim()||'No introduction added yet.')}</p>
+   </div>
    <div class="directory-expandable" id="peer-details-${esc(p.id)}"><div class="directory-detail-grid">
      <div class="directory-detail"><p class="directory-field-label">${courseLabel}</p><p class="directory-detail-value${!p.course?' is-empty':''}">${esc(PM.formatStudyText(p.course)||'Not added yet')}</p></div>
      <div class="directory-detail"><p class="directory-field-label">Institution</p><p class="directory-detail-value directory-institution${!p.institution?' is-empty':''}">${esc(PM.formatStudyText(p.institution)||'Not added yet')}</p></div>
@@ -558,6 +560,7 @@
    ${!complete?'<p class="directory-welcome">This student is getting started. You can still say hello!</p>':''}
    </div>
    <div class="peer-card-actions"><a class="view-profile-btn" href="student.html?id=${encodeURIComponent(p.id)}">${PM.icon('user')} Profile</a><button type="button" class="connect-btn" data-connect="${esc(p.id)}" data-connect-state="${connection.state}" ${connection.disabled?'disabled':''}>${PM.icon(connection.state==='accepted'||connection.state==='pending'?'check':'users')} ${connection.label}</button><button type="button" class="directory-expand-button" data-peer-expand aria-controls="peer-details-${esc(p.id)}" aria-label="Show student details" aria-expanded="false" title="Show more student details">${PM.icon('chevron-down')}</button><button type="button" class="small-ghost directory-share" data-share-profile="${esc(p.id)}" title="Share ${esc(name)}'s profile" aria-label="Share profile for ${esc(name)}">${PM.icon('share')}</button><button type="button" class="small-ghost directory-report" title="Report profile" aria-label="Report ${esc(name)}" data-report="${esc(p.id)}">${PM.icon('more')}</button></div>
+   <button type="button" class="directory-desktop-toggle" data-peer-expand aria-controls="peer-details-${esc(p.id)}" aria-expanded="false" aria-label="Show student details" title="Show student details"><span class="directory-desktop-toggle-label">Show details</span>${PM.icon('chevron-down')}</button>
   </article>`;
  }
  const loadFailure=(title)=>`<div class="empty-panel" style="grid-column:1/-1" role="alert"><h3>${esc(title)}</h3><p>Check your connection and try again. Your saved information has not been changed.</p><button type="button" class="btn btn-secondary" onclick="location.reload()">Retry loading</button></div>`;
@@ -585,12 +588,13 @@
         <div class="platform-card-top group-card-top"><span class="platform-card-icon">${PM.icon("users")}</span><span class="meta-badge ${byMe?'admin-owner-badge':''}">${esc(badge)}</span></div>
         <h3>${esc(g.name)}</h3>
         <p class="group-card-summary-line">${esc(PM.formatStudyText(g.module)||'Study group')} · ${esc(location||'Campus community')}</p>
+        <p class="group-card-description-preview">${esc(g.description||'A friendly place to learn together.')}</p>
       </div>
       <div class="group-card-expandable" id="group-details-${esc(g.id)}">
         <p>${esc(g.description||'A friendly place to learn together.')}</p>
         <div class="platform-card-meta group-card-meta"><span class="pm-group-fact"><small>MODULE</small><b>${esc(PM.formatStudyText(g.module)||'Not set')}</b></span>${g.institution?`<span class="pm-group-fact"><small>INSTITUTION</small><b>${esc(PM.formatStudyText(g.institution))}</b></span>`:''}${g.campus?`<span class="pm-group-fact"><small>CAMPUS</small><b>${esc(PM.formatStudyText(g.campus))}</b></span>`:''}</div>
       </div>
-      <div class="platform-card-bottom admin-card-actions group-card-actions">${byMe?`<button type="button" class="btn btn-secondary owner-button" disabled title="The group owner cannot leave; delete the group to close it.">Group owner</button>`:`<button type="button" class="btn ${joined?'btn-secondary':'btn-primary'}" data-join="${esc(g.id)}">${joined?'Leave group':'Join group'} ${joined?'↗':'+'}</button>`}${joined?`<button type="button" class="small-ghost" data-room="${esc(g.id)}">Open chat →</button>`:''}${byMe?`<button type="button" class="small-ghost manage-action" data-manage="${esc(g.id)}">${PM.icon("edit")} Manage</button>`:''}<button type="button" class="small-ghost group-card-toggle" data-group-expand aria-controls="group-details-${esc(g.id)}" aria-expanded="false" aria-label="Show group details">${PM.icon('chevron-down')}</button></div>
+      <div class="platform-card-bottom admin-card-actions group-card-actions">${byMe?`<button type="button" class="btn btn-secondary owner-button" disabled title="The group owner cannot leave; delete the group to close it.">Group owner</button>`:`<button type="button" class="btn ${joined?'btn-secondary':'btn-primary'}" data-join="${esc(g.id)}">${joined?'Leave group':'Join group'} ${joined?'↗':'+'}</button>`}${joined?`<button type="button" class="small-ghost" data-room="${esc(g.id)}">Open chat →</button>`:''}${byMe?`<button type="button" class="small-ghost manage-action" data-manage="${esc(g.id)}">${PM.icon("edit")} Manage</button>`:''}<button type="button" class="small-ghost group-card-toggle" data-group-expand aria-controls="group-details-${esc(g.id)}" aria-expanded="false" aria-label="Show group details"><span class="group-toggle-label">Show details</span>${PM.icon('chevron-down')}</button></div>
     </article>`;
    }).join('');
    $('groupsEmpty').classList.toggle('hidden',display.length>0);
@@ -606,6 +610,8 @@
      const expanded=card?.classList.toggle('is-expanded');
      toggle.setAttribute('aria-expanded',String(Boolean(expanded)));
      toggle.setAttribute('aria-label',expanded?'Hide group details':'Show group details');
+     const label=toggle.querySelector('.group-toggle-label');
+     if(label)label.textContent=expanded?'Hide details':'Show details';
      return;
    }
    if(!btn||!requireSignedIn())return;

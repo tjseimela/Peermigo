@@ -1,0 +1,52 @@
+/* Peer Match — expanded and collapsed student cards on desktop (721px+).
+   Shares the existing mobile state/handler; all actions and database logic stay intact. */
+.directory-desktop-summary,.directory-desktop-toggle{display:none}
+@media (min-width:721px){
+  #matchesGrid,#allPeersGrid{align-items:start}
+  .directory-card{min-height:0!important;padding:22px!important;transform:none;}
+  .directory-card .peer-card-top{margin-bottom:12px}
+  .directory-card .pm-avatar.card-avatar{width:64px;height:64px;min-width:64px;border-radius:50%}
+  .directory-card .directory-main h3{margin-bottom:7px;line-height:1.35}
+  .directory-card .directory-desktop-summary{display:block;min-width:0;}
+  .directory-card .directory-desktop-summary-line{
+    display:block;margin:0 0 15px;font-size:12px;line-height:1.55;color:#63708e;
+    overflow-wrap:anywhere;
+  }
+  .directory-card .directory-summary-dot{padding:0 4px;color:#a3a9bc}
+  .directory-card .directory-summary-institution{color:#6252d8;font-weight:700}
+  .directory-card .directory-desktop-bio{
+    margin:0 0 14px;padding-top:13px;border-top:1px solid #eceef6;
+    color:#66718f;font-size:12px;line-height:1.6;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+    line-clamp:2;overflow:hidden;min-height:39px;overflow-wrap:anywhere;
+  }
+  .directory-card:not(.is-expanded) .directory-expandable{display:none!important}
+  .directory-card.is-expanded .directory-expandable{
+    display:block;margin:2px 0 14px;padding:15px 0 0;border-top:1px solid #eceef6;
+  }
+  .directory-card.is-expanded .directory-desktop-bio{-webkit-line-clamp:unset;line-clamp:unset;display:block;min-height:0;}
+  .directory-card .peer-card-actions{margin-top:auto;padding-top:15px;}
+  .directory-card .directory-desktop-toggle{
+    margin:12px 0 0;display:flex;width:100%;min-height:44px;align-items:center;justify-content:center;gap:11px;
+    padding:9px 13px;border:1px solid #e4e4fa;border-radius:14px;
+    background:#f5f4ff;color:#5546da;font:800 12px/1.25 'Plus Jakarta Sans','DM Sans',sans-serif;
+    cursor:pointer;transition:background .18s,border-color .18s,color .18s;
+  }
+  .directory-card .directory-desktop-toggle:hover{background:#ece9ff;border-color:#cbc4ff}
+  .directory-card .directory-desktop-toggle:focus-visible{outline:3px solid #8a7cff;outline-offset:2px}
+  .directory-card .directory-desktop-toggle .pm-icon{width:17px;height:17px;transition:transform .18s ease}
+  .directory-card.is-expanded .directory-desktop-toggle .pm-icon{transform:rotate(180deg)}
+  .directory-card .directory-expand-button{display:none!important}
+  .directory-card .directory-share,.directory-card .directory-report{display:inline-flex!important}
+  html[data-theme="dark"] .directory-card .pm-avatar.card-avatar{background:#343156;color:#dcd5ff;border-color:#24304b}
+  html[data-theme="dark"] .directory-card .directory-desktop-summary-line,
+  html[data-theme="dark"] .directory-card .directory-desktop-bio{color:#bdc8e0}
+  html[data-theme="dark"] .directory-card .directory-summary-institution{color:#c0b7ff}
+  html[data-theme="dark"] .directory-card .directory-desktop-bio,
+  html[data-theme="dark"] .directory-card.is-expanded .directory-expandable{border-color:#3a4663}
+  html[data-theme="dark"] .directory-card .directory-desktop-toggle{background:#303053;border-color:#4c4a75;color:#d2caff}
+  html[data-theme="dark"] .directory-card .directory-desktop-toggle:hover{background:#3c3869;border-color:#7771b4}
+}
+@media (prefers-reduced-motion:reduce){
+  .directory-card .directory-desktop-toggle,.directory-card .directory-desktop-toggle .pm-icon{transition:none}
+}

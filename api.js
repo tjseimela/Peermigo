@@ -1,5 +1,26 @@
 /* Peer Match: Supabase-backed platform. All student data is stored in Supabase. */
 window.PM = window.PM || {};
+// Shared study-partner compatibility formula for badges and directory ranking.
+// A visitor's match score is personal: it depends on their own school,
+// campus, modules, study schedule and preferred study format.
+PM.scoreStudentMatch = (peer, me) => {
+  if (!me || !peer || peer.id === me.id || !me.institution || !peer.institution) return 0;
+  let score = 0;
+  const sameSchool = PM.institutionKey(peer.institution) === PM.institutionKey(me.institution);
+  if (sameSchool) score += 45;
+  if (sameSchool && peer.campus && me.campus && PM.campusKey(peer.campus) === PM.campusKey(me.campus)) score += 22;
+  const modules = new Set((me.modules || []).map(PM.normalize));
+  score += Math.min(24, (peer.modules || []).filter(m => modules.has(PM.normalize(m))).length * 12);
+  if (peer.availability === me.availability || peer.availability === 'flexible' || me.availability === 'flexible') score += 6;
+  if (peer.study_method === me.study_method || peer.study_method === 'hybrid' || me.study_method === 'hybrid') score += 3;
+  return score;
+};
+// Profiles without the essentials have no displayed compatibility badge, so
+// they are ranked after scored profiles, not assigned a misleading percentage.
+PM.displayStudentMatch = (peer, me) =>
+  peer?.institution && peer?.course && peer?.full_name && !/^Student [0-9A-F]{6}$/.test(peer.full_name)
+    ? PM.scoreStudentMatch(peer, me) : 0;
+
 PM.backend = {
   mode:'live',client:null,user:null,
   async init() {
@@ -112,26 +133,59 @@ PM.backend = {
     const size=Math.max(6,Math.min(Number(pageSize)||18,36));
     const current=Math.max(0,Math.floor(Number(page)||0));
     const fields='id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable';
-    let query=this.requireClient().from('profiles').select(fields,{count:'exact'})
-      .eq('discoverable',true).neq('id',this.user.id);
     const blocked=excludedIds.filter(id=>/^[0-9a-f-]{36}$/i.test(id));
-    if(blocked.length)query=query.not('id','in',`(${blocked.join(',')})`);
     const term=String(search||'').normalize('NFKC').replace(/[^\p{L}\p{N} '\-]/gu,'').trim().slice(0,64);
-    if(term)query=query.or(`full_name.ilike.%${term}%,course.ilike.%${term}%,institution.ilike.%${term}%,campus.ilike.%${term}%`);
-    if(institution)query=query.ilike('institution',institution.trim());
-    if(method)query=query.eq('study_method',method);
-    if(availability)query=query.eq('availability',availability);
-    if(sameCampus){
-      if(!me?.institution||!me?.campus)return {rows:[],count:0};
-      query=query.ilike('institution',me.institution).ilike('campus',me.campus);
+    if(sameCampus && (!me?.institution || !me?.campus))return {rows:[],count:0};
+    if(sameCourse && !me?.course)return {rows:[],count:0};
+
+    // Re-create the same filtered query for every batch of a match-ranked
+    // directory. Sorting only the current page would be incorrect: a high
+    // match on a later alphabetic page must also be able to appear first.
+    const buildQuery=()=>{
+      let query=this.requireClient().from('profiles').select(fields,{count:'exact'})
+        .eq('discoverable',true).neq('id',this.user.id);
+      if(blocked.length)query=query.not('id','in',`(${blocked.join(',')})`);
+      if(term)query=query.or(`full_name.ilike.%${term}%,course.ilike.%${term}%,institution.ilike.%${term}%,campus.ilike.%${term}%`);
+      if(institution)query=query.ilike('institution',institution.trim());
+      if(method)query=query.eq('study_method',method);
+      if(availability)query=query.eq('availability',availability);
+      if(sameCampus)query=query.ilike('institution',me.institution).ilike('campus',me.campus);
+      if(sameCourse)query=query.ilike('course',me.course);
+      return query;
+    };
+
+    if(sort==='match'){
+      // Include the viewer's matching inputs and all filters in the cache key.
+      // The short cache lets page 2/3 reuse the same GLOBAL ranking.
+      const cacheKey=JSON.stringify({user:this.user.id,term,institution,method,availability,sameCampus,sameCourse,
+        blocked:[...blocked].sort(),me:me?{id:me.id,institution:me.institution,campus:me.campus,
+          modules:me.modules,availability:me.availability,study_method:me.study_method,course:me.course}:null});
+      let saved=this._matchDirectoryCache;
+      if(!saved || saved.key!==cacheKey || Date.now()-saved.savedAt>60000){
+        const batchSize=500;
+        const students=[];
+        let total=null;
+        for(let offset=0;;offset+=batchSize){
+          const {data,count,error}=await buildQuery().order('id',{ascending:true}).range(offset,offset+batchSize-1);
+          if(error)throw error;
+          if(total===null && count!==null && count!==undefined)total=count;
+          const batch=data||[];
+          students.push(...batch);
+          if(!batch.length || (total!==null && students.length>=total) || (total===null && batch.length<batchSize))break;
+        }
+        students.sort((a,b)=>PM.displayStudentMatch(b,me)-PM.displayStudentMatch(a,me)
+          || String(a.full_name||'').localeCompare(String(b.full_name||''),'en',{sensitivity:'base'})
+          || String(a.id).localeCompare(String(b.id)));
+        saved={key:cacheKey,savedAt:Date.now(),rows:students};
+        this._matchDirectoryCache=saved;
+      }
+      return {rows:saved.rows.slice(current*size,(current+1)*size),count:saved.rows.length};
     }
-    if(sameCourse){
-      if(!me?.course)return {rows:[],count:0};
-      query=query.ilike('course',me.course);
-    }
+
+    // Preserve the existing alternative orderings: A-Z, Z-A and newest.
     const orderKey=sort==='newest'?'created_at':'full_name';
     const ascending=sort==='az';
-    const {data,count,error}=await query.order(orderKey,{ascending:sort==='newest'?false:ascending})
+    const {data,count,error}=await buildQuery().order(orderKey,{ascending:sort==='newest'?false:ascending})
       .order('id',{ascending:true}).range(current*size,current*size+size-1);
     if(error)throw error;
     return {rows:data||[],count:count||0};
