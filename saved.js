@@ -64,7 +64,7 @@
   const list=$('pmSavedList');if(!list)return;
   const items=saved.filter(row=>(currentFilter==='all'||(row.note_id?'note':'resource')===currentFilter) && (row.note_id?savedNotes.has(row.note_id):!!catalog[row.resource_key]));
   $('pmSavedTotal').textContent=String(saved.filter(row=>row.note_id?savedNotes.has(row.note_id):!!catalog[row.resource_key]).length);
-  list.innerHTML=items.length?items.map(row=>card(row)).join(''):'<div class="pm-saved-empty">'+icon('bookmark')+'<h3>Nothing saved here yet</h3><p>Browse public student notes or study resources and tap Save to build your personal learning list.</p><div><a href="matches.html" class="btn btn-secondary">Find public notes →</a><a href="resources.html" class="btn btn-primary">Explore resources →</a></div></div>';
+  list.innerHTML=items.length?items.map(row=>card(row)).join(''):'<div class="pm-saved-empty">'+icon('bookmark')+'<h3>Nothing saved here yet</h3><p>Browse public student notes or study resources and tap Save to build your personal learning list.</p><div><a href="notes.html#discover" class="btn btn-secondary">Discover notes →</a><a href="resources.html" class="btn btn-primary">Explore resources →</a></div></div>';
  }
  function showHome(){
   const root=$('pmHomeSavedPreview');if(!root)return;

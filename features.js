@@ -5,7 +5,7 @@
  const el=id=>document.getElementById(id);
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const date=x=>x?new Date(x).toLocaleString('en-ZA',{dateStyle:'medium',timeStyle:'short'}):'';
- const toast=t=>{const box=el('toast');if(box){box.textContent=t;box.classList.add('visible');setTimeout(()=>box.classList.remove('visible'),4400)}else alert(t)};
+ const toast=t=>{const box=el('toast');if(box){box.textContent=t;box.classList.add('visible');setTimeout(()=>box.classList.remove('visible'),4400)}else PMDialogs.alert(t)};
  const validId=id=>/^[0-9a-f-]{36}$/i.test(id||'');
  const hasAuth=()=>Boolean(db.user);
  const gate=()=>`<div class="social-empty"><h3>Sign in to continue</h3><p>Student profiles and private files are available to signed-in members.</p><a class="btn btn-primary" href="account.html">Sign in →</a></div>`;
@@ -62,7 +62,7 @@
     const safeName=document.createElement('span');safeName.textContent=`${f.file_name} · ${(f.file_size/1024/1024).toFixed(1)} MB`;safeName.className='file-title';
     const link=document.createElement('button');link.type='button';link.className='text-button';link.textContent='Open ↗';link.onclick=async()=>{try{const url=await db.attachmentUrl(f.storage_path);const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.click();}catch(e){toast(e.message)}};
     row.append(safeName,link);
-    if(ownerMode&&f.owner_id===db.identity()){const remove=document.createElement('button');remove.type='button';remove.className='text-button danger-text';remove.textContent='Remove';remove.onclick=async()=>{if(!confirm(`Remove ${f.file_name}?`))return;try{await db.removeAttachment(f);row.remove();toast('Attachment removed.')}catch(e){toast(e.message)}};row.append(remove)}
+    if(ownerMode&&f.owner_id===db.identity()){const remove=document.createElement('button');remove.type='button';remove.className='text-button danger-text';remove.textContent='Remove';remove.onclick=async()=>{if(!await PMDialogs.confirm(`Remove ${f.file_name}?`,{title:'Remove attachment?',confirmText:'Remove',kind:'danger'}))return;try{await db.removeAttachment(f);row.remove();toast('Attachment removed.')}catch(e){toast(e.message)}};row.append(remove)}
     if(f.mime_type.startsWith('image/')){const img=document.createElement('img');img.className='file-thumbnail';img.alt=f.file_name;img.loading='lazy';row.prepend(img);try{img.src=await db.attachmentUrl(f.storage_path)}catch{img.remove()}}
     container.append(row);
    }
@@ -84,16 +84,20 @@
   form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity()||!hasAuth())return;
    const note={topic:el('noteTopic').value.trim(),body:el('noteBody').value.trim(),visibility:el('noteVisibility').value};
    if(note.topic.length<3||!note.body)return toast('Enter a topic and note content.');
-   const files=el('noteFiles').files;const btn=el('notesSubmit');btn.disabled=true;btn.textContent='Saving…';
+   const files=el('noteFiles').files;
+   if(files?.length>5)return toast('Select up to 5 images.');
+   if(files && [...files].some(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10*1024*1024||file.size===0))
+     return toast('Only JPG, PNG or WebP images up to 10 MB each are allowed.');
+   const btn=el('notesSubmit');btn.disabled=true;btn.textContent='Saving…';
    try{const saved=editing?await db.editNote(editing,note):await db.createNote(note);
     if(files?.length){try{await db.uploadAttachments('note',saved.id,files)}catch(err){await reload();toast('Note saved, but attachment failed: '+err.message);return}}
-    reset();await reload();toast('Note saved to your profile.');}
+    reset();await reload();window.dispatchEvent(new Event('pm-note-updated'));toast('Note saved to your profile.');}
    catch(err){toast(err.message)}finally{btn.disabled=false;if(!editing)btn.textContent='Publish note →'}
   });
   list.addEventListener('click',async e=>{
    const edit=e.target.closest('[data-edit-note]'),del=e.target.closest('[data-delete-note]');if(edit){const n=cache.find(n=>n.id===edit.dataset.editNote);if(!n)return;
-    editing=n.id;el('noteTopic').value=n.topic;el('noteBody').value=n.body;el('noteVisibility').value=n.visibility;el('notesFormTitle').textContent='Edit your note';el('notesSubmit').textContent='Save changes →';el('notesCancelEdit').hidden=false;el('noteFiles').value='';form.scrollIntoView({behavior:'smooth',block:'start'});
-   }else if(del){const n=cache.find(n=>n.id===del.dataset.deleteNote);if(!n||!confirm(`Permanently delete "${n.topic}" and its attachments?`))return;
+    editing=n.id;el('noteTopic').value=n.topic;el('noteBody').value=n.body;el('noteVisibility').value=n.visibility;el('notesFormTitle').textContent='Edit your note';el('notesSubmit').textContent='Save changes →';el('notesCancelEdit').hidden=false;el('noteFiles').value='';el('noteFiles').dispatchEvent(new Event('pm-upload-sync'));form.scrollIntoView({behavior:'smooth',block:'start'});
+   }else if(del){const n=cache.find(n=>n.id===del.dataset.deleteNote);if(!n||!await PMDialogs.confirm(`This note and its images will be permanently deleted.`,{title:`Delete “${n.topic}”?`,confirmText:'Delete note',kind:'danger'}))return;
     try{await db.deleteNote(n.id);if(editing===n.id)reset();await reload();toast('Note deleted.')}catch(err){toast(err.message)}
    }
   });
@@ -106,7 +110,7 @@
   let me=await db.profile();const photo=el('photoCurrent');const paint=async()=>{photo.innerHTML=avatar(me?.full_name,me?.avatar_path,'large');await decorateAvatars(photo)};
   await paint();
   photoForm.addEventListener('submit',async e=>{e.preventDefault();const selected=el('avatarFile').files[0];if(!selected)return toast('Select a photo first.');const file=PM.cropper?.file();if(!file)return toast('Position your photo and choose Use this photo before uploading.');const saveBtn=el('savePhotoButton');if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='Uploading…'}
-   try{const path=await db.uploadAvatar(file);me={...me,avatar_path:path};await paint();window.dispatchEvent(new Event('pm-profile-photo-changed'));el('avatarFile').value='';PM.cropper?.reset();toast('Profile photo updated.')}catch(err){toast(err.message)}finally{if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save profile photo'}}
+   try{const path=await db.uploadAvatar(file);me={...me,avatar_path:path};await paint();window.dispatchEvent(new Event('pm-profile-photo-changed'));el('avatarFile').value='';el('avatarFile').dispatchEvent(new Event('pm-upload-sync'));PM.cropper?.reset();toast('Profile photo updated.')}catch(err){toast(err.message)}finally{if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save profile photo'}}
   });
   el('removePhoto').addEventListener('click',async()=>{if(!me?.avatar_path)return;try{await db.removeAvatar();me={...me,avatar_path:null};await paint();window.dispatchEvent(new Event('pm-profile-photo-changed'));PM.cropper?.reset();toast('Photo removed.')}catch(e){toast(e.message)}});
   await renderMyNotes();
@@ -266,7 +270,7 @@ async function startPresence(){if(!db.user)return;
  async function copyProfileUrl(url){
   if(navigator.clipboard&&window.isSecureContext){try{await navigator.clipboard.writeText(url);return true;}catch{/* Fall back to manual copy. */}}
   const field=document.createElement('textarea');field.value=url;field.style.position='fixed';field.style.top='-1000px';document.body.appendChild(field);field.select();const ok=document.execCommand('copy');field.remove();if(ok)return true;
-  window.prompt('Copy this student profile link:',url);return false;
+  await PMDialogs.prompt('Select the link below to copy it manually.',{title:'Share student profile',label:'Profile link',value:url,minLength:0,maxLength:2048,multiline:false,confirmText:'Close'});return false;
  }
  document.addEventListener('click',async e=>{
   const btn=e.target.closest('[data-copy-profile],[data-share-profile]');if(!btn)return;

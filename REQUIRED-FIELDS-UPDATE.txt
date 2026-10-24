@@ -1,0 +1,9 @@
+Peermigo matching essentials — 24 October 2026
+
+Registration now requires institution, course (or school grade), at least one subject/module, and preferred study format. Campus is required only for on-campus university/college students; it is optional for online and hybrid students, and for school learners.
+
+Edit Profile prevents leaving these required fields blank. Older profiles are not modified; students with missing details can complete them normally.
+
+Supabase migration peermigo_registration_match_essentials_20261024 has ALREADY been applied to the connected existing Peermigo Supabase project. You do not need to run SQL again. It saves selected study format on registration and safeguards previously completed fields against being cleared.
+
+Deploy the files in this ZIP to your existing GitHub repository root, then Commit and Push. Test sign-up and editing with spare accounts.

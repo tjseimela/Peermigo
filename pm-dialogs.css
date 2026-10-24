@@ -1,0 +1,35 @@
+.pm-dialog-overlay[hidden]{display:none!important}
+.pm-dialog-overlay{position:fixed;z-index:2147483640;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(16,21,44,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.pm-dialog-card{width:min(100%,460px);max-height:min(89dvh,700px);overflow:auto;background:#fff;color:#1b2440;border:1px solid #e8e9f3;border-radius:24px;box-shadow:0 26px 88px rgba(9,12,39,.25);padding:26px;animation:pm-dialog-arrive .18s ease-out}
+@keyframes pm-dialog-arrive{from{opacity:0;transform:translateY(11px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.pm-dialog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
+.pm-dialog-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#eeecff;color:#6453e5}
+.pm-dialog-close{border:0;border-radius:9px;color:#69738c;background:transparent;font-size:25px;line-height:1;width:32px;height:32px;cursor:pointer}
+.pm-dialog-close:hover{background:#f3f2fa}
+.pm-dialog-heading{color:#1d2646;font-family:var(--font-head,'Plus Jakarta Sans',sans-serif);font-size:22px;letter-spacing:-.04em;line-height:1.35;margin:0 0 9px}
+.pm-dialog-description{font-size:13px;line-height:1.65;color:#6c7591;margin:0 0 21px;overflow-wrap:anywhere;white-space:pre-line}
+.pm-dialog-label{display:block;font-size:12px;font-weight:800;color:#333b5a;margin-bottom:9px}
+.pm-dialog-input{display:block;width:100%;box-sizing:border-box;min-height:48px;max-height:30vh;resize:vertical;padding:13px 14px;background:#fcfcff;border:1px solid #dce0ec;border-radius:13px;color:#202745;font:500 13px var(--font-body,'DM Sans',sans-serif);outline:0}
+.pm-dialog-input:focus{border-color:#6d5be7;box-shadow:0 0 0 4px rgba(106,83,233,.12)}
+.pm-dialog-input[aria-invalid=true]{border-color:#db5d64}
+.pm-dialog-error{display:block;min-height:17px;color:#c94152;font-size:11px;margin-top:5px}
+.pm-dialog-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:23px}
+.pm-dialog-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 18px;border:1px solid #dedfec;border-radius:12px;background:#f4f5fb;color:#364064;font:800 12px var(--font-head,'Plus Jakarta Sans',sans-serif);cursor:pointer}
+.pm-dialog-primary{background:#5c4be5;color:#fff;border-color:#5c4be5;box-shadow:0 8px 20px rgba(86,68,218,.17)}
+.pm-dialog-danger{background:#c93d58;border-color:#c93d58;box-shadow:none}
+.pm-dialog-button:focus-visible,.pm-dialog-close:focus-visible,.pm-dialog-choice:focus-visible{outline:3px solid #8b7bf5;outline-offset:2px}
+.pm-dialog-choices{display:grid;gap:10px;margin-top:20px}
+.pm-dialog-choice{text-align:left;width:100%;border:1px solid #dfe1ef;border-radius:13px;padding:13px 15px;background:#fbfbff;cursor:pointer;display:grid;gap:4px}
+.pm-dialog-choice:hover{background:#f2efff;border-color:#a9a0f7}
+.pm-dialog-choice strong{color:#273053;font:800 13px var(--font-head,'Plus Jakarta Sans',sans-serif)}
+.pm-dialog-choice small{color:#727c9b;font-size:12px}
+html[data-theme=dark] .pm-dialog-card{background:#19233b;border-color:#334260;color:#e9edff}
+html[data-theme=dark] .pm-dialog-heading,html[data-theme=dark] .pm-dialog-label,html[data-theme=dark] .pm-dialog-choice strong{color:#f1f2ff}
+html[data-theme=dark] .pm-dialog-description,html[data-theme=dark] .pm-dialog-choice small{color:#aab4d4}
+html[data-theme=dark] .pm-dialog-input{background:#121c30;border-color:#3a4869;color:#eef0ff}
+html[data-theme=dark] .pm-dialog-cancel{background:#25314d;border-color:#3a4861;color:#e8eaff}
+html[data-theme=dark] .pm-dialog-choice{background:#202b46;border-color:#3a4665}
+html[data-theme=dark] .pm-dialog-choice:hover{background:#2c3656}
+html[data-theme=dark] .pm-dialog-close{color:#d1d6ec}
+@media(max-width:600px){.pm-dialog-overlay{padding:0;align-items:flex-end}.pm-dialog-card{width:100%;border-radius:24px 24px 0 0;max-height:86dvh;padding:23px 22px max(24px,env(safe-area-inset-bottom));animation:pm-dialog-slide .2s ease-out}.pm-dialog-heading{font-size:20px}@keyframes pm-dialog-slide{from{opacity:.5;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}}
+@media(prefers-reduced-motion:reduce){.pm-dialog-card{animation:none}}

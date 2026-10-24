@@ -27,11 +27,14 @@ PM.backend = {
       email,password,
       options:{data:{
         full_name:PM.formatPersonName(studentDetails.full_name),
+        given_names:studentDetails.given_names,
+        surname:studentDetails.surname,
         institution_type:studentDetails.institution_type,
         institution:studentDetails.institution,
         campus:studentDetails.campus,
         course:studentDetails.course,
         modules:studentDetails.modules,
+        study_method:studentDetails.study_method,
         discoverable:studentDetails.discoverable
       }}
     });
@@ -51,7 +54,7 @@ PM.backend = {
   async signOut(){const {error}=await this.requireClient().auth.signOut();if(error)throw error;this.user=null;},
   async profile(){if(!this.user)return null;const {data,error}=await this.requireClient().from('profiles').select('*').eq('id',this.user.id).maybeSingle();if(error)throw error;return data;},
   async saveProfile(p){
-    this.requireUser();const safe={id:this.user.id,full_name:PM.formatPersonName(p.full_name),institution_type:p.institution_type,institution:p.institution,campus:p.campus,course:p.course,modules:p.modules,availability:p.availability,study_method:p.study_method,about:p.about};
+    this.requireUser();const safe={id:this.user.id,full_name:PM.formatPersonName(p.full_name),given_names:p.given_names,surname:p.surname,institution_type:p.institution_type,institution:p.institution,campus:p.campus,course:p.course,modules:p.modules,availability:p.availability,study_method:p.study_method,about:p.about};
     const current=await this.profile();let result;if(current){const {id,...changes}=safe;result=await this.requireClient().from('profiles').update(changes).eq('id',this.user.id);}else{result=await this.requireClient().from('profiles').insert(safe);}if(result.error)throw result.error;
   },
   async peers(){

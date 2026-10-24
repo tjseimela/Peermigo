@@ -1,0 +1,28 @@
+/* Peermigo v3: restored desktop profile rail and compact note actions. */
+@media (min-width: 901px){
+  .pm-edit-profile-aside{display:block;align-self:start}
+  .pm-edit-profile-aside .aside-highlight{position:sticky;top:94px}
+}
+@media (max-width: 900px){
+  .pm-edit-profile-aside{display:none!important}
+  .profile-layout:has(.pm-edit-profile-aside){grid-template-columns:minmax(0,1fr)}
+}
+.pm-note-controls{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:8px 0 14px}
+.pm-note-controls .form-group{margin:0!important}
+.pm-note-visibility{width:168px;flex:none}
+.pm-note-visibility .pm-select-wrap{width:100%}
+.pm-note-visibility select{width:100%!important;height:45px!important;border-radius:12px!important;font-size:12px!important}
+.pm-note-photos{flex:none;min-width:0}
+.pm-image-inline{display:flex;align-items:center;gap:10px;min-height:45px}
+.pm-image-icon-button{position:relative;width:45px;height:45px;border:1px solid #dedfec;border-radius:13px;background:#f1efff;color:#6052dc;display:inline-flex;justify-content:center;align-items:center;cursor:pointer;transition:background .18s,border-color .18s,transform .18s;flex:none}
+.pm-image-icon-button:hover{background:#e5e0ff;border-color:#8678ee;transform:translateY(-1px)}
+.pm-image-icon-button:focus-within{outline:3px solid #afa5ff;outline-offset:2px}
+.pm-images-selected{font-size:11px;font-weight:600;color:#7b829a;max-width:155px;overflow-wrap:anywhere}
+html[data-theme='dark'] .pm-image-icon-button{background:#242d49;border-color:#3b4768;color:#d9d2ff}
+html[data-theme='dark'] .pm-image-icon-button:hover{background:#2c3657;border-color:#8173eb}
+html[data-theme='dark'] .pm-images-selected{color:#bac1d7}
+@media(max-width:380px){.pm-note-controls{gap:11px}.pm-note-visibility{width:148px}}
+
+.pm-images-selected[hidden]{display:none!important}
+/* Profile requirement indicators, matching registration validation. */
+.pm-required-symbol{float:none!important;margin-left:2px}

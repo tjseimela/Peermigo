@@ -27,6 +27,11 @@
 <link rel="stylesheet" href="mobile-header-refresh.css"/>
 <link rel="stylesheet" href="workspace-refresh.css"/>
 <link rel="stylesheet" href="compact-upload-ui.css"/>
+<link rel="stylesheet" href="peermigo-v3-ui.css"/>
+<link rel="stylesheet" href="notes-discovery.css"/>
+<link rel="stylesheet" href="notes-toolbar-refresh.css"/>
+<link rel="stylesheet" href="pm-dialogs.css"/>
+<script defer src="pm-dialogs.js"></script>
 </head>
 <body>
 <div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peermigo account</span><a href="account.html">Go to Sign In</a></div>
@@ -46,8 +51,39 @@
 </div>
 </header>
 <main id="mainContent" class="pm-workspace-page">
-<section class="app-section"><div class="container notes-layout"><div id="notesLogin"></div><div class="notes-editor social-panel"><span class="social-eyebrow">WRITE SOMETHING USEFUL</span><h2 id="notesFormTitle">Create a study note</h2><p>Start with a topic, then write what you're learning.</p><form id="notesForm" class="styled-form"><div class="form-group"><label for="noteTopic">Topic / title</label><input id="noteTopic" maxlength="140" minlength="3" required placeholder="e.g. SQL joins explained simply"></div><div class="form-group"><label for="noteBody">Your notes</label><textarea id="noteBody" rows="9" maxlength="10000" required placeholder="Share a study tip, summary or revision guide..."></textarea></div><div class="form-row pm-note-form-row"><div class="form-group"><label for="noteVisibility">Visibility</label><div class="pm-select-wrap"><select id="noteVisibility"><option value="private">Private — only me</option><option value="public">Public — on my profile</option></select></div></div><div class="form-group"><label for="noteFiles">Files and images</label><label class="pm-upload-control" for="noteFiles"><input type="file" class="pm-hidden-file-input" id="noteFiles" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx"><span class="pm-upload-button pm-upload-button-soft">Add files</span><span class="pm-upload-meta"><strong id="noteFilesStatus">No files selected</strong><small>Images, PDFs and documents</small></span></label><small class="pm-note-upload-help">Up to 5 files · 10 MB each.</small></div></div><div class="note-form-footer"><button id="notesSubmit" type="submit" class="btn btn-primary">Publish note →</button><button id="notesCancelEdit" type="button" class="text-button" hidden>Cancel editing</button></div></form></div>
-<div class="notes-feed-column"><div class="section-row"><div><span class="social-eyebrow">YOUR LIBRARY</span><h2>All your notes <span class="count-dot" id="notesTotal">0</span></h2><p>Private notes are never displayed on other students' profiles.</p></div><a href="profile.html" class="text-button">My profile ↗</a></div><div id="myNotesList" class="notes-feed"></div></div></div></section></main><footer class="site-footer">
+<section class="app-section pm-notes-section">
+<div class="container pm-notes-shell">
+ <div class="pm-notes-header"><div><h1>Study Notes</h1></div><button type="button" id="pmCreateNoteShortcut" class="btn btn-primary">+ Create note</button></div>
+ <nav class="pm-notes-tabs" aria-label="Notes sections"><button type="button" class="pm-notes-tab is-active" data-notes-tab="discover" aria-pressed="true">Discover Notes</button><button type="button" class="pm-notes-tab" data-notes-tab="mine" aria-pressed="false">My Notes</button></nav>
+ <section id="pmDiscoverNotesPanel" class="pm-discover-panel" aria-label="Discover public notes">
+  <form id="pmNotesSearchForm" class="pm-notes-search"><label for="pmNotesSearch" class="sr-only">Search public notes</label><input id="pmNotesSearch" type="search" autocomplete="off" placeholder="Search notes or subjects" maxlength="70"/><button type="submit" aria-label="Search notes">Search</button></form>
+  <div class="pm-note-filters" role="group" aria-label="Notes feed filters"><button type="button" class="pm-note-filter is-active" data-feed-filter="for-you" aria-pressed="true">For you</button><button type="button" class="pm-note-filter" data-feed-filter="recent" aria-pressed="false">Recent</button><button type="button" class="pm-note-filter" data-feed-filter="institution" aria-pressed="false">My institution</button></div>
+  <div id="pmDiscoverNotesList" class="pm-discover-list" aria-live="polite"><p class="pm-notes-empty">Loading public notes…</p></div>
+  <button type="button" id="pmNotesMore" class="pm-notes-more" hidden>Load more notes</button>
+ </section>
+ <section id="pmMyNotesPanel" hidden aria-label="Manage my notes">
+<div class="notes-layout"><div id="notesLogin"></div><div class="notes-editor social-panel"><h2 id="notesFormTitle">Create a study note</h2><form id="notesForm" class="styled-form"><div class="form-group"><label for="noteTopic">Topic / title</label><input id="noteTopic" maxlength="140" minlength="3" required placeholder="e.g. SQL joins explained simply"></div><div class="form-group"><label for="noteBody">Your notes</label><textarea id="noteBody" rows="9" maxlength="10000" required placeholder="Share a study tip, summary or revision guide..."></textarea></div><div class="pm-note-toolbar" aria-label="Note publishing options">
+  <div class="pm-note-toolbar-actions">
+    <label class="pm-privacy-select" for="noteVisibility">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <select id="noteVisibility" aria-label="Note visibility"><option value="private">Only me</option><option value="public">On my profile</option></select>
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+    </label>
+    <button class="pm-add-note-images" id="pmAddNoteImages" type="button" aria-label="Add images" title="Add images">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m4 17 5.5-5.5 4 4L16 13l4 4"/></svg>
+    </button>
+    <input class="pm-hidden-file-input" type="file" id="noteFiles" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple aria-label="Select note images" />
+    <span class="pm-note-image-count" id="noteFilesStatus" aria-live="polite" hidden></span>
+  </div>
+  <div class="pm-note-toolbar-publish">
+    <button id="notesCancelEdit" type="button" class="text-button" hidden>Cancel</button>
+    <button id="notesSubmit" type="submit" class="btn btn-primary">Publish note →</button>
+  </div>
+</div>
+<div id="pmNoteImagePreviews" class="pm-note-image-previews" aria-live="polite" hidden></div></form></div>
+<div class="notes-feed-column"><div class="section-row"><div><h2>All your notes <span class="count-dot" id="notesTotal">0</span></h2></div><a href="profile.html" class="text-button">My profile ↗</a></div><div id="myNotesList" class="notes-feed"></div></div></div></section></div></section></main>
+<div class="pm-note-modal" id="pmNoteReader" hidden role="dialog" aria-modal="true" aria-labelledby="pmNoteReaderTitle"><div class="pm-note-reader-card"><div class="pm-reader-top"><strong>Study note</strong><button type="button" id="pmNoteReaderClose" class="pm-reader-close" aria-label="Close note">×</button></div><article id="pmNoteReaderContent"></article></div></div>
+<footer class="site-footer">
   <div class="container footer-upper">
     <div class="footer-identity">
       <a class="brand footer-brand" href="index.html" aria-label="Peermigo home"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">migo</span><span class="brand-dot">.</span></span></a>
@@ -65,5 +101,6 @@
   </div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer src="compact-upload-ui.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer src="notes-discovery.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer src="compact-upload-ui.js"></script><script defer src="notes-toolbar-refresh.js"></script>
+</body>
 </html>

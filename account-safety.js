@@ -39,7 +39,7 @@
         const unblock=document.createElement('button');unblock.type='button';unblock.className='pm-unblock-btn';unblock.textContent='Unblock';
         unblock.setAttribute('aria-label',`Unblock ${profile?.full_name||'this student'}`);
         unblock.addEventListener('click',async()=>{
-          if(!confirm(`Unblock ${profile?.full_name||'this student'}? They will be able to message you again.`))return;
+          if(!await PMDialogs.confirm(`They will be able to message you again.`,{title:`Unblock ${profile?.full_name||'this student'}?`,confirmText:'Unblock'}))return;
           unblock.disabled=true;unblock.textContent='Unblocking…';
           try{await db().unblockPeer(id);row.remove();if(!list.querySelector('.pm-block-row'))await showBlocked();}
           catch(e){status(detail,e.message,true);unblock.disabled=false;unblock.textContent='Unblock';}
@@ -97,23 +97,23 @@
       if(reactivation.disabled)return;
       reactivation.disabled=true;reactivation.textContent='Reactivating…';
       try{await db().setAccountDeactivated(false);window.location.replace('settings-account.html');}
-      catch(error){alert('Could not reactivate account: '+error.message);reactivation.disabled=false;reactivation.textContent='Reactivate account';}
+      catch(error){await PMDialogs.alert('Could not reactivate account: '+error.message);reactivation.disabled=false;reactivation.textContent='Reactivate account';}
     });
     deactivateButton?.addEventListener('click',async()=>{
-      if(!confirm('Deactivate your Peermigo account? Your profile will be hidden, new messages stopped, and notifications paused until you sign in to reactivate.'))return;
+      if(!await PMDialogs.confirm('Your profile will be hidden, new messages stopped, and notifications paused until you sign in to reactivate.',{title:'Deactivate account?',confirmText:'Deactivate',kind:'danger'}))return;
       deactivateButton.disabled=true;deactivateButton.textContent='Deactivating…';
       try{
         await db().setAccountDeactivated(true);
         await db().signOut();
         window.location.replace('account.html');
-      }catch(error){alert('Account deactivation could not be completed: '+error.message);deactivateButton.disabled=false;deactivateButton.textContent='Deactivate account';}
+      }catch(error){await PMDialogs.alert('Account deactivation could not be completed: '+error.message);deactivateButton.disabled=false;deactivateButton.textContent='Deactivate account';}
     });
     $('pmDeleteForm')?.addEventListener('submit',e=>{
       e.preventDefault();if(!e.currentTarget.reportValidity())return;
       withSubmit(e.currentTarget,async()=>{
         const check=$('pmDeletePhrase').value.trim();
         if(check!=='DELETE'||!$('pmDeleteAcknowledged').checked){status($('pmDeleteStatus'),'Type DELETE and acknowledge permanent removal.',true);return;}
-        if(!confirm('Permanently delete this Peermigo account and all associated data? This action cannot be undone.'))return;
+        if(!await PMDialogs.confirm('All associated data will be removed. This action cannot be undone.',{title:'Permanently delete account?',confirmText:'Delete account',kind:'danger'}))return;
         try{
           status($('pmDeleteStatus'),'Securely removing your account…');
           await db().permanentlyDeleteAccount($('pmDeletePassword').value);

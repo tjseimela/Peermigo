@@ -53,7 +53,7 @@
  const quickLinks=[
   ['index.html','Home','home'],['matches.html','Find peers','user'],
   ['groups.html','Groups','users'],['messages.html','Messages','message'],
-  ['notifications.html','Notifications','bell']
+  ['notes.html','Notes','book'],['notifications.html','Notifications','bell']
  ];
  let topHub=null;
  function setupTopHub(){
@@ -289,31 +289,45 @@
  function subscribeNotifications(){if(!db.client||!db.user)return;db.client.channel('alerts-'+db.user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+db.user.id},()=>{refreshBadge();refreshMessageBadge();if($('notificationsList'))renderNotifications()}).subscribe();}
  function setupInstitutionSuggestions(){const type=$('institutionType'),list=$('institutionSuggestions');if(!type||!list)return;const update=()=>{list.replaceChildren();for(const name of PM.INSTITUTIONS[type.value]||[]){const opt=document.createElement('option');opt.value=name;list.append(opt)}};type.addEventListener('change',update);update();return update;}
  async function initProfile(){const form=$('profileForm');if(!form)return;const suggestions=setupInstitutionSuggestions();
-  $('studentName')?.addEventListener('blur',()=>{$('studentName').value=PM.formatPersonName($('studentName').value)});
+  for(const field of ['studentFirstName','studentSurname'])$(field)?.addEventListener('blur',()=>{$(field).value=PM.formatPersonName($(field).value)});
   const schoolGrade=$('profileGrade'),courseInput=$('course'),typeInput=$('institutionType');
   const updateProfileCourseGrade=()=>{
    const school=typeInput.value==='school';
    $('profileCourseGroup').classList.toggle('hidden',school);
    $('profileGradeGroup').classList.toggle('hidden',!school);
-   schoolGrade.disabled=!school;schoolGrade.required=false;
-   courseInput.disabled=school;
+   schoolGrade.disabled=!school;schoolGrade.required=school;
+   courseInput.disabled=school;courseInput.required=!school;
+   updateProfileCampusRequirement();
+  };
+  const updateProfileCampusRequirement=()=>{
+   const required=typeInput.value!=='school'&&$('studyMethod')?.value==='campus';
+   const input=$('campus'),label=$('profileCampusRequiredText');
+   if(input)input.required=required;
+   if(label){label.textContent=required?'*':'Optional';label.classList.toggle('pm-optional',!required);label.classList.toggle('pm-required-symbol',required);}
   };
   typeInput.addEventListener('change',updateProfileCourseGrade);
-  const my=await getMe();if(my){const obj={studentName:PM.formatPersonName(my.full_name),institutionType:my.institution_type,institutionName:PM.formatStudyText(my.institution),campus:PM.formatStudyText(my.campus),course:PM.formatStudyText(my.course),modules:(my.modules||[]).map(PM.formatStudyText).join(', '),availability:my.availability,studyMethod:my.study_method,about:my.about};for(const [key,value]of Object.entries(obj))if($(key))$(key).value=value||'';if(my.institution_type==='school'&&/^Grade (8|9|10|11|12)$/.test(my.course||''))schoolGrade.value=my.course;suggestions?.();}updateProfileCourseGrade();
+  $('studyMethod')?.addEventListener('change',updateProfileCampusRequirement);
+  const my=await getMe();if(my){const parts=PM.formatPersonName(my.full_name).split(/\s+/).filter(Boolean);const obj={studentFirstName:my.given_names||parts.slice(0,-1).join(' ')||parts[0]||'',studentSurname:my.surname||(parts.length>1?parts[parts.length-1]:''),institutionType:my.institution_type,institutionName:PM.formatStudyText(my.institution),campus:PM.formatStudyText(my.campus),course:PM.formatStudyText(my.course),modules:(my.modules||[]).map(PM.formatStudyText).join(', '),availability:my.availability,studyMethod:my.study_method,about:my.about};for(const [key,value]of Object.entries(obj))if($(key))$(key).value=value||'';if(my.institution_type==='school'&&/^Grade (8|9|10|11|12)$/.test(my.course||''))schoolGrade.value=my.course;suggestions?.();}updateProfileCourseGrade();updateProfileCampusRequirement();
   if(!db.user){feedback('profileFeedback','Sign in or create an account before saving your profile.');const link=document.createElement('a');link.href='account.html';link.textContent=' Open account →';$('profileFeedback').append(link);}
   if($('profilePrivacy'))$('profilePrivacy').textContent='Your profile is shared with signed-in members only. Your sign-in email is never published. Verification badges are awarded by an administrator.';
-  form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity()||!requireSignedIn())return;
+  form.addEventListener('submit',async e=>{e.preventDefault();if(!requireSignedIn())return;
    const notice=$('profileFeedback'),submit=$('saveProfileChanges');
-   const modules=val('modules').split(',').map(PM.formatStudyText).filter(Boolean).slice(0,10);
+   const modules=val('modules').split(',').map(PM.formatStudyText).filter(Boolean);
    const course=typeInput.value==='school'?schoolGrade.value:PM.formatStudyText(val('course'));
-   // A student editing another field is not forced to re-enter registration data.
-   // Retain their previously saved display name if the field was left empty.
-   const newName=clean(val('studentName'))||my?.full_name||'';
-   if(!PM.validPersonName(newName)){
-    feedback('profileFeedback','Please keep a valid display name. Names can contain letters, spaces, apostrophes and hyphens.',true);
-    notice.scrollIntoView({behavior:'smooth',block:'nearest'});return;
+   const firstName=PM.formatPersonName(val('studentFirstName'));
+   const surname=PM.formatPersonName(val('studentSurname'));
+   const newName=[firstName,surname].filter(Boolean).join(' ');
+   if(!firstName||!surname||!PM.validPersonName(firstName)||!PM.validPersonName(surname)||newName.length>80){
+    feedback('profileFeedback','Enter a valid first name and surname (80 characters maximum combined).',true);
+    (!firstName?$('studentFirstName'):$('studentSurname')).focus();return;
    }
-   const payload={full_name:PM.formatPersonName(newName),institution_type:val('institutionType'),institution:PM.canonicalInstitution(val('institutionName'),val('institutionType')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
+   const payload={full_name:PM.formatPersonName(newName),given_names:firstName,surname,institution_type:val('institutionType'),institution:PM.canonicalInstitution(val('institutionName'),val('institutionType')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
+   const issue=PM.matchEssentialsValidation(payload);
+   if(issue){
+    const fieldMap={institution_type:'institutionType',institution:'institutionName',course:typeInput.value==='school'?'profileGrade':'course',campus:'campus',modules:'modules',study_method:'studyMethod'};
+    feedback('profileFeedback',issue.message,true);notice.scrollIntoView({behavior:'smooth',block:'nearest'});$(fieldMap[issue.field])?.focus();return;
+   }
+   if(!form.reportValidity())return;
    submit.disabled=true;submit.textContent='Saving changes…';notice.classList.add('hidden');
    try{
     await db.saveProfile(payload);
@@ -511,7 +525,7 @@
     return;
    }
    if(report){const id=report.dataset.report;if(!validPeerId(id))return;
-    const reason=prompt('Report this profile: briefly describe the problem (5–500 characters).');
+    const reason=await PMDialogs.prompt('Briefly describe the issue (5–500 characters).',{title:'Report profile',confirmText:'Submit report',minLength:5,maxLength:500});
     if(!reason)return;if(reason.trim().length<5||reason.trim().length>500){notify('Please enter 5–500 characters.');return;}
     try{if(!requireSignedIn())return;await db.reportPeer(id,reason.trim());notify('Report submitted.');}catch(error){handleError(error)}
    }
@@ -657,7 +671,7 @@
    const btn=e.target.closest('[data-remove-member]');if(!btn||!managingGroup||!ownsGroup(managingGroup)||!requireSignedIn())return;
    const id=btn.dataset.removeMember;if(id===db.identity())return;
    const name=btn.closest('.admin-member-row')?.querySelector('strong')?.textContent||'this member';
-   if(!confirm(`Remove ${name} from this group and prevent them rejoining? Their RSVPs in this group's sessions will also be cancelled. You can allow them back later.`))return;
+   if(!await PMDialogs.confirm(`Their RSVPs will be cancelled and they will be prevented from rejoining until allowed back.`,{title:`Remove ${name}?`,confirmText:'Remove member',kind:'danger'}))return;
    try{await db.removeGroupMember(managingGroup,id);await refreshRoster();await refreshBans();notify('Member removed and restricted from rejoining.');}
    catch(err){handleError(err);}
   });
@@ -672,7 +686,7 @@
   }
   $('adminBanList')?.addEventListener('click',async e=>{
    const btn=e.target.closest('[data-unban-member]');if(!btn||!managingGroup||!ownsGroup(managingGroup)||!requireSignedIn())return;
-   if(!confirm('Allow this student to join the group again?'))return;
+   if(!await PMDialogs.confirm('This student will be able to rejoin the group.',{title:'Allow student back?',confirmText:'Allow rejoining'}))return;
    try{await db.unbanGroupMember(managingGroup,btn.dataset.unbanMember);await refreshBans();notify('Student can now rejoin the group.');}catch(err){handleError(err);}
   });
   $('editGroupForm')?.addEventListener('submit',async e=>{
@@ -684,7 +698,7 @@
   $('deleteGroup')?.addEventListener('click',async()=>{
    if(!managingGroup||!ownsGroup(managingGroup)||!requireSignedIn())return;
    const g=groupsCache.find(x=>x.id===managingGroup);
-   if(!confirm(`Permanently delete “${g?.name||'this group'}” and all its posts, study sessions and RSVPs? This cannot be undone.`))return;
+   if(!await PMDialogs.confirm('All group posts, sessions and RSVPs will be removed. This cannot be undone.',{title:`Delete “${g?.name||'this group'}”?`,confirmText:'Delete group',kind:'danger'}))return;
    try{const id=managingGroup;await db.deleteGroup(id);managingGroup=null;admin.classList.add('hidden');
     await load();notify('Study group deleted. ');}
    catch(err){handleError(err);}
@@ -735,7 +749,7 @@
    }
    if(remove){
     const s=sessions.find(x=>x.id===remove.dataset.deleteSession);if(!s||!canManage(s)||!requireSignedIn())return;
-    if(!confirm(`Permanently cancel “${s.title}”? All RSVPs for this session will be removed.`))return;
+    if(!await PMDialogs.confirm('All RSVPs for this study session will be removed.',{title:`Cancel “${s.title}”?`,confirmText:'Cancel session',kind:'danger'}))return;
     try{await db.deleteSession(s.id);if($('editingSessionId').value===s.id){resetSessionForm();f.classList.add('hidden');}await load();notify('Session cancelled. ');}catch(err){handleError(err);}return;
    }
    if(!rsvp||!requireSignedIn())return;
@@ -766,7 +780,7 @@
   async function openChat(id){const p=inboxPeers.find(x=>x.id===id);if(!p||blocked.includes(id))return;selectedPeer=id;const layout=$('conversationList').closest('.messaging-layout');layout?.classList.add('chat-open');document.body.classList.add('pm-private-chat-open');
    $('conversationList').querySelectorAll('[data-peer]').forEach(el=>el.classList.toggle('selected',el.dataset.peer===id));$('chatHeader').innerHTML=`<button class="pm-chat-back-button" id="chatMobileBack" type="button" aria-label="Back to all conversations">←</button><a href="student.html?id=${encodeURIComponent(p.id)}" class="pm-chat-header-avatar-link" aria-label="Open ${esc(PM.formatPersonName(p.full_name))} profile">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}</a><div class="pm-chat-header-main"><strong class="pm-chat-peer-name">${esc(PM.formatPersonName(p.full_name))}${p.is_verified?` <span class="pm-chat-verified" title="Verified student" aria-label="Verified student">${PM.icon('shield')}<span class="sr-only">Verified</span></span>`:''}</strong>${p.show_activity!==false?`<small class="activity-status" id="peerActivity">${esc(PM.ui.status(p))}</small>`:'<small class="pm-chat-private-status">Last seen hidden</small>'}</div><button class="text-button pm-chat-safety-control" type="button" id="safetyOptions" aria-label="Safety options: block or report" title="Block or report this account"><span aria-hidden="true">⋯</span></button>`;
    $('messageBody').disabled=false;$('sendMessageBtn').disabled=false;$('emojiPickerToggle').disabled=false;
-   $('safetyOptions').addEventListener('click',async()=>{const choice=prompt('Type BLOCK to stop future messages, or REPORT to flag abuse.');if(!choice)return;if(choice.toUpperCase()==='BLOCK'){if(!confirm('Block this account? You will no longer be able to message each other.'))return;try{await db.blockPeer(id);blocked.push(id);notify('Student blocked. ');location.href='messages.html'}catch(e){handleError(e)}}else if(choice.toUpperCase()==='REPORT'){const reason=prompt('Describe the issue (5–500 characters):');if(reason?.trim().length>=5&&reason.trim().length<=500)try{await db.reportPeer(id,reason.trim());notify('Report recorded. ')}catch(e){handleError(e)}else notify('Please enter a reason between 5 and 500 characters.')}});
+   $('safetyOptions').addEventListener('click',async()=>{const choice=await PMDialogs.choose('Safety options',[{label:'Block student',value:'BLOCK',description:'Stop messages and connections.'},{label:'Report student',value:'REPORT',description:'Tell us about a concern.'}]);if(!choice)return;if(choice==='BLOCK'){if(!await PMDialogs.confirm('You will no longer be able to message each other.',{title:'Block this student?',confirmText:'Block student',kind:'danger'}))return;try{await db.blockPeer(id);blocked.push(id);notify('Student blocked.');location.href='messages.html'}catch(e){handleError(e)}}else if(choice==='REPORT'){const reason=await PMDialogs.prompt('Briefly describe the issue (5–500 characters).',{title:'Report student',confirmText:'Submit report',minLength:5,maxLength:500});if(reason)try{await db.reportPeer(id,reason.trim());notify('Report submitted.')}catch(e){handleError(e)}}});
    await reloadThread();
   }
   async function reloadThread(){if(!selectedPeer)return;const peerAtStart=selectedPeer;try{const result=await db.messagesWith(peerAtStart);if(peerAtStart!==selectedPeer)return;thread=result;const chat=$('chatMessages');chat.innerHTML=thread.length?thread.map(x=>`<div class="chat-bubble ${x.sender_id===db.identity()?'mine':''}"><p>${esc(x.body)}</p><div class="bubble-attachments" data-message-files="${esc(x.id)}"></div><small>${esc(prettyDate(x.created_at))}</small></div>`).join(''):`<div class="chat-placeholder"><div class="placeholder-art">${PM.icon("mail")}</div><h3>Say hello first.</h3><p>${'Introduce yourself, your module, and what you would like to work on together.'}</p></div>`;
@@ -866,7 +880,7 @@
   const institutionType=$('signupInstitutionType'),institutionName=$('signupInstitution'),suggestions=$('signupInstitutionSuggestions');
   const updateSuggestions=()=>{if(!suggestions||!institutionType)return;suggestions.replaceChildren();for(const name of PM.INSTITUTIONS[institutionType.value]||[]){const opt=document.createElement('option');opt.value=name;suggestions.append(opt)}};
   let create=false,submitting=false;
-  const signupCourse=$('signupCourse'),signupGrade=$('signupGrade'),signupModules=$('signupModules'),signupCampus=$('signupCampus');
+  const signupCourse=$('signupCourse'),signupGrade=$('signupGrade'),signupModules=$('signupModules'),signupCampus=$('signupCampus'),signupStudyMethod=$('signupStudyMethod');
   const updateSignupCourseGrade=()=>{
    const school=institutionType?.value==='school';
    $('signupCourseGroup')?.classList.toggle('hidden',school);
@@ -874,13 +888,21 @@
    $('signupCampusGroup')?.classList.toggle('hidden',school);
    $('signupInstitutionLabel').innerHTML=school?'School name <span aria-hidden="true">*</span>':'Institution name <span aria-hidden="true">*</span>';
    institutionName.placeholder=school?'e.g. Vaal High School':'Start typing your institution';
-   $('signupModulesLabel').innerHTML=school?'School subjects <span class="pm-optional">Optional</span>':'Subjects or modules <span class="pm-optional">Optional</span>';
-   $('signupModulesHint').textContent=school?'Optional for now. If added, separate school subjects with commas (up to 10). You can edit them later.':'Optional for now. If added, separate subjects or modules with commas (up to 10). You can edit them later.';
+   $('signupModulesLabel').innerHTML=school?'School subjects <span aria-hidden="true">*</span>':'Subjects or modules <span aria-hidden="true">*</span>';
+   $('signupModulesHint').textContent='Enter at least one '+(school?'school subject':'subject or module')+'. Separate multiple entries with commas (up to 10).';
    signupModules.placeholder=school?'e.g. Mathematics, English, Physical Sciences':'e.g. Web Development, Business Analysis';
    if(signupCourse){signupCourse.required=create&&!school;signupCourse.disabled=!create||school;}
    if(signupGrade){signupGrade.required=create&&school;signupGrade.disabled=!create||!school;}
-   if(signupCampus){signupCampus.disabled=!create||school;}
+   updateSignupCampusRequirement();
   };
+  const updateSignupCampusRequirement=()=>{
+   const school=institutionType?.value==='school';
+   const required=create&&!school&&signupStudyMethod?.value==='campus';
+   const label=$('signupCampusRequiredText');
+   if(signupCampus){signupCampus.disabled=!create||school;signupCampus.required=required;}
+   if(label){label.textContent=required?'*':'Optional';label.classList.toggle('pm-optional',!required);label.classList.toggle('pm-required-symbol',required);}
+  };
+  signupStudyMethod?.addEventListener('change',updateSignupCampusRequirement);
   institutionType?.addEventListener('change',()=>{updateSuggestions();if(institutionName)institutionName.value='';updateSignupCourseGrade();});
   const toggle=v=>{
    create=v;
@@ -898,8 +920,8 @@
    $('authPasswordConfirm').required=v;
    $('authPasswordConfirm').disabled=!v;
    requiredFields.forEach(el=>{el.required=v;el.disabled=!v});
-   // Optional study subjects must be enabled only during signup, never required.
-   signupModules.disabled=!v;signupModules.required=false;
+   // Subjects are required for reliable matching.
+   signupModules.disabled=!v;signupModules.required=v;
    updateSignupCourseGrade();
    $('authSubmit').textContent=v?'Create account →':'Sign in →';
    $('authPassword').autocomplete=v?'new-password':'current-password';
@@ -923,7 +945,7 @@
    e.preventDefault();
    if(submitting)return;
    if(!db.client){feedback('authFeedback','Unable to connect to the service. Please try again shortly.',true);return;}
-   if(!form.reportValidity())return;
+   if(!create&&!form.reportValidity())return;
    const email=val('authEmailInput'),password=$('authPassword').value;
    let details=null;
    if(create){
@@ -954,11 +976,14 @@
     if(name.length<3||name.length>80||institution.length<2||institution.length>120||course.length<2||course.length>100){
       feedback('authFeedback','Please complete your name, institution and '+(school?'grade':'course or programme')+' using valid details.',true);return;
     }
-    if(moduleInput&&(modules.length<1||modules.length>10||modules.some(x=>x.length<2||x.length>100))){
-      feedback('authFeedback','If you add '+(school?'school subjects':'subjects or modules')+', enter up to 10 valid entries separated by commas, or leave the field empty.',true);
-      signupModules.focus();return;
+    const detailsForCheck={institution_type:institutionType.value,institution,campus:school?'':PM.formatStudyText(val('signupCampus')),course,modules,study_method:signupStudyMethod.value};
+    const issue=PM.matchEssentialsValidation(detailsForCheck);
+    if(issue){
+      const fieldMap={institution_type:'signupInstitutionType',institution:'signupInstitution',course:school?'signupGrade':'signupCourse',campus:'signupCampus',modules:'signupModules',study_method:'signupStudyMethod'};
+      feedback('authFeedback',issue.message,true);$(fieldMap[issue.field])?.focus();return;
     }
-    details={full_name:name,institution_type:institutionType.value,institution,campus:school?'':PM.formatStudyText(val('signupCampus')),course,modules,discoverable:$('signupDiscoverable').checked};
+    details={full_name:name,given_names:firstName,surname,...detailsForCheck,discoverable:$('signupDiscoverable').checked};
+    if(!form.reportValidity())return;
    }
    const submit=$('authSubmit');submitting=true;submit.disabled=true;submit.textContent=create?'Creating your account…':'Signing in…';
    try{

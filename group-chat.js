@@ -127,7 +127,7 @@
   history.addEventListener('click',async e=>{
     const button=e.target.closest('[data-delete-post]');
     if(!button||!group||group.created_by!==db.identity())return;
-    if(!confirm('Remove this message from the group?'))return;
+    if(!await PMDialogs.confirm('This message will be removed from the group discussion.',{title:'Delete message?',confirmText:'Delete',kind:'danger'}))return;
     button.disabled=true;
     try{await db.deleteGroupPost(groupId,button.dataset.deletePost);await showPosts();}
     catch(error){inform(error.message||'Unable to remove message.',true);button.disabled=false;}

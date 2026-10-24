@@ -1,0 +1,72 @@
+/* Peermigo / Notes discovery — compact and responsive. */
+.pm-notes-section{padding-top:24px}
+.pm-notes-shell{max-width:1120px}
+.pm-notes-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.pm-notes-header h1{font-size:clamp(24px,3.5vw,33px);margin:0;letter-spacing:-.04em}
+.pm-notes-header .btn{padding:12px 17px;min-height:43px;white-space:nowrap}
+.pm-notes-tabs{display:flex;gap:8px;margin:0 0 18px;border-bottom:1px solid #e7e8f1;padding-bottom:9px}
+.pm-notes-tab{border:0;background:transparent;font:800 13px var(--font-head);color:#6e7792;padding:12px 16px;border-radius:12px;cursor:pointer}
+.pm-notes-tab.is-active{background:#edeaff;color:#5245ca}
+.pm-notes-tab:focus-visible,.pm-note-filter:focus-visible,.pm-note-read:focus-visible,.pm-notes-more:focus-visible,.pm-reader-close:focus-visible{outline:3px solid #aaa2ff;outline-offset:2px}
+.pm-discover-panel{max-width:930px;margin:auto}
+.pm-notes-search{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e6f0;border-radius:14px;padding:6px 6px 6px 15px}
+.pm-notes-search:focus-within{border-color:#7869ee;box-shadow:0 0 0 3px #675de51a}
+.pm-notes-search input{flex:1;min-width:0;background:transparent;border:0;outline:0;height:35px;font:500 13px var(--font-body);color:#263153}
+.pm-notes-search button{border:0;border-radius:10px;background:#5c4be9;color:white;min-height:37px;padding:0 15px;font:700 12px var(--font-head);cursor:pointer}
+.pm-note-filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.pm-note-filter{border:1px solid #e2e4ef;background:#fff;color:#657088;font:800 11px var(--font-head);border-radius:999px;padding:9px 14px;cursor:pointer}
+.pm-note-filter.is-active{border-color:#d9d3ff;background:#eeeaff;color:#594cd0}
+.pm-discover-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+.pm-discovery-note{background:#fff;border:1px solid #e7e7f1;border-radius:16px;padding:19px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pm-note-card-top{display:flex;align-items:start;gap:10px;justify-content:space-between;color:#717c96;font-size:10px;line-height:1.6}
+.pm-note-author{min-width:0;overflow-wrap:anywhere;font-weight:700}
+.pm-note-date{flex:none;white-space:nowrap}
+.pm-discovery-note h3{font-size:17px;line-height:1.4;margin:0;color:#202843;letter-spacing:-.026em;overflow-wrap:anywhere}
+.pm-discovery-note p{font-size:12px;line-height:1.65;color:#6c7590;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;margin:0;min-height:57px;overflow-wrap:anywhere}
+.pm-note-card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:5px}
+.pm-note-read{padding:9px 0;border:none;background:transparent;color:#5b4dd5;font:800 12px var(--font-head);cursor:pointer}
+.pm-discovery-note .pm-save-btn{background:#f4f2ff;border:1px solid #e8e4ff;border-radius:9px;padding:8px 9px;color:#6154d6;font-size:11px;display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+.pm-discovery-note .pm-save-btn.is-saved{background:#e7f9f2;color:#19785b;border-color:#c7ebd8}
+.pm-discovery-note .pm-save-btn svg{height:15px;width:15px}
+.pm-notes-empty{grid-column:1/-1;color:#73809a;background:#fff;border:1px solid #e8e8f1;border-radius:15px;padding:24px;text-align:center;font-size:13px}
+.pm-notes-more{display:block;margin:18px auto 0;padding:11px 18px;border:1px solid #e4e2f2;border-radius:12px;background:#fff;color:#5b50c9;font-weight:800;cursor:pointer}
+.pm-notes-more[hidden]{display:none}
+.pm-notes-shell #pmMyNotesPanel[hidden],.pm-notes-shell #pmDiscoverNotesPanel[hidden]{display:none!important}
+.pm-notes-shell #pmMyNotesPanel .notes-layout{padding-top:8px}
+.pm-notes-shell .notes-layout{max-width:none}
+.pm-notes-shell .notes-editor h2{font-size:21px;margin-bottom:14px}
+.pm-note-modal[hidden]{display:none!important}
+.pm-note-modal{position:fixed;inset:0;z-index:20000;background:rgba(15,20,39,.66);display:flex;align-items:center;justify-content:center;padding:15px}
+.pm-note-modal-open{overflow:hidden}
+.pm-note-reader-card{background:#fff;color:#263153;border-radius:18px;width:min(650px,100%);max-height:90dvh;overflow-y:auto;box-shadow:0 24px 80px #0004;padding:24px}
+.pm-reader-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:#766cc9;font-size:12px}
+.pm-reader-close{border:0;background:#f0effb;border-radius:50%;height:34px;width:34px;font-size:22px;color:#464e69;cursor:pointer}
+.pm-note-reader-card h2{font-size:clamp(20px,3vw,26px);line-height:1.3;margin:10px 0}
+.pm-reader-meta{font-size:11px;color:#77819b;margin:0 0 18px}
+.pm-reader-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#48536e;font-size:13px;line-height:1.8}
+.pm-reader-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:25px;border-top:1px solid #ecedf3;padding-top:15px}
+.pm-reader-actions a,.pm-reader-actions button{border:0;background:transparent;color:#6455d8;font-size:12px;font-weight:800;cursor:pointer;text-decoration:none;padding:6px 0}
+.pm-reader-attachments{margin-top:16px}
+@media(max-width:650px){.pm-notes-section{padding-top:18px}.pm-notes-header h1{font-size:23px}.pm-notes-header .btn{font-size:11px;padding:10px 12px}.pm-discover-list{grid-template-columns:1fr}.pm-discovery-note{padding:16px}.pm-note-card-top{flex-wrap:wrap}.pm-note-reader-card{padding:19px}.pm-notes-tabs{margin-bottom:15px}.pm-notes-tab{padding:11px 12px}.pm-note-modal{align-items:flex-end;padding:0}.pm-note-reader-card{border-radius:21px 21px 0 0;max-height:86dvh}}
+html[data-theme=dark] .pm-notes-tabs{border-color:#303a56}
+html[data-theme=dark] .pm-notes-tab{color:#9ea8c4}
+html[data-theme=dark] .pm-notes-tab.is-active{background:#28264a;color:#d5cfff}
+html[data-theme=dark] .pm-notes-search,html[data-theme=dark] .pm-discovery-note,html[data-theme=dark] .pm-notes-more,html[data-theme=dark] .pm-note-filter,html[data-theme=dark] .pm-notes-empty{background:#182236;border-color:#35415d;color:#bdc5e1}
+html[data-theme=dark] .pm-notes-search input{color:#e5e9fa}
+html[data-theme=dark] .pm-note-filter.is-active{background:#302953;border-color:#514780;color:#e4dfff}
+html[data-theme=dark] .pm-discovery-note h3{color:#f2f3ff}
+html[data-theme=dark] .pm-discovery-note p{color:#b4bfda}
+html[data-theme=dark] .pm-note-card-top{color:#9fa9c3}
+html[data-theme=dark] .pm-note-reader-card{background:#192439;color:#eff2ff}
+html[data-theme=dark] .pm-reader-body{color:#cbd3e9}
+html[data-theme=dark] .pm-reader-close{background:#303c58;color:#e9edff}
+html[data-theme=dark] .pm-reader-actions{border-color:#35415d}
+
+.pm-report-form{margin-top:15px;padding:15px;border:1px solid #e7e8f1;background:#fafaff;border-radius:12px;display:grid;gap:8px}
+.pm-report-form[hidden]{display:none!important}
+.pm-report-form label{font-weight:700;font-size:11px;color:#4e5971}
+.pm-report-form textarea,.pm-report-form select{width:100%;background:#fff;color:#313955;border:1px solid #dde1ef;border-radius:9px;font:12px var(--font-body);padding:11px}
+.pm-report-form .btn{justify-self:end;margin-top:4px}
+html[data-theme=dark] .pm-report-form{background:#151e30;border-color:#35415d}
+html[data-theme=dark] .pm-report-form label{color:#d0d8ef}
+html[data-theme=dark] .pm-report-form textarea,html[data-theme=dark] .pm-report-form select{background:#1b2841;color:#eef0ff;border-color:#445170}
