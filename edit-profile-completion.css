@@ -1,0 +1,34 @@
+/* Compact, real profile completion indicator in Edit Profile. */
+.pm-edit-completion[hidden]{display:none!important}
+.pm-edit-completion{
+ display:grid;gap:9px;min-width:0;
+ margin:0 0 20px;padding:13px 16px 14px;
+ border:1px solid #e2e0f4;border-radius:13px;
+ background:#faf9ff;box-shadow:none;
+}
+.pm-edit-completion-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.pm-edit-completion-copy{min-width:0;flex:1;display:grid;gap:3px}
+.pm-edit-completion-copy>strong{display:block;color:#24274a;font-size:13px;line-height:1.3;font-weight:800;letter-spacing:-.015em}
+.pm-edit-completion-copy>small{display:block;color:#747c97;font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pm-edit-completion-stats{display:flex;align-items:baseline;gap:8px;flex:0 0 auto;white-space:nowrap}
+.pm-edit-completion-stats strong{color:#5647cf;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.pm-edit-completion-stats small{color:#838ba7;font-size:10px;font-variant-numeric:tabular-nums}
+.pm-edit-completion-track{height:5px;border-radius:999px;background:#e9e6fa;overflow:hidden}
+.pm-edit-completion-track>span{display:block;width:0%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#5a4ae2,#9386ff);transition:width 250ms ease}
+html[data-theme="dark"] .pm-edit-completion{background:#202841;border-color:#393c60}
+html[data-theme="dark"] .pm-edit-completion-copy>strong{color:#f1efff}
+html[data-theme="dark"] .pm-edit-completion-copy>small,html[data-theme="dark"] .pm-edit-completion-stats small{color:#afb9d0}
+html[data-theme="dark"] .pm-edit-completion-stats strong{color:#afa4ff}
+html[data-theme="dark"] .pm-edit-completion-track{background:#353451}
+@media(max-width:480px){
+ .pm-edit-completion{margin-bottom:16px;padding:11px 12px 12px;gap:8px;border-radius:12px}
+ .pm-edit-completion-copy>strong{font-size:12px}
+ .pm-edit-completion-copy>small{font-size:10px}
+ .pm-edit-completion-stats{gap:6px}
+ .pm-edit-completion-stats strong{font-size:13px}
+ .pm-edit-completion-stats small{font-size:10px}
+}
+@media(max-width:350px){
+ .pm-edit-completion-stats{flex-direction:column;align-items:flex-end;gap:0}
+}
+@media(prefers-reduced-motion:reduce){.pm-edit-completion-track>span{transition:none}}

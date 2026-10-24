@@ -15,7 +15,7 @@
  const getMe=async()=>{try{return await db.profile()}catch(e){handleError(e);return null}};
  const requireSignedIn=()=>{if(!db.user){notify('Please sign in first.');location.href='account.html';return false}if(!db.client){notify('Check your Supabase connection.');return false}return true};
  const rankPeer=(p,me)=>PM.scoreStudentMatch(p,me);
- const matchReason=(p,me)=>{if(!me||p.id===me.id)return 'Student profile';const s=rankPeer(p,me);if(s>=65)return 'Great campus fit';if(s>=45)return 'Same institution';if(s>=12)return 'Modules in common';return 'Explore profile';};
+ const matchReason=(p,me)=>PM.matchDetails(p,me).reason;
  const memberNav = `<a class="nav-link" data-page="index.html" href="index.html">Dashboard</a>
  <a class="nav-link" data-page="search.html" href="search.html">Search students & groups</a>
  <a class="nav-link" data-page="matches.html" href="matches.html">Find peers</a>
@@ -143,7 +143,7 @@
   }
   const path=location.pathname.split('/').pop()||'index.html';
   topHub.querySelectorAll('.pm-top-link').forEach(a=>{if(a.dataset.page===path){a.classList.add('is-active');a.setAttribute('aria-current','page')}});
-  if(path==='settings.html'){const settings=topHub.querySelector('#pmTopSettingsLink');settings?.setAttribute('aria-current','page');}
+  if(path==='settings.html'||path.startsWith('settings-')){const settings=topHub.querySelector('#pmTopSettingsLink');settings?.setAttribute('aria-current','page');}
  }
  function setupSmartMobileHeader(){
   const header=document.querySelector('.site-header');if(!header)return;
@@ -231,7 +231,7 @@
   if(nav){nav.innerHTML=db.user?memberNav:guestNav;const file=location.pathname.split('/').pop()||'index.html';nav.querySelectorAll('[data-page]').forEach(a=>{if(a.dataset.page===file){a.classList.add('active');a.setAttribute('aria-current','page')}});}
   if(foot)foot.innerHTML=db.user?'<a href="matches.html">Find peers</a><a href="groups.html">Study groups</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="saved.html">Saved items</a><a href="resources.html">Resources</a><a href="faq.html">FAQs</a><a href="student.html">My profile</a>':'<a href="about.html">About</a><a href="resources.html">Resources</a><a href="faq.html">FAQs</a><a href="contact.html">Contact</a><a href="guidelines.html">Guidelines</a>';
  }
- const privatePaths=new Set(['matches.html','groups.html','sessions.html','messages.html','group-chat.html','notes.html','notifications.html','profile.html','student.html','saved.html','settings.html']);
+ const privatePaths=new Set(['matches.html','groups.html','sessions.html','messages.html','group-chat.html','notes.html','notifications.html','profile.html','student.html','saved.html','settings.html','settings-account.html','settings-blocking.html','settings-notifications.html','settings-privacy.html']);
  function safeNext(){
   const wanted=new URLSearchParams(location.search).get('next');if(!wanted||wanted.startsWith('//')||wanted.includes('\\'))return null;
   try{const u=new URL(wanted,location.href);const page=u.pathname.split('/').pop();if(u.pathname!=='/'+page||wanted.includes('..')||u.origin!==location.origin||!privatePaths.has(page)||u.username||u.password)return null;
@@ -313,7 +313,7 @@
     feedback('profileFeedback','Please keep a valid display name. Names can contain letters, spaces, apostrophes and hyphens.',true);
     notice.scrollIntoView({behavior:'smooth',block:'nearest'});return;
    }
-   const payload={full_name:PM.formatPersonName(newName),institution_type:val('institutionType'),institution:PM.formatStudyText(val('institutionName')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
+   const payload={full_name:PM.formatPersonName(newName),institution_type:val('institutionType'),institution:PM.canonicalInstitution(val('institutionName'),val('institutionType')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
    submit.disabled=true;submit.textContent='Saving changes…';notice.classList.add('hidden');
    try{
     await db.saveProfile(payload);
@@ -341,7 +341,7 @@
       `${meCache.institution}${meCache.campus?' · '+meCache.campus:''} · Personalised matches`:
       'Complete your profile to see personalised matches';
   }
-  if($('directoryBadge'))$('directoryBadge').textContent='STUDENT DIRECTORY';
+  // Directory badge removed for a cleaner interface.
   // A typeable institution filter works for institutions not in a fixed dropdown.
   const inst=$('institutionFilter');
   if(inst){
@@ -413,12 +413,12 @@
     if(m&&p.study_method!==m)return false;
     if(t&&p.availability!==t)return false;
     if(same&&(!meCache?.campus||PM.campusKey(p.campus)!==PM.campusKey(meCache.campus)||PM.institutionKey(p.institution)!==PM.institutionKey(meCache.institution)))return false;
-    if(courseOnly&&(!meCache?.course||PM.normalize(p.course)!==PM.normalize(meCache.course)))return false;
-    return rankPeer(p,meCache)>=12;
+    if(courseOnly&&(!meCache?.course||PM.MatchingV2.courseKey(p.course)!==PM.MatchingV2.courseKey(meCache.course)))return false;
+    return PM.matchDetails(p,meCache).eligible;
    }).sort((a,b)=>rankPeer(b,meCache)-rankPeer(a,meCache)).slice(0,6);
-   grid.innerHTML=filtered.length?filtered.map(peerCard).join(''):'<div class="social-empty full-span"><h3>No close matches yet</h3><p>You can still browse every discoverable student below. Complete your study profile for better recommendations.</p></div>';
+   grid.innerHTML=filtered.length?filtered.map(peerCard).join(''):'<p class="pm-compact-no-match full-span">No recommended peers yet.</p>';
    $('resultCount').textContent=String(filtered.length);
-   $('matchingDescription').textContent=meCache?.institution?'Suggested peers from your institution based on your study preferences.':'Complete your profile to unlock personalised recommendations.';
+   // A separate recommendation description is unnecessary on a compact directory page.
    PM.ui?.decorateAvatars?.(grid);
   };
   const updatePager=()=>{
@@ -526,19 +526,22 @@
  function peerCard(p){
   const name=PM.formatPersonName(p.full_name)||'New student';
   const complete=Boolean(p.institution&&p.course&&p.full_name&&!/^Student [0-9A-F]{6}$/.test(p.full_name));
-  const score=complete?rankPeer(p,meCache):0;
+  const scoreDetails=PM.matchDetails(p,meCache);
+  const score=scoreDetails.score;
   const subjectLabel=p.institution_type==='school'?'Subjects':'Subjects / modules';
   const courseLabel=p.institution_type==='school'?'Grade':'Course / programme';
   const formatLabels={campus:'On campus',virtual:'Online',hybrid:'Hybrid / both'};
   const timeLabels={mornings:'Mornings',afternoons:'Afternoons',evenings:'Evenings',weekends:'Weekends',flexible:'Flexible'};
   const studyFormat=formatLabels[p.study_method]||'Not set';
   const availability=timeLabels[p.availability]||'Not set';
-  const matchKnown=complete&&Boolean(meCache?.institution);
-  const matchTier=score>=70?'match-high':score>=45?'match-mid':'match-low';
+  const matchKnown=complete&&scoreDetails.showScore;
+  const matchTier=score>=75?'match-high':score>=50?'match-mid':'match-low';
+  const scoreDescription=scoreDetails.signals.slice(0,4).join(' · ') || scoreDetails.reason;
+  const scoreTitle=esc('Study compatibility based on profile details: '+scoreDescription+'. This is an estimate, not a guarantee.');
   const relation=db.connectionWith(connectionRows,p.id);
   const connection=PM.connectionAction(relation,db.identity());
   return `<article class="peer-card peer-card-v2 directory-card">
-   <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<span class="directory-status match-score ${matchTier}" aria-label="${score} percent compatibility score"><span class="match-number">${score}%</span><span class="match-label">match</span></span>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peermigo'}</span>`}</div>
+   <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<span class="directory-status match-score ${matchTier}" aria-label="${score} percent study compatibility" title="${scoreTitle}"><span class="match-number">${score}%</span><span class="match-label">match</span></span>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peermigo'}</span>`}</div>
    <div class="directory-main"><h3><a class="profile-name-link" href="student.html?id=${encodeURIComponent(p.id)}">${esc(name)}</a>${p.is_verified?`<span class="verified-label" title="Institution reviewed by administrator">${PM.icon('shield')} Verified</span>`:''}</h3></div>
    <div class="directory-desktop-summary" aria-label="Student summary">
      <p class="directory-desktop-summary-line"><span>${esc(PM.formatStudyText(p.course)||'Course not listed')}</span><span class="directory-summary-dot" aria-hidden="true"> · </span><span class="directory-summary-institution">${esc(PM.formatStudyText(p.institution)||'Institution not listed')}</span></p>
@@ -557,6 +560,7 @@
      <div class="directory-preference"><p class="directory-field-label">Study format</p><span class="directory-pref-value${!formatLabels[p.study_method]?' is-empty':''}">${esc(studyFormat)}</span></div>
      <div class="directory-preference"><p class="directory-field-label">Availability</p><span class="directory-pref-value${!timeLabels[p.availability]?' is-empty':''}">${esc(availability)}</span></div>
    </div>
+   ${matchKnown&&scoreDetails.signals.length?`<p class="directory-match-explanation" title="Study compatibility estimate">${esc(scoreDetails.signals.slice(0,3).join(' · '))}</p>`:''}
    ${!complete?'<p class="directory-welcome">This student is getting started. You can still say hello!</p>':''}
    </div>
    <div class="peer-card-actions"><a class="view-profile-btn" href="student.html?id=${encodeURIComponent(p.id)}">${PM.icon('user')} Profile</a><button type="button" class="connect-btn" data-connect="${esc(p.id)}" data-connect-state="${connection.state}" ${connection.disabled?'disabled':''}>${PM.icon(connection.state==='accepted'||connection.state==='pending'?'check':'users')} ${connection.label}</button><button type="button" class="directory-expand-button" data-peer-expand aria-controls="peer-details-${esc(p.id)}" aria-label="Show student details" aria-expanded="false" title="Show more student details">${PM.icon('chevron-down')}</button><button type="button" class="small-ghost directory-share" data-share-profile="${esc(p.id)}" title="Share ${esc(name)}'s profile" aria-label="Share profile for ${esc(name)}">${PM.icon('share')}</button><button type="button" class="small-ghost directory-report" title="Report profile" aria-label="Report ${esc(name)}" data-report="${esc(p.id)}">${PM.icon('more')}</button></div>
@@ -756,10 +760,11 @@
   try{blocked=await db.blockedPeers();const msgs=await db.inbox();const partners=[...new Set(msgs.map(x=>x.sender_id===db.identity()?x.recipient_id:x.sender_id))].filter(id=>id!==db.identity()&&!blocked.includes(id));const requested=new URLSearchParams(location.search).get('peer');if(requested&&/^[0-9a-f-]{36}$/i.test(requested)&&!blocked.includes(requested))partners.unshift(requested);
    const unique=[...new Set(partners)];inboxPeers=await db.profilesByIds(unique);renderContacts(unique);if(requested&&unique.includes(requested))await openChat(requested);else if(unique.length&&!matchMedia('(max-width:720px)').matches)await openChat(unique[0]);else if(!unique.length)$('conversationList').innerHTML='<p class="loading-state">Your inbox is empty. Find a peer to start a conversation.</p>';
   }catch(err){handleError(err);$('conversationList').innerHTML=loadFailure('Could not load your conversations.')}
-  $('chatMobileBack')?.addEventListener('click',()=>{$('conversationList')?.closest('.messaging-layout')?.classList.remove('chat-open');selectedPeer=null;closeEmojiPicker();if($('emojiPickerToggle'))$('emojiPickerToggle').disabled=true;});
+  const leaveChat=()=>{$('conversationList')?.closest('.messaging-layout')?.classList.remove('chat-open');document.body.classList.remove('pm-private-chat-open');selectedPeer=null;closeEmojiPicker();if($('emojiPickerToggle'))$('emojiPickerToggle').disabled=true;};
+  $('chatHeader')?.addEventListener('click',event=>{if(event.target.closest('#chatMobileBack'))leaveChat();});
   function renderContacts(ids){$('conversationList').innerHTML=ids.map(id=>{const p=inboxPeers.find(x=>x.id===id);if(!p)return '';return `<button type="button" class="conversation-item ${id===selectedPeer?'selected':''}" data-peer="${esc(id)}">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}<span><strong>${esc(PM.formatPersonName(p.full_name))}</strong><small>${esc(PM.formatStudyText(p.institution))}</small></span></button>`}).join('');$('conversationList').querySelectorAll('[data-peer]').forEach(btn=>btn.addEventListener('click',()=>openChat(btn.dataset.peer)))}
-  async function openChat(id){const p=inboxPeers.find(x=>x.id===id);if(!p||blocked.includes(id))return;selectedPeer=id;const layout=$('conversationList').closest('.messaging-layout');layout?.classList.add('chat-open');if(matchMedia('(max-width:720px)').matches)requestAnimationFrame(()=>layout?.scrollIntoView({block:'start'}));
-   $('conversationList').querySelectorAll('[data-peer]').forEach(el=>el.classList.toggle('selected',el.dataset.peer===id));$('chatHeader').innerHTML=`<a href="student.html?id=${encodeURIComponent(p.id)}" class="pm-chat-header-avatar-link" aria-label="Open ${esc(PM.formatPersonName(p.full_name))} profile">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}</a><div class="pm-chat-header-main"><span class="pm-chat-header-kicker">DIRECT MESSAGE</span><strong>${esc(PM.formatPersonName(p.full_name))} ${p.is_verified?'✓':''}</strong><small>School: ${esc(PM.formatStudyText(p.institution)||'Not listed')}</small><small>Campus: ${esc(PM.formatStudyText(p.campus)||'Not listed')}</small>${p.show_activity!==false?`<small class="activity-status" id="peerActivity">${esc(PM.ui.status(p))}</small>`:''}</div><a class="text-button" href="student.html?id=${encodeURIComponent(p.id)}">Profile ↗</a><button class="text-button" type="button" id="safetyOptions">Safety ⋯</button>`;
+  async function openChat(id){const p=inboxPeers.find(x=>x.id===id);if(!p||blocked.includes(id))return;selectedPeer=id;const layout=$('conversationList').closest('.messaging-layout');layout?.classList.add('chat-open');document.body.classList.add('pm-private-chat-open');
+   $('conversationList').querySelectorAll('[data-peer]').forEach(el=>el.classList.toggle('selected',el.dataset.peer===id));$('chatHeader').innerHTML=`<button class="pm-chat-back-button" id="chatMobileBack" type="button" aria-label="Back to all conversations">←</button><a href="student.html?id=${encodeURIComponent(p.id)}" class="pm-chat-header-avatar-link" aria-label="Open ${esc(PM.formatPersonName(p.full_name))} profile">${PM.ui.avatar(p.full_name,p.avatar_path,'conversation-avatar')}</a><div class="pm-chat-header-main"><strong class="pm-chat-peer-name">${esc(PM.formatPersonName(p.full_name))}${p.is_verified?` <span class="pm-chat-verified" title="Verified student" aria-label="Verified student">${PM.icon('shield')}<span class="sr-only">Verified</span></span>`:''}</strong>${p.show_activity!==false?`<small class="activity-status" id="peerActivity">${esc(PM.ui.status(p))}</small>`:'<small class="pm-chat-private-status">Last seen hidden</small>'}</div><button class="text-button pm-chat-safety-control" type="button" id="safetyOptions" aria-label="Safety options: block or report" title="Block or report this account"><span aria-hidden="true">⋯</span></button>`;
    $('messageBody').disabled=false;$('sendMessageBtn').disabled=false;$('emojiPickerToggle').disabled=false;
    $('safetyOptions').addEventListener('click',async()=>{const choice=prompt('Type BLOCK to stop future messages, or REPORT to flag abuse.');if(!choice)return;if(choice.toUpperCase()==='BLOCK'){if(!confirm('Block this account? You will no longer be able to message each other.'))return;try{await db.blockPeer(id);blocked.push(id);notify('Student blocked. ');location.href='messages.html'}catch(e){handleError(e)}}else if(choice.toUpperCase()==='REPORT'){const reason=prompt('Describe the issue (5–500 characters):');if(reason?.trim().length>=5&&reason.trim().length<=500)try{await db.reportPeer(id,reason.trim());notify('Report recorded. ')}catch(e){handleError(e)}else notify('Please enter a reason between 5 and 500 characters.')}});
    await reloadThread();
@@ -883,7 +888,7 @@
    $('tabSignIn').classList.toggle('active',!v);$('tabSignUp').classList.toggle('active',v);
    $('tabSignIn').setAttribute('aria-selected',String(!v));$('tabSignUp').setAttribute('aria-selected',String(v));
    $('authTitle').textContent=v?'Create your student account.':'Welcome back.';
-   $('authSubtitle').textContent=v?'Start with the essentials so others can find and study with you.':'Sign in to continue growing together.';
+   $('authSubtitle').textContent=v?'Find your ideal study partner on Peermigo.':'Sign in to continue growing together.';
    $('authSignupFields').classList.toggle('hidden',!v);
    $('authConfirmGroup').classList.toggle('hidden',!v);
    $('authLegalNote').classList.toggle('hidden',!v);
@@ -928,7 +933,7 @@
     const course=school?grade:PM.formatStudyText(val('signupCourse'));
     const firstName=PM.formatPersonName(val('signupFirstName')),surname=PM.formatPersonName(val('signupSurname'));
     const name=[firstName,surname].filter(Boolean).join(' ');
-    const institution=PM.formatStudyText(val('signupInstitution'));
+    const institution=PM.canonicalInstitution(val('signupInstitution'),institutionType.value);
     const moduleInput=val('signupModules').trim();
     const modules=moduleInput?moduleInput.split(',').map(PM.formatStudyText).filter(Boolean):[];
     if(!firstName||!surname){
@@ -1031,8 +1036,8 @@
   // The SQL migration also restricts direct database access during deactivation.
   if(db.user){
    try{const me=await db.profile();const page=location.pathname.split('/').pop()||'index.html';
-    if(me?.deactivated_at && page!=='settings.html' && page!=='account.html'){
-     location.replace('settings.html#your-account');return;
+    if(me?.deactivated_at && page!=='settings.html' && page!=='settings-account.html' && page!=='account.html'){
+     location.replace('settings-account.html');return;
     }
    }catch(error){console.warn('Account status could not be checked:',error.message);}
   }

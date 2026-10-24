@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-
-<html lang="en" data-access="student">
+<html data-access="student" lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="robots" content="noindex,nofollow"/>
+<meta content="noindex,nofollow" name="robots"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="#f7f9fc" name="theme-color"/>
 <meta content="Peermigo helps students meet study partners, connect at the same campus, join groups and schedule study sessions." name="description"/>
@@ -18,51 +17,50 @@
 <link href="legal.css" rel="stylesheet"/>
 <script src="theme.js"></script>
 <link href="social.css" rel="stylesheet"/>
-<link rel="preconnect" href="https://esm.sh" crossorigin>
-<link rel="stylesheet" href="refinements.css"/>
-<link rel="stylesheet" href="mobile-dock.css"/>
-<link rel="stylesheet" href="top-nav.css"/>
-<link rel="stylesheet" href="saved.css"/>
-<link rel="stylesheet" href="compact-headers.css"/>
-<link rel="stylesheet" href="mobile-header-refresh.css"/>
-<link rel="stylesheet" href="workspace-refresh.css"/>
-<link rel="stylesheet" href="connection-ui.css"/>
-</head>
+<link crossorigin="" href="https://esm.sh" rel="preconnect"/>
+<link href="refinements.css" rel="stylesheet"/>
+<link href="mobile-dock.css" rel="stylesheet"/>
+<link href="top-nav.css" rel="stylesheet"/>
+<link href="saved.css" rel="stylesheet"/>
+<link href="compact-headers.css" rel="stylesheet"/>
+<link href="mobile-header-refresh.css" rel="stylesheet"/>
+<link href="workspace-refresh.css" rel="stylesheet"/>
+<link href="connection-ui.css" rel="stylesheet"/>
+<link href="peermigo-clean-ui.css" rel="stylesheet"/></head>
 <body>
-<div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peermigo account</span><a href="account.html">Go to Sign In</a></div>
+<div aria-live="polite" class="access-check" id="accessCheck" role="status"><span aria-hidden="true" class="access-spinner"></span><strong>Opening your student space…</strong><span>Checking your Peermigo account</span><a href="account.html">Go to Sign In</a></div>
 <header class="site-header">
 <div class="container nav-shell">
 <a aria-label="Peermigo home" class="brand" href="index.html"><span aria-hidden="true" class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">migo</span><span class="brand-dot">.</span></span></a>
 <nav aria-label="Primary navigation" class="main-nav" id="primaryNav">
 <a class="nav-link" data-page="index.html" href="index.html">Home</a>
 <a class="nav-link" data-page="about.html" href="about.html">About</a>
-
 <a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
-<a class="nav-account" data-page="account.html" id="authNavLink" href="account.html">Sign in</a>
+<a class="nav-account" data-page="account.html" href="account.html" id="authNavLink">Sign in</a>
 <a class="nav-cta join-nav" href="account.html?mode=signup">Join Peermigo <span aria-hidden="true">↗</span></a>
 </nav>
-<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewBox="0 0 24 24" width="21"><path fill="currentColor" d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z"/><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
-<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span class="menu-unread-dot" id="mobileUnreadDot" aria-hidden="true" hidden></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+<button aria-label="Switch to dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Switch to dark mode" type="button"><svg aria-hidden="true" class="theme-moon" fill="none" height="21" viewbox="0 0 24 24" width="21"><path d="M19.86 15.34A8.6 8.6 0 0 1 8.66 4.14a8.7 8.7 0 1 0 11.2 11.2Z" fill="currentColor"></path><path d="M19.3 3.4v4.2M17.2 5.5h4.2" stroke="currentColor" stroke-linecap="round" stroke-width="1.25"></path></svg><svg aria-hidden="true" class="theme-sun" fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 24 24" width="19"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg></button>
+<button aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" id="menuToggle" type="button"><span aria-hidden="true" class="menu-unread-dot" hidden="" id="mobileUnreadDot"></span><svg aria-hidden="true" class="icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
 </div>
 </header>
-<main id="mainContent"><section class="app-section pm-immediate-page"><div class="container narrow-container"><div class="section-row pm-notification-heading"><div><h2>Recent notifications</h2><p>Only you can see your notifications.</p></div><div class="pm-notification-actions"><button class="btn btn-secondary" id="markAllRead" type="button">Mark all as read ✓</button><a class="pm-notification-settings-link" href="settings.html#notifications" aria-label="Manage notification preferences" title="Notification settings"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="M10 2.8h4l.6 2.5 2 1.1 2.4-1 2.1 3.5-1.9 1.7v2.8l1.9 1.7-2.1 3.5-2.4-1-2 1.1-.6 2.5h-4l-.6-2.5-2-1.1-2.4 1-2.1-3.5 1.9-1.7v-2.8L2.9 8.9 5 5.4l2.4 1 2-1.1.6-2.5Z"/></svg></a></div></div><div class="notifications-list" id="notificationsList"></div><div class="empty-panel hidden" id="notificationsEmpty"><span class="empty-illustration">✦</span><h3>All caught up!</h3><p>You'll find connection requests, study group, session and public-note updates here.</p><a class="btn btn-primary" href="matches.html">Explore peers</a></div></div></section></main>
+<main id="mainContent"><section class="app-section pm-immediate-page"><div class="container narrow-container"><div class="section-row pm-notification-heading"><div><h2>Notifications</h2></div><div class="pm-notification-actions"><button class="btn btn-secondary" id="markAllRead" type="button">Mark all as read</button><a aria-label="Manage notification preferences" class="pm-notification-settings-link" href="settings-notifications.html" title="Notification settings"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path><path d="M10 2.8h4l.6 2.5 2 1.1 2.4-1 2.1 3.5-1.9 1.7v2.8l1.9 1.7-2.1 3.5-2.4-1-2 1.1-.6 2.5h-4l-.6-2.5-2-1.1-2.4 1-2.1-3.5 1.9-1.7v-2.8L2.9 8.9 5 5.4l2.4 1 2-1.1.6-2.5Z"></path></svg></a></div></div><div class="notifications-list" id="notificationsList"></div><div class="empty-panel hidden" id="notificationsEmpty"><span class="empty-illustration">✦</span><h3>All caught up!</h3><a class="btn btn-primary" href="matches.html">Explore peers</a></div></div></section></main>
 <footer class="site-footer">
-  <div class="container footer-upper">
-    <div class="footer-identity">
-      <a class="brand footer-brand" href="index.html" aria-label="Peermigo home"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">migo</span><span class="brand-dot">.</span></span></a>
-      <p>Find your people. Learn better together.</p>
-      <a class="footer-contact" href="mailto:peermatchstudents@gmail.com" aria-label="Email Peermigo support">peermatchstudents@gmail.com</a>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
+<div class="container footer-upper">
+<div class="footer-identity">
+<a aria-label="Peermigo home" class="brand footer-brand" href="index.html"><span class="brand-symbol"><span></span><span></span><span></span></span><span>peer<span class="brand-accent">migo</span><span class="brand-dot">.</span></span></a>
+<p>Find your people. Learn better together.</p>
+<a aria-label="Email Peermigo support" class="footer-contact" href="mailto:peermatchstudents@gmail.com">peermatchstudents@gmail.com</a>
+</div>
+<nav aria-label="Footer navigation" class="footer-nav">
 <a href="about.html">About</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a><a href="faq.html">FAQs</a><a href="guidelines.html">Guidelines</a>
 </nav>
-  </div>
-  <div class="container footer-bottom">
-    <div class="footer-bottom-main"><span>© 2026 Peermigo · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
-    <nav class="footer-legal-links" aria-label="Legal and help links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
-    <span class="footer-credit">Built by tjseimela</span>
-  </div>
+</div>
+<div class="container footer-bottom">
+<div class="footer-bottom-main"><span>© 2026 Peermigo · Student community</span><span>For students aged 18+ · Meet in public spaces</span></div>
+<nav aria-label="Legal and help links" class="footer-legal-links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="guidelines.html">Community Guidelines</a><a href="contact.html">Contact</a></nav>
+<span class="footer-credit">Built by tjseimela</span>
+</div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer src="connections.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="connections.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
 </html>

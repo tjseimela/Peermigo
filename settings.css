@@ -91,3 +91,47 @@ html[data-theme="dark"] .pm-settings-notification-body .pm-preference-heading p,
 html[data-theme="dark"] .pm-settings-jump-links a{background:#222d43;color:#c4b9ff;border-color:#444c6c}
 html[data-theme="dark"] .pm-settings-jump-links a:hover{background:#34305e}
 @media(max-width:400px){.pm-settings-jump-links{gap:7px}.pm-settings-jump-links a{padding:9px 10px;font-size:10px}}
+
+/* Separate, mobile-first settings pages; concise category navigation. */
+.pm-settings-hub .pm-settings-container{max-width:710px}
+.pm-settings-hub .pm-settings-intro{padding:35px 0 8px}
+.pm-settings-hub .pm-settings-intro h1{margin:0}
+.pm-settings-hub .pm-settings-section{padding:12px 0 72px}
+.pm-settings-hub-list{padding:6px 14px}
+.pm-settings-hub-list .pm-settings-link{border-top:1px solid #eff0f7;min-height:76px;padding:15px 14px}
+.pm-settings-hub-list .pm-settings-link:first-child{border-top:0}
+.pm-settings-hub-list .pm-settings-link-copy strong{font-size:15px}
+.pm-settings-hub-list .pm-settings-link-icon{width:44px;height:44px}
+.pm-settings-subpage-head{padding:30px 0 10px}
+.pm-settings-back{display:inline-flex;align-items:center;gap:9px;font:700 13px/1.3 'DM Sans',sans-serif;text-decoration:none;color:#6654d5;margin-bottom:20px}
+.pm-settings-back:hover{text-decoration:underline}
+.pm-settings-subpage .pm-settings-intro h1{margin-bottom:0}
+.pm-settings-subpage .pm-settings-section{padding:10px 0 78px}
+.pm-settings-subpage .pm-settings-panel{padding-top:20px}
+.pm-settings-subpage .pm-account-body,.pm-settings-subpage .pm-block-list{padding-top:4px}
+.pm-settings-subpage .pm-settings-links{padding-top:0}
+.pm-settings-subpage .pm-settings-links .pm-settings-link:first-child{border-top:0}
+.pm-settings-subpage .pm-settings-notification-body{padding-top:4px}
+.pm-settings-subpage .pm-settings-notification-body .pm-switch{min-height:54px;padding-top:10px;padding-bottom:10px}
+.pm-settings-subpage .pm-settings-notification-body .pm-preference-heading h2{margin:0 0 12px;font-size:16px;color:#2b3050}
+.pm-settings-subpage .pm-settings-notification-body .email-panel .social-panel-head h3{font-size:16px;margin:0}
+.pm-settings-subpage .pm-email-note{font-size:11px;line-height:1.5;color:#838aa4;margin:3px 0 13px}
+html[data-theme="dark"] .pm-settings-hub-list .pm-settings-link{border-color:#35415c}
+html[data-theme="dark"] .pm-settings-back{color:#baaaff}
+html[data-theme="dark"] .pm-settings-subpage .pm-settings-notification-body .pm-preference-heading h2,
+html[data-theme="dark"] .pm-settings-subpage .pm-settings-notification-body .email-panel .social-panel-head h3{color:#f0efff}
+html[data-theme="dark"] .pm-settings-subpage .pm-email-note{color:#b4c0d6}
+@media(max-width:600px){
+  .pm-settings-hub .pm-settings-intro{padding:29px 0 4px}
+  .pm-settings-hub .pm-settings-section{padding:9px 0 52px}
+  .pm-settings-hub-list{padding:5px 12px}
+  .pm-settings-hub-list .pm-settings-link{min-height:70px;padding:14px 10px}
+  .pm-settings-hub-list .pm-settings-link-copy strong{font-size:14px}
+  .pm-settings-subpage-head{padding:22px 0 7px}
+  .pm-settings-back{margin-bottom:16px}
+  .pm-settings-subpage .pm-settings-panel{padding-top:15px}
+  .pm-settings-subpage .pm-settings-section{padding:8px 0 50px}
+  .pm-settings-subpage .pm-settings-notification-body .pm-switch{min-height:48px}
+}
+/* Settings is a focused in-app area, not a marketing/landing page. */
+main.pm-settings-page ~ footer.site-footer{display:none}

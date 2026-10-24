@@ -25,7 +25,7 @@
     try{
       const rows=await db().blockedProfiles();
       list.replaceChildren();
-      if(!rows.length){const empty=document.createElement('p');empty.className='pm-empty-blocks';empty.textContent="You haven't blocked anyone. Students you block will appear here, with an option to unblock them.";list.append(empty);return;}
+      if(!rows.length){const empty=document.createElement('p');empty.className='pm-empty-blocks';empty.textContent="No blocked students.";list.append(empty);return;}
       for(const record of rows){
         const id=record.blocked_id;
         if(!UUID.test(id))continue;
@@ -57,7 +57,9 @@
     }catch(e){list.replaceChildren();const err=document.createElement('p');err.className='pm-empty-blocks';err.textContent='Could not load blocked students: '+e.message;list.append(err);}
   }
   async function initialize(){
-    if(!document.getElementById('pmEmailForm')||!db()?.user)return;
+    if(!db()?.user)return;
+    if($('pmBlockedList')&&!initialize.blockedDone){initialize.blockedDone=true;await showBlocked();}
+    if(!document.getElementById('pmEmailForm'))return;
     if(initialize.done)return;
     initialize.done=true;
     const user=db().user;
@@ -94,7 +96,7 @@
     reactivation?.addEventListener('click',async()=>{
       if(reactivation.disabled)return;
       reactivation.disabled=true;reactivation.textContent='Reactivating…';
-      try{await db().setAccountDeactivated(false);window.location.replace('settings.html#your-account');}
+      try{await db().setAccountDeactivated(false);window.location.replace('settings-account.html');}
       catch(error){alert('Could not reactivate account: '+error.message);reactivation.disabled=false;reactivation.textContent='Reactivate account';}
     });
     deactivateButton?.addEventListener('click',async()=>{
@@ -119,7 +121,6 @@
         }catch(error){status($('pmDeleteStatus'),error.message,true);}
       });
     });
-    await showBlocked();
   }
   window.addEventListener('pm-ready',()=>initialize().catch(console.warn));
   // For test fixtures and late-loaded modules when the PM session is already ready.

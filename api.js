@@ -1,26 +1,6 @@
 /* Peermigo: Supabase-backed platform. All student data is stored in Supabase. */
 window.PM = window.PM || {};
-// Shared study-partner compatibility formula for badges and directory ranking.
-// A visitor's match score is personal: it depends on their own school,
-// campus, modules, study schedule and preferred study format.
-PM.scoreStudentMatch = (peer, me) => {
-  if (!me || !peer || peer.id === me.id || !me.institution || !peer.institution) return 0;
-  let score = 0;
-  const sameSchool = PM.institutionKey(peer.institution) === PM.institutionKey(me.institution);
-  if (sameSchool) score += 45;
-  if (sameSchool && peer.campus && me.campus && PM.campusKey(peer.campus) === PM.campusKey(me.campus)) score += 22;
-  const modules = new Set((me.modules || []).map(PM.normalize));
-  score += Math.min(24, (peer.modules || []).filter(m => modules.has(PM.normalize(m))).length * 12);
-  if (peer.availability === me.availability || peer.availability === 'flexible' || me.availability === 'flexible') score += 6;
-  if (peer.study_method === me.study_method || peer.study_method === 'hybrid' || me.study_method === 'hybrid') score += 3;
-  return score;
-};
-// Profiles without the essentials have no displayed compatibility badge, so
-// they are ranked after scored profiles, not assigned a misleading percentage.
-PM.displayStudentMatch = (peer, me) =>
-  peer?.institution && peer?.course && peer?.full_name && !/^Student [0-9A-F]{6}$/.test(peer.full_name)
-    ? PM.scoreStudentMatch(peer, me) : 0;
-
+// Compatibility engine is loaded from matching.js after data.js.
 PM.backend = {
   mode:'live',client:null,user:null,
   async init() {
@@ -132,7 +112,7 @@ PM.backend = {
     this.requireUser();
     const size=Math.max(6,Math.min(Number(pageSize)||18,36));
     const current=Math.max(0,Math.floor(Number(page)||0));
-    const fields='id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable';
+    const fields='id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable,created_at';
     const blocked=excludedIds.filter(id=>/^[0-9a-f-]{36}$/i.test(id));
     const term=String(search||'').normalize('NFKC').replace(/[^\p{L}\p{N} '\-]/gu,'').trim().slice(0,64);
     if(sameCampus && (!me?.institution || !me?.campus))return {rows:[],count:0};
@@ -145,20 +125,26 @@ PM.backend = {
       let query=this.requireClient().from('profiles').select(fields,{count:'exact'})
         .eq('discoverable',true).neq('id',this.user.id);
       if(blocked.length)query=query.not('id','in',`(${blocked.join(',')})`);
-      if(term)query=query.or(`full_name.ilike.%${term}%,course.ilike.%${term}%,institution.ilike.%${term}%,campus.ilike.%${term}%`);
-      if(institution)query=query.ilike('institution',institution.trim());
+      if(term){
+        // Searches for common abbreviations also find the official institution name.
+        const other=PM.institutionVariants(term).filter(x=>PM.normalize(x)!==PM.normalize(term))
+          .slice(0,12).map(x=>'institution.ilike."'+x.replace(/"/g,'')+'"');
+        query=query.or([`full_name.ilike.%${term}%`,`course.ilike.%${term}%`,`institution.ilike.%${term}%`,`campus.ilike.%${term}%`,...other].join(','));
+      }
+      if(institution)query=PM.applyInstitutionQuery(query,institution.trim());
       if(method)query=query.eq('study_method',method);
       if(availability)query=query.eq('availability',availability);
-      if(sameCampus)query=query.ilike('institution',me.institution).ilike('campus',me.campus);
-      if(sameCourse)query=query.ilike('course',me.course);
+      // Campus/course quick filters are applied after canonicalization below.
+      // Raw SQL equality would miss valid equivalent names/courses.
+      if(sameCampus)query=PM.applyInstitutionQuery(query,me.institution);
       return query;
     };
 
-    if(sort==='match'){
+    if(sort==='match'||sameCampus||sameCourse){
       // Include the viewer's matching inputs and all filters in the cache key.
       // The short cache lets page 2/3 reuse the same GLOBAL ranking.
       const cacheKey=JSON.stringify({user:this.user.id,term,institution,method,availability,sameCampus,sameCourse,
-        blocked:[...blocked].sort(),me:me?{id:me.id,institution:me.institution,campus:me.campus,
+        blocked:[...blocked].sort(),sort,me:me?{id:me.id,institution:me.institution,campus:me.campus,
           modules:me.modules,availability:me.availability,study_method:me.study_method,course:me.course}:null});
       let saved=this._matchDirectoryCache;
       if(!saved || saved.key!==cacheKey || Date.now()-saved.savedAt>60000){
@@ -173,10 +159,20 @@ PM.backend = {
           students.push(...batch);
           if(!batch.length || (total!==null && students.length>=total) || (total===null && batch.length<batchSize))break;
         }
-        students.sort((a,b)=>PM.displayStudentMatch(b,me)-PM.displayStudentMatch(a,me)
+        let selected=students.filter(peer=>{
+          if(sameCampus && !(PM.institutionKey(peer.institution)===PM.institutionKey(me.institution)
+            && PM.campusKey(peer.campus)===PM.campusKey(me.campus)))return false;
+          if(sameCourse && PM.MatchingV2.courseKey(peer.course)!==PM.MatchingV2.courseKey(me.course))return false;
+          return true;
+        });
+        const scoreById=new Map(selected.map(row=>[row.id,PM.displayStudentMatch(row,me)]));
+        selected.sort((a,b)=>(sort==='match'?(scoreById.get(b.id)-scoreById.get(a.id)):
+          sort==='newest' ? String(b.created_at||'').localeCompare(String(a.created_at||'')):
+          sort==='za' ? String(b.full_name||'').localeCompare(String(a.full_name||''),'en',{sensitivity:'base'}):
+          String(a.full_name||'').localeCompare(String(b.full_name||''),'en',{sensitivity:'base'}))
           || String(a.full_name||'').localeCompare(String(b.full_name||''),'en',{sensitivity:'base'})
           || String(a.id).localeCompare(String(b.id)));
-        saved={key:cacheKey,savedAt:Date.now(),rows:students};
+        saved={key:cacheKey,savedAt:Date.now(),rows:selected};
         this._matchDirectoryCache=saved;
       }
       return {rows:saved.rows.slice(current*size,(current+1)*size),count:saved.rows.length};
@@ -192,14 +188,27 @@ PM.backend = {
   },
   async recommendedDirectoryPeers(me,excludedIds=[]){
     this.requireUser();
-    if(!me?.institution||!(me?.modules?.length||me?.campus||me?.course))return [];
-    let query=this.requireClient().from('profiles')
-      .select('id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable')
-      .eq('discoverable',true).ilike('institution',me.institution).neq('id',this.user.id);
-    const blocked=excludedIds.filter(id=>/^[0-9a-f-]{36}$/i.test(id));
-    if(blocked.length)query=query.not('id','in',`(${blocked.join(',')})`);
-    const {data,error}=await query.order('created_at',{ascending:false}).limit(80);
-    if(error)throw error;return data||[];
+    if(!me || !(me.course || (Array.isArray(me.modules)&&me.modules.length)))return [];
+    const fields='id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable';
+    const blocked=new Set(excludedIds);
+    const students=[];
+    // Recommendations must compare students across institutions for online
+    // learning, and globally rank the candidates rather than taking the first
+    // 80 profiles alphabetically/by signup time.
+    const batchSize=300;
+    for(let offset=0;offset<6000;offset+=batchSize){
+      const {data,error}=await this.requireClient().from('profiles').select(fields)
+        .eq('discoverable',true).neq('id',this.user.id)
+        .order('id',{ascending:true}).range(offset,offset+batchSize-1);
+      if(error)throw error;
+      const batch=data||[];
+      students.push(...batch.filter(peer=>!blocked.has(peer.id)));
+      if(batch.length<batchSize)break;
+      if(offset+batchSize>=6000)console.warn('Peermigo: client-side recommendation scan reached its 6,000-profile safety limit. Server-side matching is recommended at scale.');
+    }
+    return students.filter(peer=>PM.matchDetails(peer,me).eligible)
+      .sort((a,b)=>PM.scoreStudentMatch(b,me)-PM.scoreStudentMatch(a,me)
+        || String(a.id).localeCompare(String(b.id))).slice(0,60);
   },
   async profilesByIds(ids){
     this.requireUser();if(!ids?.length)return [];
@@ -401,7 +410,7 @@ PM.backend = {
   async requestEmailChange(email){
     this.requireUser();
     const cleaned=String(email||'').trim().toLowerCase();
-    const redirect=new URL('settings.html#your-account',location.href).href;
+    const redirect=new URL('settings-account.html',location.href).href;
     const {error}=await this.requireClient().auth.updateUser({email:cleaned},{emailRedirectTo:redirect});
     if(error)throw error;
   },

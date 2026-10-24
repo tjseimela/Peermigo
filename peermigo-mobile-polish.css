@@ -1,0 +1,52 @@
+/* Peermigo mobile clean-up 2026-10-24: registration, search, message list and private conversations. */
+html.pm-signup-active #authSubtitle{max-width:440px}
+html.pm-signup-active .pm-signup-fields{margin-top:0}
+/* Search: place the search form first, with recommendations immediately beneath. */
+.pm-search-recommended{display:flex;justify-content:flex-start;margin:0 0 14px}
+.pm-search-recommended .pm-search-page-peers-link{min-height:42px}
+@media(max-width:720px){
+  .pm-search-page .pm-search-main{padding-top:14px!important}
+  .pm-search-page .pm-search-page-form{margin-bottom:10px}
+  .pm-search-recommended{margin:0 0 14px}
+}
+/* A simple compact DM header on desktop and mobile. */
+.pm-messages-page .pm-chat-header-main{flex:1 1 auto;display:flex;min-width:0;align-items:flex-start;flex-direction:column;justify-content:center;gap:3px}
+.pm-messages-page .pm-chat-peer-name{font-size:15px;line-height:1.4;display:flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere;color:#29324c}
+.pm-messages-page .pm-chat-verified{display:inline-flex;align-items:center;vertical-align:middle;color:#6e59e8;flex-shrink:0}
+.pm-messages-page .pm-chat-verified .pm-icon{width:17px;height:17px}
+.pm-messages-page .pm-chat-header-main .activity-status,.pm-messages-page .pm-chat-private-status{color:#518f7c!important;font-size:11px;margin:0}
+.pm-messages-page .pm-chat-private-status{color:#8c94aa!important}
+.pm-messages-page .pm-chat-back-button{display:none;flex-shrink:0;border:0;background:transparent;color:#6c59e0;padding:7px;border-radius:12px;font-size:25px;line-height:1;cursor:pointer}
+.pm-messages-page .pm-chat-back-button:focus-visible{outline:3px solid #988aff}
+.pm-messages-page .pm-chat-safety-control{margin-left:auto;white-space:nowrap}
+html[data-theme="dark"] .pm-messages-page .pm-chat-peer-name{color:#f0f2ff}
+html[data-theme="dark"] .pm-messages-page .pm-chat-verified{color:#b1a4ff}
+@media(max-width:720px){
+  /* The messages experience owns the visible viewport; hide the page footer and remove legacy layout gaps. */
+  body.pm-messages-page{overflow:hidden!important;min-height:0!important;padding-bottom:0!important}
+  body.pm-messages-page .site-footer{display:none!important}
+  body.pm-messages-page #mainContent{min-height:0!important;padding:0!important;margin:0!important}
+  body.pm-messages-page #mainContent>.app-section{padding:0!important;min-height:0!important;margin:0!important}
+  body.pm-messages-page #mainContent>.app-section>.container{width:100%!important;max-width:none!important;padding:0!important;margin:0!important;transform:none!important;opacity:1!important;animation:none!important}
+  body.pm-messages-page .messaging-layout{display:flex!important;flex-direction:column!important;min-height:0!important;max-height:none!important;height:calc(var(--pm-visible-height,100dvh) - var(--pm-chat-site-header-height,75px) - 91px)!important;overflow:hidden;border:0;border-radius:0;box-shadow:none}
+  body.pm-messages-page:not(.pm-dock-visible) .messaging-layout:not(.chat-open){height:calc(var(--pm-visible-height,100dvh) - var(--pm-chat-site-header-height,75px))!important}
+  body.pm-messages-page .messaging-layout .inbox-sidebar{display:flex!important;flex:1 1 auto;min-height:0!important;max-height:none!important;overflow:hidden!important;border:0;background:var(--social-card,#fff)}
+  body.pm-messages-page .messaging-layout .inbox-head{flex:none}
+  body.pm-messages-page .messaging-layout .conversation-list{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;display:flex;flex-direction:column}
+  body.pm-messages-page .messaging-layout .chat-window{display:none!important}
+  body.pm-messages-page .messaging-layout.chat-open{height:calc(var(--pm-visible-height,100dvh) - var(--pm-chat-site-header-height,75px))!important}
+  body.pm-messages-page .messaging-layout.chat-open .inbox-sidebar{display:none!important}
+  body.pm-messages-page .messaging-layout.chat-open .chat-window{display:flex!important;flex:1 1 auto!important;height:100%!important;max-height:none!important;min-height:0!important;overflow:hidden!important;border:0;border-radius:0}
+  body.pm-messages-page .messaging-layout.chat-open .chat-header{height:auto!important;min-height:66px!important;flex:0 0 auto;padding:10px 11px!important;align-items:center!important;gap:9px!important}
+  body.pm-messages-page .messaging-layout.chat-open .pm-chat-back-button{display:flex;align-items:center;justify-content:center;width:34px;height:44px;padding:0}
+  body.pm-messages-page .messaging-layout.chat-open .chat-header .conversation-avatar,
+  body.pm-messages-page .messaging-layout.chat-open .chat-header .pm-avatar{width:42px!important;height:42px!important;min-width:42px;border-radius:50%!important}
+  body.pm-messages-page .messaging-layout.chat-open .chat-header .pm-chat-safety-control{display:grid!important;place-items:center;width:35px;min-width:35px;height:40px;margin:0!important;padding:0!important;border:0!important;border-radius:10px;background:transparent;color:#8174e2;font-size:24px!important;line-height:1}
+  body.pm-messages-page .messaging-layout.chat-open .chat-header .pm-chat-safety-control:focus-visible{outline:3px solid #988aff}
+  body.pm-messages-page .messaging-layout.chat-open .chat-header strong{font-size:14px;line-height:1.35}
+  body.pm-messages-page .messaging-layout.chat-open .chat-header small{font-size:11px;line-height:1.35}
+  body.pm-messages-page .messaging-layout.chat-open .chat-messages{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow-y:auto!important;overscroll-behavior:contain}
+  body.pm-messages-page .messaging-layout.chat-open #messageForm{flex:0 0 auto!important}
+  body.pm-private-chat-open .pm-student-dock{display:none!important}
+  body.pm-private-chat-open.pm-dock-visible{padding-bottom:0!important}
+}

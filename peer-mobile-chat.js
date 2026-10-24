@@ -15,13 +15,15 @@
     // visualViewport.height reflects the available area above Android/iOS soft keyboards.
     const height=viewport?.height || window.innerHeight;
     document.documentElement.style.setProperty('--pm-visible-height',Math.round(height)+'px');
+    const headerHeight=document.querySelector('.site-header')?.getBoundingClientRect().height||75;
+    document.documentElement.style.setProperty('--pm-chat-site-header-height',Math.round(headerHeight)+'px');
   }
   field.addEventListener('input',resizeComposer);
   field.addEventListener('focus',()=>{
     updateViewport();resizeComposer();
     if(window.innerWidth<=720){
       document.body.classList.add('pm-chat-keyboard');
-      requestAnimationFrame(()=>chat.scrollIntoView({block:'start',behavior:'instant'}));
+      // The chat pane stays within the visual viewport; scroll messages, not the whole page.
     }
   });
   field.addEventListener('blur',()=>document.body.classList.remove('pm-chat-keyboard'));
@@ -34,5 +36,9 @@
   });
   window.addEventListener('resize',()=>{updateViewport();resizeComposer()},{passive:true});
   window.visualViewport?.addEventListener('resize',updateViewport,{passive:true});
+  window.addEventListener('pm-ready',updateViewport);
+  window.addEventListener('pm-auth-changed',()=>requestAnimationFrame(updateViewport));
+  // Signed-in navigation changes the header height after auth has loaded.
+  if('ResizeObserver' in window){new ResizeObserver(updateViewport).observe(document.querySelector('.site-header'));}
   updateViewport();resizeComposer();
 })();

@@ -1,0 +1,11 @@
+/* Compact searchable institution dropdown; works in both themes. */
+.pm-institution-picker{position:relative;min-width:0;width:100%}
+.pm-institution-picker>input{width:100%}
+.pm-institution-results[hidden]{display:none!important}
+.pm-institution-results{position:absolute;z-index:155;top:calc(100% + 5px);left:0;right:0;max-height:268px;overflow:auto;border:1px solid var(--border,#e6e8f1);border-radius:13px;background:var(--surface,#fff);box-shadow:0 14px 32px rgba(26,29,66,.16);padding:5px}
+.pm-institution-option{display:block;width:100%;text-align:left;padding:12px 13px;border:0;background:transparent;color:var(--ink,#171b3a);font-size:13px;line-height:1.35;border-radius:9px;white-space:normal}
+.pm-institution-option:hover,.pm-institution-option.active{background:var(--violet-light);color:var(--violet)}
+.pm-institution-option:focus-visible{outline:2px solid var(--violet);outline-offset:-2px}
+html[data-theme="dark"] .pm-institution-results{background:#1b243a;border-color:#3d4865;box-shadow:0 16px 35px #060b18aa}
+html[data-theme="dark"] .pm-institution-option{color:#eef0ff}
+html[data-theme="dark"] .pm-institution-option:hover,html[data-theme="dark"] .pm-institution-option.active{background:#36315d;color:#cec5ff}

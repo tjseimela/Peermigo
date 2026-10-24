@@ -25,7 +25,9 @@
 <link href="registration.css" rel="stylesheet"/>
 <link href="mobile-header-refresh.css" rel="stylesheet"/>
 <link href="workspace-refresh.css" rel="stylesheet"/><link href="profile-reminder.css" rel="stylesheet"/>
-<link href="account-profile-refresh.css" rel="stylesheet"/></head>
+<link href="account-profile-refresh.css" rel="stylesheet"/><link href="peermigo-mobile-polish.css" rel="stylesheet"/>
+<link href="institution-picker.css" rel="stylesheet"/>
+</head>
 <body>
 <header class="site-header">
 <div class="container nav-shell">
@@ -42,8 +44,7 @@
 </div>
 </header>
 <main class="pm-workspace-page" id="mainContent">
-<section class="app-section"><div class="container auth-layout"><div class="form-card auth-card"><div class="hidden" id="authLoggedIn"><div class="auth-symbol">✓</div><h2>You’re signed in.</h2><p class="muted-text" id="authEmail"></p><p>Update your profile and discover students at your institution.</p><div class="auth-actions"><a class="btn btn-primary" href="index.html" id="accountContinueLink">Go to dashboard →</a><a class="btn btn-secondary" href="profile.html">My profile</a><button class="btn btn-secondary" id="signOutButton" type="button">Sign out</button></div></div><div id="authLoggedOut"><div class="auth-tabs" id="authTabs" role="tablist"><button aria-selected="true" class="auth-tab active" id="tabSignIn" role="tab" type="button">Sign in</button><button aria-selected="false" class="auth-tab" id="tabSignUp" role="tab" type="button">Create account</button></div><h2 id="authTitle">Welcome back.</h2><p class="muted-text" id="authSubtitle">Sign in to continue growing together.</p><div class="form-feedback hidden" id="authFeedback" role="status"></div><form class="styled-form" id="authForm"><div aria-labelledby="pmSignupHeading" class="pm-signup-fields hidden" id="authSignupFields">
-<div class="pm-signup-heading"><span class="pm-signup-step">YOUR STUDENT PROFILE</span><h3 id="pmSignupHeading">Tell us about yourself</h3><p>Help classmates find the right study partner from day one. Fields marked <span aria-hidden="true">*</span> are required.</p></div>
+<section class="app-section"><div class="container auth-layout"><div class="form-card auth-card"><div class="hidden" id="authLoggedIn"><div class="auth-symbol">✓</div><h2>You’re signed in.</h2><p class="muted-text" id="authEmail"></p><p>Update your profile and discover students at your institution.</p><div class="auth-actions"><a class="btn btn-primary" href="index.html" id="accountContinueLink">Go to dashboard →</a><a class="btn btn-secondary" href="profile.html">My profile</a><button class="btn btn-secondary" id="signOutButton" type="button">Sign out</button></div></div><div id="authLoggedOut"><div class="auth-tabs" id="authTabs" role="tablist"><button aria-selected="true" class="auth-tab active" id="tabSignIn" role="tab" type="button">Sign in</button><button aria-selected="false" class="auth-tab" id="tabSignUp" role="tab" type="button">Create account</button></div><h2 id="authTitle">Welcome back.</h2><p class="muted-text" id="authSubtitle">Sign in to continue growing together.</p><div class="form-feedback hidden" id="authFeedback" role="status"></div><form class="styled-form" id="authForm"><div aria-label="Student profile details" class="pm-signup-fields hidden" id="authSignupFields">
 <div class="form-group pm-signup-name-group">
 <label id="signupNameLabel">Name <span aria-hidden="true">*</span></label>
 <div aria-labelledby="signupNameLabel" class="pm-signup-name-grid" role="group">
@@ -82,5 +83,5 @@
 </div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="password-visibility.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="institution-picker.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="password-visibility.js"></script></body>
 </html>

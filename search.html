@@ -27,6 +27,7 @@
 <link href="directory.css" rel="stylesheet"/>
 <link href="mobile-header-refresh.css" rel="stylesheet"/>
 </link><link href="search-page.css" rel="stylesheet"/><link rel="stylesheet" href="workspace-refresh.css"/>
+<link href="peermigo-mobile-polish.css" rel="stylesheet"/>
 </head>
 <body>
 <div aria-live="polite" class="access-check" id="accessCheck" role="status"><span aria-hidden="true" class="access-spinner"></span><strong>Opening your student space…</strong><span>Checking your Peermigo account</span><a href="account.html">Go to Sign In</a></div>
@@ -45,14 +46,11 @@
 </div>
 </header>
 <main class="pm-workspace-page pm-search-page" id="mainContent"><section aria-label="Search results" class="pm-search-main container">
-<div class="pm-search-page-heading">
-<div><span class="social-eyebrow">YOUR COMMUNITY</span><h1>Search Peermigo</h1><p>One search for student profiles and study groups. Only information available to signed-in students is shown.</p></div>
-<a class="pm-search-page-peers-link" href="matches.html">Explore recommended peers <span aria-hidden="true">↗</span></a>
-</div>
 <form class="pm-search-page-form" id="pmFullSearchForm" role="search">
 <label class="pm-full-search-wrap" for="pmFullSearchInput"><svg aria-hidden="true" class="pm-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.6"></circle><path d="m16 16 5 5"></path></svg><input aria-label="Search students and study groups" autocomplete="off" id="pmFullSearchInput" maxlength="64" placeholder="Student name, institution, group or module" type="search"/></label>
 <button class="pm-search-submit" type="submit">Search <span aria-hidden="true">→</span></button>
 </form>
+<div class="pm-search-recommended"><a class="pm-search-page-peers-link" href="matches.html">Explore recommended peers <span aria-hidden="true">↗</span></a></div>
 <div aria-label="Search category" class="pm-search-tabs" id="pmSearchTabs" role="group">
 <button aria-pressed="true" class="pm-search-tab is-active" data-tab="all" type="button">All results</button>
 <button aria-pressed="false" class="pm-search-tab" data-tab="students" type="button">Students</button>
@@ -89,5 +87,5 @@
 </div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="True" src="search-page.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="True" src="search-page.js"></script></body>
 </html>

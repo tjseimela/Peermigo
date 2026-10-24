@@ -1,0 +1,81 @@
+/* Peermigo compact UX | keeps controls visible, avoids oversized mobile introductions */
+/* Notifications: single-row title + actions */
+.pm-notification-heading{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-between;gap:8px!important;margin-bottom:14px!important}
+.pm-notification-heading>div:first-child{min-width:0;flex:1}
+.pm-notification-heading h2{font-size:clamp(19px,4.7vw,25px);white-space:nowrap;letter-spacing:-.04em;margin:0}
+.pm-notification-heading .pm-notification-actions{width:auto!important;max-width:65%;margin:0!important;flex:0 0 auto;align-self:center!important;gap:7px;position:relative;top:-2px}
+.pm-notification-heading .pm-notification-actions .btn{white-space:nowrap;min-height:38px!important;padding:8px 10px!important;font-size:11px!important;border-radius:11px}
+.pm-notification-heading .pm-notification-settings-link{flex:none;width:38px;height:38px;min-width:38px;min-height:38px;border-radius:11px}
+/* Profile Privacy in Settings (same controls and persistence) */
+.pm-privacy-controls{padding:20px 24px 25px;border-bottom:1px solid #e9eafa}
+.pm-privacy-controls h2{font-size:18px;color:#242b48;margin:0 0 8px;letter-spacing:-.03em}
+.pm-privacy-controls .pm-switch{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:62px;padding:12px 0;border-bottom:1px solid #e6e8f5;cursor:pointer}
+.pm-privacy-controls .pm-switch>span{display:grid;gap:2px;min-width:0}
+.pm-privacy-controls .pm-switch strong{font-size:12px;color:#29324f}
+.pm-privacy-controls .pm-switch small{font-size:11px;color:#7c869e;line-height:1.4}
+.pm-privacy-controls input[type=checkbox]{appearance:none;flex:0 0 auto;width:43px;height:25px;border-radius:30px;border:1px solid #c7c8d9;background:#dfe1eb;position:relative;cursor:pointer;transition:background .2s}
+.pm-privacy-controls input[type=checkbox]:before{content:'';position:absolute;left:3px;top:3px;width:17px;height:17px;background:#fff;border-radius:50%;box-shadow:0 1px 4px #0002;transition:transform .2s}
+.pm-privacy-controls input[type=checkbox]:checked{background:#6657dc;border-color:#6657dc}
+.pm-privacy-controls input[type=checkbox]:checked:before{transform:translateX(18px)}
+.pm-privacy-controls input[type=checkbox]:focus-visible{outline:3px solid #a397ff;outline-offset:3px}
+.pm-privacy-controls .btn{margin-top:15px}
+html[data-theme='dark'] .pm-privacy-controls{border-color:#3c4865}
+html[data-theme='dark'] .pm-privacy-controls h2,html[data-theme='dark'] .pm-privacy-controls .pm-switch strong{color:#eff1ff}
+html[data-theme='dark'] .pm-privacy-controls .pm-switch small{color:#a7b4cc}
+html[data-theme='dark'] .pm-privacy-controls .pm-switch{border-color:#35415c}
+/* Directory: bring student cards up, compress empty recommendations */
+.pm-workspace-page:has(#matchesGrid) .app-section{padding-top:18px}
+.pm-workspace-page:has(#matchesGrid) .pm-find-heading{margin-bottom:12px}
+.pm-workspace-page:has(#matchesGrid) .pm-find-heading h1{margin:0}
+.pm-workspace-page:has(#matchesGrid) .pm-compact-finder{margin-bottom:18px}
+.pm-workspace-page:has(#matchesGrid) .section-row{margin-bottom:10px}
+.pm-workspace-page:has(#matchesGrid) .section-row h2{font-size:clamp(18px,4.8vw,23px);margin:0}
+.pm-workspace-page:has(#matchesGrid) .all-peers-section{margin-top:17px}
+.pm-workspace-page:has(#matchesGrid) .all-peers-section .section-row{margin-bottom:12px}
+.pm-compact-no-match{font-size:12px;line-height:1.45;color:#7c849b;margin:0;padding:6px 0 8px}
+html[data-theme='dark'] .pm-compact-no-match{color:#a7b3cf}
+/* Group page: search first, then create action and My groups filter */
+.pm-workspace-page:has(#groupsGrid)>.app-section:first-child{padding-top:16px}
+.pm-workspace-page:has(#groupsGrid) .finder-panel.compact-finder{margin-bottom:10px;padding:12px 14px}
+.pm-workspace-page:has(#groupsGrid) .pm-group-top-actions{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:17px;flex-wrap:wrap}
+.pm-workspace-page:has(#groupsGrid) .pm-group-top-actions .toggle-label{margin-left:auto;min-height:42px}
+.pm-workspace-page:has(#groupsGrid) .pm-group-top-actions #openGroupForm{min-height:44px;padding:10px 17px;font-size:12px}
+.pm-workspace-page:has(#groupsGrid) .section-row{margin-bottom:12px}
+.pm-workspace-page:has(#groupsGrid) .section-row h2{font-size:clamp(20px,5vw,25px)}
+/* Sessions page: compact heading and compact empty state */
+.pm-workspace-page:has(#sessionsGrid)>.app-section:first-child{padding-top:16px}
+.pm-workspace-page:has(#sessionsGrid) .app-intro{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px!important}
+.pm-workspace-page:has(#sessionsGrid) .app-intro h2{margin:0;font-size:clamp(21px,5vw,27px)}
+.pm-workspace-page:has(#sessionsGrid) .app-intro .btn{min-height:42px;padding:10px 15px;font-size:12px}
+.pm-workspace-page:has(#sessionsGrid) .section-row{margin-bottom:14px}
+.pm-workspace-page:has(#sessionsGrid) .section-row h2{font-size:clamp(18px,4.8vw,24px)}
+#sessionsEmpty{min-height:0!important;padding:18px 16px!important;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:left}
+#sessionsEmpty.hidden{display:none!important}
+#sessionsEmpty h3{font-size:14px!important;margin:0!important}
+#sessionsEmpty .btn{margin:0!important;padding:9px 14px!important;min-height:38px;font-size:12px}
+@media(max-width:640px){
+ .pm-notification-heading{margin-bottom:12px!important}
+ .pm-notification-heading .pm-notification-actions .btn{padding:7px 8px!important;font-size:10px!important;min-height:35px!important}
+ .pm-notification-heading .pm-notification-settings-link{width:35px;height:35px;min-width:35px;min-height:35px}
+ .pm-privacy-controls{padding:18px 17px 19px}
+ .pm-workspace-page:has(#matchesGrid) .pm-compact-finder{margin-bottom:14px}
+ .pm-workspace-page:has(#matchesGrid) .all-peers-section{margin-top:12px}
+ .pm-workspace-page:has(#groupsGrid) .pm-group-top-actions{margin-bottom:12px;gap:9px}
+ .pm-workspace-page:has(#groupsGrid) .pm-group-top-actions #openGroupForm{padding:9px 12px;min-height:41px}
+ .pm-workspace-page:has(#groupsGrid) .pm-group-top-actions .toggle-label{font-size:11px;gap:8px}
+ .pm-workspace-page:has(#sessionsGrid) .app-intro{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:18px!important}
+ #sessionsEmpty{justify-content:space-between;text-align:left;padding:14px!important}
+}
+@media(max-width:350px){
+ .pm-notification-heading .pm-notification-actions{gap:4px}
+ .pm-notification-heading h2{font-size:18px}
+ .pm-notification-heading .pm-notification-actions .btn{font-size:9px!important;padding:6px!important}
+ .pm-notification-heading .pm-notification-settings-link{width:32px;height:32px;min-width:32px;min-height:32px}
+}
+/* Keep the notification title and both actions in one true horizontal row on phones. */
+.pm-notification-heading{flex-direction:row!important;text-align:left!important;width:100%;}
+.pm-notification-heading>div:first-child{width:auto!important;text-align:left!important;}
+.pm-notification-heading .pm-notification-actions{flex-direction:row!important;}
+
+/* Matching v2: reasons appear only when a peer card is expanded. */
+.directory-match-explanation{margin:.55rem 0 0;font-size:.8rem;line-height:1.45;color:var(--muted,#6c7390);overflow-wrap:anywhere}

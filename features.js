@@ -109,9 +109,20 @@
    try{const path=await db.uploadAvatar(file);me={...me,avatar_path:path};await paint();window.dispatchEvent(new Event('pm-profile-photo-changed'));el('avatarFile').value='';PM.cropper?.reset();toast('Profile photo updated.')}catch(err){toast(err.message)}finally{if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save profile photo'}}
   });
   el('removePhoto').addEventListener('click',async()=>{if(!me?.avatar_path)return;try{await db.removeAvatar();me={...me,avatar_path:null};await paint();window.dispatchEvent(new Event('pm-profile-photo-changed'));PM.cropper?.reset();toast('Photo removed.')}catch(e){toast(e.message)}});
-  el('discoverableSetting').checked=me?.discoverable!==false;el('activitySetting').checked=me?.show_activity!==false;
-  el('privacyForm').addEventListener('submit',async e=>{e.preventDefault();try{await db.saveDiscoverability(el('discoverableSetting').checked,el('activitySetting').checked);toast('Privacy settings updated.')}catch(e){toast(e.message)}});
   await renderMyNotes();
+ }
+ async function initPrivacySettings(){
+  const form=el('privacyForm');if(!form)return;
+  if(!hasAuth())return;
+  try{const me=await db.profile();
+   el('discoverableSetting').checked=me?.discoverable!==false;
+   el('activitySetting').checked=me?.show_activity!==false;
+  }catch(e){console.warn('Could not load privacy preferences:',e.message);return;}
+  form.addEventListener('submit',async e=>{e.preventDefault();
+   const button=form.querySelector('button[type=submit]');if(button)button.disabled=true;
+   try{await db.saveDiscoverability(el('discoverableSetting').checked,el('activitySetting').checked);toast('Privacy settings updated.');}
+   catch(e){toast(e.message)}finally{if(button)button.disabled=false;}
+  });
  }
  async function initPublicProfile(){
   const root=el('studentPage');if(!root)return;
@@ -268,7 +279,7 @@ async function startPresence(){if(!db.user)return;
   }catch(err){toast(err.message||'Unable to copy profile link.');}
  });
  window.addEventListener('pm-ready',async()=>{
-  initFileIndicators();await Promise.allSettled([initProfileExtras(),initNotesEditor(),initPublicProfile(),initEmailSettings(),initAppNotificationSettings(),startPresence()]);
+  initFileIndicators();await Promise.allSettled([initProfileExtras(),initPrivacySettings(),initNotesEditor(),initPublicProfile(),initEmailSettings(),initAppNotificationSettings(),startPresence()]);
   decorateAvatars();
  });
 })();
