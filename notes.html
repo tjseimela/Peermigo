@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="pm-dialogs.css"/>
 <script defer src="pm-dialogs.js"></script>
 <link rel="stylesheet" href="peermigo-refined.css"/>
+<link rel="stylesheet" href="peermigo-selects.css">
 </head>
 <body>
 <div class="access-check" id="accessCheck" role="status" aria-live="polite"><span class="access-spinner" aria-hidden="true"></span><strong>Opening your student space…</strong><span>Checking your Peermigo account</span><a href="account.html">Go to Sign In</a></div>
@@ -65,11 +66,11 @@
  <section id="pmMyNotesPanel" hidden aria-label="Manage my notes">
 <div class="notes-layout"><div id="notesLogin"></div><div class="notes-editor social-panel"><h2 id="notesFormTitle">Create a study note</h2><form id="notesForm" class="styled-form"><div class="form-group"><label for="noteTopic">Topic / title</label><input id="noteTopic" maxlength="140" minlength="3" required placeholder="e.g. SQL joins explained simply"></div><div class="form-group"><label for="noteBody">Your notes</label><textarea id="noteBody" rows="9" maxlength="10000" required placeholder="Share a study tip, summary or revision guide..."></textarea></div><div class="pm-note-toolbar" aria-label="Note publishing options">
   <div class="pm-note-toolbar-actions">
-    <label class="pm-privacy-select" for="noteVisibility">
+    <div class="pm-privacy-select">
       <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <select id="noteVisibility" aria-label="Note visibility"><option value="private">Only me</option><option value="public">On my profile</option></select>
       <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
-    </label>
+    </div>
     <button class="pm-add-note-images" id="pmAddNoteImages" type="button" aria-label="Add images" title="Add images">
       <svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m4 17 5.5-5.5 4 4L16 13l4 4"/></svg>
     </button>
@@ -103,5 +104,6 @@
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
 <script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer src="notes-discovery.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer src="compact-upload-ui.js"></script><script defer src="notes-toolbar-refresh.js"></script>
+<script defer src="peermigo-selects.js"></script>
 </body>
 </html>

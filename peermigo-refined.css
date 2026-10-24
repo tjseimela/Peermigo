@@ -130,3 +130,18 @@ html[data-theme="dark"] .member-hero-card::before,
 html[data-theme="dark"] .member-hero-card::after { display:none !important; }
 html:not([data-theme="dark"]) .member-hero-card::before,
 html:not([data-theme="dark"]) .member-hero-card::after { display:none !important; }
+
+/* Contrast fix, 2026-10-25 — light mode ONLY.
+   The refined global text palette must not overwrite light text on dark brand surfaces. */
+html:not([data-theme="dark"]) .auth-aside .section-kicker {
+  color: #f0edff !important;
+}
+html:not([data-theme="dark"]) .site-footer .footer-brand {
+  color: #f8f9ff !important;
+}
+html:not([data-theme="dark"]) .site-footer .footer-brand .brand-accent {
+  color: #c9c5ff !important;
+}
+html:not([data-theme="dark"]) .site-footer .footer-brand .brand-dot {
+  color: #f2a65a !important;
+}

@@ -33,6 +33,7 @@
 <link href="peermigo-clean-ui.css" rel="stylesheet"/><link rel="stylesheet" href="pm-dialogs.css"/>
 <script defer src="pm-dialogs.js"></script>
 <link rel="stylesheet" href="peermigo-refined.css"/>
+<link rel="stylesheet" href="peermigo-selects.css">
 </head>
 <body>
 <div aria-live="polite" class="access-check" id="accessCheck" role="status"><span aria-hidden="true" class="access-spinner"></span><strong>Opening your student space…</strong><span>Checking your Peermigo account</span><a href="account.html">Go to Sign In</a></div>
@@ -93,12 +94,12 @@
         <input aria-label="Filter by institution" autocomplete="off" id="institutionFilter" list="peerInstitutionSuggestions" placeholder="All institutions" type="search"/>
 <datalist id="peerInstitutionSuggestions"></datalist>
 </label>
-<label class="pm-finder-field">Study format
+<div class="pm-finder-field"><span>Study format</span>
         <select aria-label="Study method" id="methodFilter"><option value="">Any study format</option><option value="campus">On campus</option><option value="virtual">Online</option><option value="hybrid">Hybrid</option></select>
-</label>
-<label class="pm-finder-field">Availability
+</div>
+<div class="pm-finder-field"><span>Availability</span>
         <select aria-label="Availability" id="timeFilter"><option value="">Any availability</option><option value="mornings">Mornings</option><option value="afternoons">Afternoons</option><option value="evenings">Evenings</option><option value="weekends">Weekends</option><option value="flexible">Flexible</option></select>
-</label>
+</div>
 </div>
 <div class="finder-bottom">
 <button class="text-button" id="clearFilters" type="button">Reset all filters</button>
@@ -128,5 +129,6 @@
 </div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="connections.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script></body>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="connections.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer src="peermigo-selects.js"></script>
+</body>
 </html>
