@@ -1,4 +1,4 @@
-/* Peer Match responsive mobile header refresh.
+/* Peermigo responsive mobile header refresh.
  * Applies to signed-in students. Desktop and public navigation are unchanged. */
 .pm-mobile-filter-wrap{display:none}
 .pm-mobile-filter-panel[hidden]{display:none!important}

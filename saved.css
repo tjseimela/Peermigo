@@ -1,4 +1,4 @@
-/* Peer Match: private student bookmarks, static resource cards and saved page. */
+/* Peermigo: private student bookmarks, static resource cards and saved page. */
 .pm-save-btn[hidden]{display:none!important}
 .pm-save-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;border:1px solid #dedcf0;border-radius:11px;background:#fff;color:#5546bd;font:800 11px/1.3 var(--font-head,system-ui);padding:8px 11px;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
 .pm-save-btn .pm-icon,.pm-remove-saved .pm-icon{width:16px;height:16px;flex:none}

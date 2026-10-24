@@ -1,4 +1,4 @@
-/* Peer Match — better post-signup confirmation and focused profile editing.
+/* Peermigo — better post-signup confirmation and focused profile editing.
    Scoped to their respective pages; does not restyle the rest of the platform. */
 .pm-signup-success{max-width:570px;margin:12px auto 6px;padding:27px 6px 8px;text-align:center;outline:0}
 .pm-signup-success.hidden{display:none!important}

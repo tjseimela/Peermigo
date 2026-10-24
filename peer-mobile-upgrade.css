@@ -1,4 +1,4 @@
-/* Peer Match 2026-10: compact, expandable student directory and mobile messaging.
+/* Peermigo 2026-10: compact, expandable student directory and mobile messaging.
    Desktop directory layout and desktop message composer are unchanged. */
 .directory-expand-button{display:none!important}
 #messageForm #messageBody{resize:none;overflow-y:auto;max-height:152px;min-height:44px;line-height:1.5;box-sizing:border-box}

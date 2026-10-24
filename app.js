@@ -31,7 +31,7 @@
  <a class="nav-link" data-page="about.html" href="about.html">About</a>
  <a class="nav-link" data-page="contact.html" href="contact.html">Contact</a>
  <a class="nav-account" data-page="account.html" id="authNavLink" href="account.html">Sign in</a>
- <a class="nav-cta join-nav" href="account.html?mode=signup">Join Peer Match <span aria-hidden="true">↗</span></a>`;
+ <a class="nav-cta join-nav" href="account.html?mode=signup">Join Peermigo <span aria-hidden="true">↗</span></a>`;
  function setupNav(){
   const menu=$('menuToggle'),nav=$('primaryNav');if(!menu||!nav)return;
   const setOpen=(open)=>{nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close menu':'Open menu');document.querySelector('.site-header')?.classList.remove('pm-header-hidden');};
@@ -538,7 +538,7 @@
   const relation=db.connectionWith(connectionRows,p.id);
   const connection=PM.connectionAction(relation,db.identity());
   return `<article class="peer-card peer-card-v2 directory-card">
-   <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<span class="directory-status match-score ${matchTier}" aria-label="${score} percent compatibility score"><span class="match-number">${score}%</span><span class="match-label">match</span></span>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peer Match'}</span>`}</div>
+   <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<span class="directory-status match-score ${matchTier}" aria-label="${score} percent compatibility score"><span class="match-number">${score}%</span><span class="match-label">match</span></span>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peermigo'}</span>`}</div>
    <div class="directory-main"><h3><a class="profile-name-link" href="student.html?id=${encodeURIComponent(p.id)}">${esc(name)}</a>${p.is_verified?`<span class="verified-label" title="Institution reviewed by administrator">${PM.icon('shield')} Verified</span>`:''}</h3></div>
    <div class="directory-desktop-summary" aria-label="Student summary">
      <p class="directory-desktop-summary-line"><span>${esc(PM.formatStudyText(p.course)||'Course not listed')}</span><span class="directory-summary-dot" aria-hidden="true"> · </span><span class="directory-summary-institution">${esc(PM.formatStudyText(p.institution)||'Institution not listed')}</span></p>

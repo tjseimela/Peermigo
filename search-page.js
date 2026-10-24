@@ -20,7 +20,7 @@
  }
  function setStatus(s){el('pmSearchPageStatus').textContent=s;}
  function renderStudent(student){
-  const name=PM.formatPersonName(student.full_name)||'Peer Match student';
+  const name=PM.formatPersonName(student.full_name)||'Peermigo student';
   const detail=[student.course,student.institution,student.campus].filter(Boolean).join(' · ')||'Student profile';
   return `<article class="pm-result-card">
     <div class="pm-result-top"><span class="pm-result-avatar">${window.PM.ui.avatar(name,student.avatar_path||null,'pm-search-page-avatar')}</span>
@@ -76,7 +76,7 @@
   try{history.replaceState(null,'',u.pathname+u.search+u.hash)}catch(_){/* Local file previews have no navigable origin. */}
  }
  async function run(){
-  if(!backend()?.user){setStatus('Sign in to search Peer Match.');return;}
+  if(!backend()?.user){setStatus('Sign in to search Peermigo.');return;}
   const request=++version;
   studentPage=0;groupPage=0;studentRows=0;groupRows=0;studentCount=0;groupCount=0;
   el('pmSearchStudentResults').replaceChildren();el('pmSearchGroupResults').replaceChildren();
@@ -96,7 +96,7 @@
    syncEmpty();
   } catch(error){
    if(request===version){setStatus('Unable to load search results. Please try again.');el('pmSearchEmpty').hidden=true;}
-   console.warn('Peer Match search:',error.message);
+   console.warn('Peermigo search:',error.message);
   }
  }
  async function more(kind){

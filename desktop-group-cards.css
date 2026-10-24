@@ -1,4 +1,4 @@
-/* Peer Match — desktop folded group cards (721px+), October 2026.
+/* Peermigo — desktop folded group cards (721px+), October 2026.
    Uses existing group member/admin logic; no backend changes. */
 .group-card-description-preview,.group-toggle-label{display:none}
 @media (min-width:721px){

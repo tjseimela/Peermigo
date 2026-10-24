@@ -1,4 +1,4 @@
-/* Peer Match: mobile-only navigation, shown only after Supabase authentication. */
+/* Peermigo: mobile-only navigation, shown only after Supabase authentication. */
 (() => {
   'use strict';
   const destinations = [

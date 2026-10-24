@@ -261,7 +261,7 @@ async function startPresence(){if(!db.user)return;
   const btn=e.target.closest('[data-copy-profile],[data-share-profile]');if(!btn)return;
   const id=btn.dataset.copyProfile||btn.dataset.shareProfile;if(!isValidProfileId(id))return;
   try{const url=studentProfileUrl(id);if(btn.hasAttribute('data-share-profile')&&navigator.share){
-    try{await navigator.share({title:'Student profile on Peer Match',text:'View this student on Peer Match. Sign in to see their profile.',url});return;}
+    try{await navigator.share({title:'Student profile on Peermigo',text:'View this student on Peermigo. Sign in to see their profile.',url});return;}
     catch(err){if(err?.name==='AbortError')return;}
    }
    const copied=await copyProfileUrl(url);if(copied){toast('Profile link copied! Only authorized signed-in students can view it.');const original=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>{if(btn.isConnected)btn.textContent=original;},1800);}

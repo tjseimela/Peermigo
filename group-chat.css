@@ -1,4 +1,4 @@
-/* Peer Match dedicated group inbox — isolated from other site pages. */
+/* Peermigo dedicated group inbox — isolated from other site pages. */
 .pm-group-chat-page{--pm-group-wash:#f7f8fd;--pm-group-card:#fff;--pm-group-ink:#283252;--pm-group-muted:#77839e;--pm-group-stroke:#e4e7f2;--pm-group-purple:#5c4ced}
 .pm-group-chat-main{padding:24px max(14px,calc((100vw - 1200px)/2));background:#fafaff;min-height:0}
 .pm-group-chat-layout{display:grid;grid-template-columns:270px minmax(0,1fr);width:100%;height:min(780px,calc(100dvh - 170px));min-height:430px;background:var(--pm-group-card);border:1px solid var(--pm-group-stroke);border-radius:20px;overflow:hidden;box-shadow:0 16px 42px #202b4c11}

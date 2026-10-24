@@ -1,4 +1,4 @@
-/* Peer Match - student bookmarks. All writes are authenticated & RLS checked. */
+/* Peermigo - student bookmarks. All writes are authenticated & RLS checked. */
 (() => {
  'use strict';
  const db=window.PM.backend;
@@ -50,7 +50,7 @@
   if(row.resource_key&&!resource)return '';
   const title=note?.topic||resource.title;
   const detail=note?noteText(note):resource.detail;
-  const author=note?(noteAuthors.get(note.author_id)||'Peer Match student'):null;
+  const author=note?(noteAuthors.get(note.author_id)||'Peermigo student'):null;
   const href=itemLink(row,note);
   const external=href.startsWith('https://');
   const metadata=note?`Public note · ${esc(author)}`:`${esc(resource.category)}`;

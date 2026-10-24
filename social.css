@@ -1,4 +1,4 @@
-/* Peer Match community features — responsive, consistent with existing design */
+/* Peermigo community features — responsive, consistent with existing design */
 :root{--social-card:#fff;--social-border:#e9eaf4;--social-text:#18213d;--social-sub:#65728e;--social-wash:#f6f7fd}
 .social-eyebrow{font-weight:800;font-size:10px;letter-spacing:.17em;color:#6054da;text-transform:uppercase}
 .social-panel,.note-post{background:var(--social-card);border:1px solid var(--social-border);border-radius:20px;padding:26px;box-shadow:0 13px 36px rgba(22,29,64,.035)}

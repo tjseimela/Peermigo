@@ -1,5 +1,5 @@
 'use strict';
-/* Peer Match connection requests. Database RLS and triggers own access and alerts. */
+/* Peermigo connection requests. Database RLS and triggers own access and alerts. */
 (() => {
  const db=window.PM?.backend;if(!db)return;
  db.connectionRequests=async function(){

@@ -1,4 +1,4 @@
-/* Peer Match — dedicated group inbox. Uses existing group_posts and pm_attachments.
+/* Peermigo — dedicated group inbox. Uses existing group_posts and pm_attachments.
    Membership is checked client-side for UX; Supabase RLS remains authoritative. */
 (() => {
   'use strict';
@@ -89,7 +89,7 @@
       if(!joined){fail('Join this group before opening its discussion.');return;}
       $('pmGroupChatTitle').textContent=group.name;
       $('pmGroupChatMeta').textContent=[group.module,group.institution,group.campus].filter(Boolean).map(PM.formatStudyText).join(' · ') || 'Members-only study conversation';
-      document.title=group.name+' | Peer Match';
+      document.title=group.name+' | Peermigo';
       const list=$('pmGroupChatList');
       const available=groups.filter(g=>memberships.some(m=>m.group_id===g.id));
       list.innerHTML=available.map(g=>`<a class="pm-group-inbox-link${g.id===groupId?' is-active':''}" href="group-chat.html?group=${encodeURIComponent(g.id)}" ${g.id===groupId?'aria-current="page"':''}><span class="pm-group-inbox-mark">${PM.icon('users')}</span><span><strong>${esc(g.name)}</strong><small>${esc(PM.formatStudyText(g.module)||'Study group')}</small></span></a>`).join('');

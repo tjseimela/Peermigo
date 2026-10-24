@@ -1,4 +1,4 @@
-/* Peer Match: Supabase-backed platform. All student data is stored in Supabase. */
+/* Peermigo: Supabase-backed platform. All student data is stored in Supabase. */
 window.PM = window.PM || {};
 // Shared study-partner compatibility formula for badges and directory ranking.
 // A visitor's match score is personal: it depends on their own school,

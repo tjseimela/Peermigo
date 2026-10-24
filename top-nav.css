@@ -1,4 +1,4 @@
-/* Peer Match — authenticated student top navigation and live student search */
+/* Peermigo — authenticated student top navigation and live student search */
 .pm-top-hub[hidden],.pm-search-popover[hidden],.pm-top-count[hidden]{display:none!important}
 html.pm-member-header .site-header .main-nav{display:none}
 .pm-top-hub{display:flex;align-items:center;justify-content:space-between;gap:clamp(10px,2vw,26px);flex:1;min-width:0;margin-left:auto}

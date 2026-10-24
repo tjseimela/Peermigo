@@ -1,4 +1,4 @@
-/* Peer Match social extensions. Uses the existing authenticated Supabase client. */
+/* Peermigo social extensions. Uses the existing authenticated Supabase client. */
 (() => {
  const db=window.PM.backend;
  const allowed = new Set(['image/jpeg','image/png','image/webp','application/pdf','text/plain','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-powerpoint','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);

@@ -1,4 +1,4 @@
-/* Peer Match - required profile details at signup; sign-in stays minimal. */
+/* Peermigo - required profile details at signup; sign-in stays minimal. */
 .pm-signup-fields.hidden,.pm-signup-confirm.hidden,#authLegalNote.hidden{display:none!important}
 .pm-signup-fields{margin:1px 0 22px;min-width:0}
 .pm-signup-heading{margin:0 0 20px;border-bottom:1px solid #e7e8f2;padding-bottom:14px}

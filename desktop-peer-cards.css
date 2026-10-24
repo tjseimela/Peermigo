@@ -1,4 +1,4 @@
-/* Peer Match — expanded and collapsed student cards on desktop (721px+).
+/* Peermigo — expanded and collapsed student cards on desktop (721px+).
    Shares the existing mobile state/handler; all actions and database logic stay intact. */
 .directory-desktop-summary,.directory-desktop-toggle{display:none}
 @media (min-width:721px){

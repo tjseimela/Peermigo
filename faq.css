@@ -1,4 +1,4 @@
-/* Peer Match FAQs: public homepage preview and full help directory */
+/* Peermigo FAQs: public homepage preview and full help directory */
 .pm-faq-home,.pm-faq-page{--pmq-ink:#282849;--pmq-muted:#757c97;--pmq-line:#e8e8f5;--pmq-card:#fff;--pmq-purple:#5b4be6;--pmq-purple-light:#f1efff}
 .pm-faq-home{padding:92px 0 82px;background:radial-gradient(circle at 7% 12%,#f0edff 0,transparent 26%),#fafaff}
 .pm-faq-home-layout{display:grid;grid-template-columns:minmax(250px,.74fr) minmax(0,1.26fr);gap:clamp(36px,6.5vw,110px);align-items:start}

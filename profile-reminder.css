@@ -1,4 +1,4 @@
-/* Peer Match personal profile-completion reminder; isolated from activity notifications. */
+/* Peermigo personal profile-completion reminder; isolated from activity notifications. */
 .pm-profile-progress[hidden]{display:none!important}
 .pm-profile-progress{display:grid;gap:17px;margin:22px 0 29px;padding:22px 24px;border:1px solid #deddf9;background:linear-gradient(117deg,#fff,#f8f7ff);box-shadow:0 10px 32px rgba(72,62,139,.06);border-radius:19px;min-width:0}
 .pm-profile-progress-head{display:flex;align-items:flex-start;gap:14px;min-width:0}

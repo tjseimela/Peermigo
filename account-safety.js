@@ -98,7 +98,7 @@
       catch(error){alert('Could not reactivate account: '+error.message);reactivation.disabled=false;reactivation.textContent='Reactivate account';}
     });
     deactivateButton?.addEventListener('click',async()=>{
-      if(!confirm('Deactivate your Peer Match account? Your profile will be hidden, new messages stopped, and notifications paused until you sign in to reactivate.'))return;
+      if(!confirm('Deactivate your Peermigo account? Your profile will be hidden, new messages stopped, and notifications paused until you sign in to reactivate.'))return;
       deactivateButton.disabled=true;deactivateButton.textContent='Deactivating…';
       try{
         await db().setAccountDeactivated(true);
@@ -111,7 +111,7 @@
       withSubmit(e.currentTarget,async()=>{
         const check=$('pmDeletePhrase').value.trim();
         if(check!=='DELETE'||!$('pmDeleteAcknowledged').checked){status($('pmDeleteStatus'),'Type DELETE and acknowledge permanent removal.',true);return;}
-        if(!confirm('Permanently delete this Peer Match account and all associated data? This action cannot be undone.'))return;
+        if(!confirm('Permanently delete this Peermigo account and all associated data? This action cannot be undone.'))return;
         try{
           status($('pmDeleteStatus'),'Securely removing your account…');
           await db().permanentlyDeleteAccount($('pmDeletePassword').value);

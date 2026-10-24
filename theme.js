@@ -1,4 +1,4 @@
-/* Peer Match theme: apply before paint and persist locally across pages. */
+/* Peermigo theme: apply before paint and persist locally across pages. */
 (() => {
   const key = 'peer-match-theme';
   let theme = 'light';

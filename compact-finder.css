@@ -1,4 +1,4 @@
-/* Peer Match: compact, accessible Find Peers toolbar. Advanced controls remain available on demand. */
+/* Peermigo: compact, accessible Find Peers toolbar. Advanced controls remain available on demand. */
 .pm-compact-finder{
  --pm-filter-surface:#fff;
  position:relative;isolation:isolate;overflow:visible;

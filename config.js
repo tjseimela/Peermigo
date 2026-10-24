@@ -1,4 +1,4 @@
-// Public Supabase client configuration for Peer Match.
+// Public Supabase client configuration for Peermigo.
 // Publishable keys are designed for browser use; database access is protected by RLS.
 // NEVER include service_role or sb_secret keys in a deployed site.
 window.PEER_MATCH_CONFIG = {
