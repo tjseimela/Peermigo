@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-access="student"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Peermigo · Student verification</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="peermigo-refined.css"><link rel="stylesheet" href="platform-admin.css"><script src="theme.js"></script></head>
+<body class="pm-platform-admin"><header class="pm-admin-topbar"><div class="pm-admin-topbar-inner"><a href="index.html" class="pm-admin-brand"><span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span></span><span>peer<b>migo</b><span class="brand-dot">.</span></span></a><span class="pm-admin-grow"></span><a class="pm-admin-back" href="settings-account.html">← Your Account</a><button id="themeToggle" class="pm-admin-theme-btn" type="button" aria-label="Switch theme">◐</button></div></header>
+<main class="pm-admin-shell" style="max-width:800px">
+<section class="pm-admin-gate" style="margin:0 auto;max-width:710px;text-align:left" id="requestCard">
+ <span class="pm-admin-eyebrow">STUDENT ACCOUNT</span><h1 style="margin:10px 0 7px">Request verification</h1>
+ <p style="font-size:13px">You can request review for Peermigo's Verified badge. An administrator may ask you to provide reliable proof of enrolment through an appropriate private channel. Do not upload ID numbers or documents here.</p>
+ <div id="requestStatus" style="font-size:13px;font-weight:700;color:var(--pm-ad-accent);margin:18px 0" role="status">Checking your profile…</div>
+ <form id="verificationForm" hidden>
+ <label for="requestMessage" style="display:block;font-size:12px;font-weight:800;margin-bottom:9px">Optional note to the reviewer</label>
+ <textarea id="requestMessage" maxlength="400" rows="3" style="width:100%;padding:13px;font:13px 'DM Sans';background:var(--pm-ad-input);color:var(--pm-ad-ink);border-radius:11px;border:1px solid var(--pm-ad-border)" placeholder="e.g. I am currently enrolled in Diploma in Information Technology."></textarea>
+ <div style="margin-top:17px"><button class="pm-admin-primary" id="requestSubmit" type="submit">Submit request</button></div>
+ </form>
+ <div style="margin-top:24px"><a class="pm-admin-subtle-button" href="student.html">Back to my profile →</a></div>
+</section>
+</main><script src="config.js"></script><script src="api.js"></script><script defer src="verification-request.js"></script></body></html>

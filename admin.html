@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f8f9f7">
+<title>Peermigo · Admin Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="peermigo-refined.css">
+<link rel="stylesheet" href="platform-admin.css">
+<script src="theme.js"></script>
+</head>
+<body class="pm-platform-admin">
+<header class="pm-admin-topbar">
+  <div class="pm-admin-topbar-inner">
+    <a class="pm-admin-brand" href="index.html" aria-label="Back to Peermigo"><span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span></span><span>peer<b>migo</b><span class="brand-dot">.</span></span></a>
+    <span class="pm-admin-brand-sep"></span><span class="pm-admin-console-label">Admin console</span>
+    <span class="pm-admin-grow"></span>
+    <a class="pm-admin-back" href="index.html">Student website <span aria-hidden="true">↗</span></a>
+    <button id="themeToggle" class="pm-admin-theme-btn" type="button" aria-label="Switch theme" title="Switch theme">◐</button>
+  </div>
+</header>
+<main class="pm-admin-shell">
+ <section id="adminGate" class="pm-admin-gate" role="status" aria-live="polite">
+  <div class="pm-admin-gate-icon" aria-hidden="true">♧</div>
+  <h1 id="adminGateTitle">Checking access</h1>
+  <p id="adminGateCopy">Checking your Peermigo administrator permissions.</p>
+  <a class="pm-admin-primary" id="adminGateLink" href="account.html" hidden>Sign in to Peermigo</a>
+ </section>
+ <div id="adminApp" hidden>
+  <div class="pm-admin-heading-row">
+   <div><span class="pm-admin-eyebrow">PEERMIGO / ADMINISTRATION</span><h1>Administration</h1><p>Moderation, student accounts and verification in one place.</p></div>
+   <button type="button" class="pm-admin-refresh" id="adminRefresh"><span aria-hidden="true">↻</span> Refresh</button>
+  </div>
+  <nav class="pm-admin-tabs" aria-label="Admin sections">
+   <button type="button" class="is-active" data-tab="overview">Overview</button>
+   <button type="button" data-tab="reports">Reports <span id="reportTabCount" class="pm-admin-tab-count" hidden></span></button>
+   <button type="button" data-tab="students">Students</button>
+   <button type="button" data-tab="verification">Verification <span id="verifyTabCount" class="pm-admin-tab-count" hidden></span></button>
+  </nav>
+  <section id="panel-overview" class="pm-admin-panel">
+   <div class="pm-admin-stats">
+    <article class="pm-admin-stat"><span>Registered students</span><strong id="statStudents">—</strong><small>All student accounts</small></article>
+    <article class="pm-admin-stat"><span>Hidden accounts</span><strong id="statHidden">—</strong><small>Excluded from Find Peers</small></article>
+    <article class="pm-admin-stat"><span>Verified students</span><strong id="statVerified">—</strong><small>Badge approved by admin</small></article>
+    <article class="pm-admin-stat"><span>Open reports</span><strong id="statReports">—</strong><small>Accounts and notes</small></article>
+   </div>
+   <div class="pm-admin-overview-grid">
+    <section class="pm-admin-panel-card"><div class="pm-admin-card-head"><div><h2>Needs attention</h2><p>Review reports and verification requests.</p></div><span class="pm-admin-small-pill">Queue</span></div>
+     <button type="button" data-go="reports" class="pm-admin-link-row"><span class="pm-admin-link-icon">⚑</span><span>Account reports</span><b id="statAccountReports">—</b><span aria-hidden="true">›</span></button>
+     <button type="button" data-go="reports" class="pm-admin-link-row"><span class="pm-admin-link-icon">▤</span><span>Note reports</span><b id="statNoteReports">—</b><span aria-hidden="true">›</span></button>
+     <button type="button" data-go="verification" class="pm-admin-link-row"><span class="pm-admin-link-icon">✓</span><span>Verification requests</span><b id="statVerification">—</b><span aria-hidden="true">›</span></button>
+    </section>
+    <section class="pm-admin-panel-card"><div class="pm-admin-card-head"><div><h2>Student visibility</h2><p>Hidden students remain visible to authorised administrators.</p></div></div>
+     <div class="pm-admin-visibility-bar"><div id="visibleBar" class="pm-admin-vis-visible"></div><div id="hiddenBar" class="pm-admin-vis-hidden"></div></div>
+     <div class="pm-admin-vis-legend"><span><i class="pm-dot visible"></i><span id="statVisible">—</span> discoverable</span><span><i class="pm-dot hidden"></i><span id="statHiddenLegend">—</span> hidden</span></div>
+     <button type="button" data-go="students" data-scope="hidden" class="pm-admin-subtle-button">Review hidden accounts <span aria-hidden="true">→</span></button>
+    </section>
+   </div>
+  </section>
+  <section id="panel-reports" class="pm-admin-panel" hidden>
+   <div class="pm-admin-section-title"><div><h2>Reports</h2><p>Review submitted account and note reports before taking action.</p></div></div>
+   <div class="pm-admin-tools"><label class="pm-admin-input-label" for="reportFilter">Status</label><select id="reportFilter" class="pm-admin-filter"><option value="all">All reports</option><option value="new">New</option><option value="reviewing">In review</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select></div>
+   <div class="pm-admin-cards" id="reportRows" aria-live="polite"></div>
+   <div class="pm-admin-pager"><button class="pm-admin-pager-button" id="reportsPrev" type="button">Previous</button><span id="reportsPagination"></span><button class="pm-admin-pager-button" id="reportsNext" type="button">Next</button></div>
+  </section>
+  <section id="panel-students" class="pm-admin-panel" hidden>
+   <div class="pm-admin-section-title"><div><h2>Students</h2><p>All registered accounts, including profiles hidden from Find Peers.</p></div></div>
+   <div class="pm-admin-tools pm-admin-tools-students"><label class="pm-admin-sr-only" for="studentSearch">Search students</label><input id="studentSearch" type="search" placeholder="Search name, institution or course…" autocomplete="off" maxlength="80"><label class="pm-admin-sr-only" for="studentFilter">Filter students</label><select id="studentFilter" class="pm-admin-filter"><option value="all">All students</option><option value="hidden">Hidden accounts</option><option value="visible">Discoverable</option><option value="verified">Verified</option><option value="unverified">Not verified</option><option value="deactivated">Deactivated</option></select></div>
+   <div class="pm-admin-table-wrap"><table class="pm-admin-table"><thead><tr><th>Student</th><th>Institution</th><th>Visibility</th><th>Verification</th><th></th></tr></thead><tbody id="studentRows"></tbody></table></div>
+   <div class="pm-admin-pager"><button class="pm-admin-pager-button" id="studentsPrev" type="button">Previous</button><span id="studentsPagination"></span><button class="pm-admin-pager-button" id="studentsNext" type="button">Next</button></div>
+  </section>
+  <section id="panel-verification" class="pm-admin-panel" hidden>
+   <div class="pm-admin-section-title"><div><h2>Verification</h2><p>Review student requests and manage existing Verified badges.</p></div></div>
+   <div class="pm-admin-hint"><span aria-hidden="true">ⓘ</span> Confirm genuine enrolment using reliable evidence before approving. A request alone is not proof.</div>
+   <div class="pm-admin-tools"><label class="pm-admin-input-label" for="verificationFilter">Status</label><select id="verificationFilter" class="pm-admin-filter"><option value="pending">Pending requests</option><option value="all">All requests</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
+   <div id="verificationRows" class="pm-admin-cards" aria-live="polite"></div>
+   <div class="pm-admin-pager"><button class="pm-admin-pager-button" id="verifyPrev" type="button">Previous</button><span id="verifyPagination"></span><button class="pm-admin-pager-button" id="verifyNext" type="button">Next</button></div>
+   <div class="pm-admin-footer-tip">To manually verify or revoke a student's badge, open <button type="button" data-go="students" class="pm-admin-inline-button">Students</button>, find their account and choose Manage.</div>
+  </section>
+ </div>
+</main>
+<div class="pm-admin-modal-backdrop" id="adminModal" hidden>
+ <div class="pm-admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle" aria-describedby="adminModalDesc">
+  <button class="pm-admin-modal-close" type="button" id="adminModalClose" aria-label="Close dialog">×</button>
+  <span class="pm-admin-eyebrow">ADMIN ACTION</span><h2 id="adminModalTitle">Confirm action</h2>
+  <p id="adminModalDesc"></p>
+  <form id="adminModalForm">
+   <label for="adminModalReason">Reason / review notes <span aria-hidden="true">*</span></label>
+   <textarea id="adminModalReason" maxlength="500" rows="4" placeholder="Record the reason for this decision…"></textarea>
+   <div class="pm-admin-modal-actions"><button type="button" class="pm-admin-cancel" id="adminModalCancel">Cancel</button><button type="submit" class="pm-admin-primary" id="adminModalSubmit">Confirm</button></div>
+  </form>
+ </div>
+</div>
+<div class="pm-admin-toast" id="adminToast" hidden role="status" aria-live="polite"></div>
+<script src="config.js"></script><script src="api.js"></script><script defer src="platform-admin.js"></script>
+</body></html>
