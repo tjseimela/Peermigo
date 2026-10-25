@@ -1,0 +1,10 @@
+/* Peermigo moderation notices are identifiable without relying only on color. */
+.notification-item.pm-moderation-notification{border-left:4px solid #6555dc;align-items:flex-start;box-shadow:0 6px 22px rgba(40,35,100,.045)}
+.notification-item.pm-moderation-notification .notification-symbol{background:#ece9ff;color:#5949cf}
+.pm-moderation-label{display:inline-flex;align-items:center;color:#5441be;background:#eeebff;border:1px solid #ded7ff;border-radius:30px;padding:5px 9px;font:800 10px var(--font-head,'Plus Jakarta Sans',sans-serif);margin:0 0 8px}
+.notification-item.pm-moderation-notification p{overflow-wrap:anywhere;line-height:1.65}
+.notification-item.pm-moderation-notification .text-button{white-space:nowrap}
+html[data-theme="dark"] .notification-item.pm-moderation-notification{border-left-color:#9c8fff}
+html[data-theme="dark"] .notification-item.pm-moderation-notification .notification-symbol{background:#302b53;color:#c1b8ff}
+html[data-theme="dark"] .pm-moderation-label{background:#302b53;border-color:#584f92;color:#e5e0ff}
+@media(max-width:600px){.notification-item.pm-moderation-notification{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px 12px}.notification-item.pm-moderation-notification .text-button{grid-column:2;justify-self:start;padding:5px 0}}

@@ -286,7 +286,17 @@
  window.setInterval(()=>{if(document.visibilityState==='visible'&&db.user)refreshMessageBadge()},45000);
  async function refreshBadge(){if(!db.user||!db.client)return;try{const all=await db.notifications(),count=all.filter(n=>!n.is_read).length;const dot=$('alertDot'),badge=$('pmTopNotificationsCount');if(dot)dot.hidden=!count;if(badge){badge.textContent=count>99?'99+':String(count);badge.hidden=!count;}const link=topHub?.querySelector('[data-page="notifications.html"]');if(link)link.setAttribute('aria-label',count?`Notifications, ${count} unread`:'Notifications')}catch(e){console.warn(e.message)}}
  window.addEventListener('pm-app-prefs-changed',()=>{refreshBadge().catch(console.warn);if($('notificationsList'))renderNotifications().catch(console.warn);});
- function subscribeNotifications(){if(!db.client||!db.user)return;db.client.channel('alerts-'+db.user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+db.user.id},()=>{refreshBadge();refreshMessageBadge();if($('notificationsList'))renderNotifications()}).subscribe();}
+ function subscribeNotifications(){if(!db.client||!db.user)return;db.client.channel('alerts-'+db.user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+db.user.id},payload=>{
+   refreshBadge();refreshMessageBadge();if($('notificationsList'))renderNotifications();
+   if(payload.new?.kind==='moderation'){
+    notify('Important account notice: '+String(payload.new.title||'Please check your notifications.').slice(0,120));
+    if(['Account suspended','Account disabled'].includes(payload.new.title))location.replace('account-status.html');
+   }
+  }).subscribe();}
+ // Recover missed realtime events when the tab becomes active again.
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&db.user){refreshBadge();if($('notificationsList'))renderNotifications();}});
+ window.addEventListener('focus',()=>{if(db.user)refreshBadge()});
+ window.setInterval(()=>{if(db.user&&document.visibilityState==='visible')refreshBadge()},60000);
  function setupInstitutionSuggestions(){const type=$('institutionType'),list=$('institutionSuggestions');if(!type||!list)return;const update=()=>{list.replaceChildren();for(const name of PM.INSTITUTIONS[type.value]||[]){const opt=document.createElement('option');opt.value=name;list.append(opt)}};type.addEventListener('change',update);update();return update;}
  async function initProfile(){const form=$('profileForm');if(!form)return;const suggestions=setupInstitutionSuggestions();
   for(const field of ['studentFirstName','studentSurname'])$(field)?.addEventListener('blur',()=>{$(field).value=PM.formatPersonName($(field).value)});
@@ -853,7 +863,7 @@
    list.innerHTML=notifications.map(n=>{
     const sender=n.kind==='connect'&&n.title==='New connection request'&&/^student\.html\?id=([0-9a-f-]{36})$/i.test(n.link||'')?n.link.split('=')[1]:null;
     const request=sender?received.get(sender):null;
-    return `<div class="notification-item ${n.is_read?'':'unread'}"><span class="notification-symbol">${PM.icon(n.kind==='connect'?'users':n.kind==='message'?'mail':n.kind==='group'?'users':n.kind==='note'?'book':'calendar')}</span><div><h3>${esc(n.title)}</h3><p>${esc(n.description)}</p><small>${esc(prettyDate(n.created_at))}</small>${request?`<div class="pm-request-actions"><button type="button" data-request-action="accept" data-request-id="${esc(request.id)}">Accept request</button><button type="button" data-request-action="decline" data-request-id="${esc(request.id)}">Decline</button></div>`:''}</div><a href="${safeLink(n.link)}" class="text-button">${n.kind==='connect'?'View profile ↗':'Open ↗'}</a></div>`;
+    return `<div class="notification-item ${n.is_read?'':'unread'} ${n.kind==='moderation'?'pm-moderation-notification':''}"><span class="notification-symbol">${PM.icon(n.kind==='moderation'?'shield':n.kind==='connect'?'users':n.kind==='message'?'mail':n.kind==='group'?'users':n.kind==='note'?'book':'calendar')}</span><div>${n.kind==='moderation'?'<span class="pm-moderation-label">Important account notice</span>':''}<h3>${esc(n.title)}</h3><p>${esc(n.description)}</p><small>${esc(prettyDate(n.created_at))}</small>${request?`<div class="pm-request-actions"><button type="button" data-request-action="accept" data-request-id="${esc(request.id)}">Accept request</button><button type="button" data-request-action="decline" data-request-id="${esc(request.id)}">Decline</button></div>`:''}</div><a href="${safeLink(n.link)}" class="text-button">${n.kind==='moderation'?'View details ↗':n.kind==='connect'?'View profile ↗':'Open ↗'}</a></div>`;
    }).join('');
    $('notificationsEmpty').classList.toggle('hidden',notifications.length>0);
    $('markAllRead').disabled=!notifications.some(n=>!n.is_read);
@@ -871,7 +881,7 @@
    await renderNotifications();await refreshBadge();
   }catch(error){buttons.forEach(b=>b.disabled=false);handleError(error)}
  });
- const safeLink=link=>/^((messages|groups|sessions|notifications|student|notes)\.html)(\?[-a-zA-Z0-9_=%&.]*)?$/.test(link||'')?esc(link):'notifications.html';
+ const safeLink=link=>/^((messages|groups|sessions|notifications|student|notes|account-status|verification)\.html)(\?[-a-zA-Z0-9_=%&.]*)?$/.test(link||'')?esc(link):'notifications.html';
  async function initAccount(){
   const form=$('authForm');if(!form)return;
   if(db.user){$('authLoggedIn').classList.remove('hidden');$('authLoggedOut').classList.add('hidden');$('authEmail').textContent=db.user.email||'';const target=safeNext();if(target){$('accountContinueLink').href=target;$('accountContinueLink').textContent='Continue where you left off →';}}
@@ -1060,6 +1070,14 @@
   // A paused member may sign in to reactivate, but cannot browse the student area.
   // The SQL migration also restricts direct database access during deactivation.
   if(db.user){
+   // Read the user's own account status. Restricted students may review and appeal.
+   try {
+    const {data:moderation,error:moderationError}=await db.requireClient().rpc('pm_my_moderation_status');
+    if(moderationError)throw moderationError;
+    if(['suspended','disabled'].includes(moderation?.status)){
+     location.replace('account-status.html');return;
+    }
+   }catch(error){console.warn('Moderation status could not be checked:',error.message);}
    try{const me=await db.profile();const page=location.pathname.split('/').pop()||'index.html';
     if(me?.deactivated_at && page!=='settings.html' && page!=='settings-account.html' && page!=='account.html'){
      location.replace('settings-account.html');return;

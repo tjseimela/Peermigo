@@ -1,8 +1,71 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Account status · Peermigo</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="platform-admin.css"><link rel="stylesheet" href="pm-dialogs.css">
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Peermigo · Account status</title><link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="peermigo-refined.css"><link rel="stylesheet" href="platform-admin.css"><link rel="stylesheet" href="moderation-notices.css"><link rel="stylesheet" href="pm-dialogs.css">
+<script defer src="theme.js"></script><script defer src="pm-dialogs.js"></script>
+<style>
+.pm-status-wrap{width:min(100% - 32px,680px);margin:55px auto 90px}
+.pm-status-card{background:var(--surface,#fff);border:1px solid #e5e5f1;border-radius:22px;box-shadow:0 14px 45px rgba(45,39,95,.07);padding:32px}
+.pm-status-card h1{font:800 clamp(24px,4vw,32px)/1.2 'Plus Jakarta Sans',sans-serif;letter-spacing:-.04em;margin:13px 0 12px}
+.pm-status-card p{line-height:1.7;overflow-wrap:anywhere}
+.pm-status-flag{display:inline-flex;gap:7px;align-items:center;background:#eeebff;color:#574ac2;border-radius:22px;padding:8px 12px;font:800 11px 'Plus Jakarta Sans',sans-serif}
+.pm-status-notice{margin:23px 0;padding:20px;border-radius:15px;background:#f4f1ff;border:1px solid #e2ddff}
+.pm-status-notice strong{display:block;margin-bottom:7px;color:#473aa4}
+.pm-status-notice p{margin:0}
+.pm-status-notice[hidden],.pm-status-card [hidden]{display:none!important}
+.pm-status-appeal{margin-top:25px;border-top:1px solid #e7e5f0;padding-top:25px}
+.pm-status-appeal h2{font:800 19px 'Plus Jakarta Sans',sans-serif}
+.pm-status-label{display:block;font:700 12px 'Plus Jakarta Sans',sans-serif;margin-bottom:10px}
+.pm-status-input{display:block;width:100%;box-sizing:border-box;min-height:125px;background:transparent;border:1px solid #dad8eb;border-radius:13px;padding:14px;color:inherit;resize:vertical;font:14px 'DM Sans',sans-serif}
+.pm-status-input:focus{outline:3px solid rgba(101,82,220,.18);border-color:#7464dd}
+.pm-status-btn{margin-top:15px;cursor:pointer}
+.pm-status-link{display:inline-flex;margin-top:24px;color:inherit;text-decoration:underline;text-underline-offset:4px}
+.pm-status-alert{margin-top:14px;font-size:13px;font-weight:700}
+html[data-theme=dark] .pm-status-card{background:#1c2440;border-color:#3f4867;color:#f0efff}
+html[data-theme=dark] .pm-status-notice{background:#2a2949;border-color:#514883}
+html[data-theme=dark] .pm-status-notice strong{color:#d6ceff}
+html[data-theme=dark] .pm-status-flag{background:#373059;color:#e0d9ff}
+html[data-theme=dark] .pm-status-input{border-color:#505a78}
+@media(max-width:600px){.pm-status-wrap{margin:28px auto 60px}.pm-status-card{padding:22px}}
+</style>
 </head>
-<body class="pm-platform-admin"><header class="pm-admin-topbar"><div class="pm-admin-topbar-inner"><a class="pm-admin-brand" href="index.html">peermigo.</a><span class="pm-admin-grow"></span><a class="pm-admin-back" href="index.html">Back to Peermigo</a></div></header>
-<main class="pm-admin-shell"><section class="pm-admin-panel-card" style="max-width:660px;margin:55px auto;padding:30px"><span class="pm-admin-eyebrow">YOUR ACCOUNT</span><h1 id="statusTitle">Checking account status…</h1><p id="statusInfo" aria-live="polite">Verifying your account with Peermigo.</p><p id="statusReason"></p><p id="appealState"></p>
-<form id="appealForm" hidden><label for="appealText" style="display:block;font-weight:700;margin:22px 0 9px">Request a review</label><textarea id="appealText" required minlength="20" maxlength="1000" rows="6" style="box-sizing:border-box;width:100%;padding:12px;border-radius:10px" placeholder="Explain why this decision should be reviewed (20–1000 characters)."></textarea><button class="pm-admin-primary" style="margin-top:15px" id="appealSubmit">Submit appeal</button></form><p id="appealResult" role="status"></p></section></main>
-<script defer src="pm-dialogs.js"></script><script src="config.js"></script><script src="api.js"></script><script>
-(async()=>{const el=id=>document.getElementById(id);try{await PM.backend.init();const c=PM.backend.requireClient(),auth=await c.auth.getUser();if(!auth.data?.user){el('statusTitle').textContent='Sign in required';el('statusInfo').textContent='Please sign in to view your account status.';return}const {data,error}=await c.rpc('pm_my_moderation_status');if(error)throw error;const st=data.status;el('statusTitle').textContent=({active:'Account active',suspended:'Account suspended',disabled:'Account disabled',deactivated:'Account deactivated'})[st]||'Account status';el('statusInfo').textContent=st==='suspended'?'Your access is temporarily restricted'+(data.until?' until '+new Date(data.until).toLocaleString('en-ZA'):'')+'.':st==='disabled'?'Your Peermigo account access has been disabled.':st==='active'?'Your account is currently active.':'Contact Peermigo support if you need help.';if(data.notice?.reason)el('statusReason').textContent='Reason: '+data.notice.reason;const appeal=data.appeal;if(appeal){el('appealState').textContent='Latest appeal: '+appeal.status+(appeal.reviewer_note?' — '+appeal.reviewer_note:'');}if(['suspended','disabled'].includes(st)&&!['new','reviewing'].includes(appeal?.status)){el('appealForm').hidden=false;}el('appealForm').addEventListener('submit',async e=>{e.preventDefault();const btn=el('appealSubmit');btn.disabled=true;try{const {error}=await c.rpc('pm_submit_moderation_appeal',{p_message:el('appealText').value.trim()});if(error)throw error;el('appealResult').textContent='Your appeal was submitted for administrator review.';el('appealForm').hidden=true;}catch(err){el('appealResult').textContent=err.message;}finally{btn.disabled=false;}});}catch(err){el('statusTitle').textContent='Status unavailable';el('statusInfo').textContent=err.message;}})();
-</script></body></html>
+<body class="pm-platform-admin">
+<header class="pm-admin-topbar"><div class="pm-admin-topbar-inner"><a class="pm-admin-brand" href="index.html" aria-label="Peermigo home"><span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span></span><span>peer<b>migo</b><span class="brand-dot">.</span></span></a><span class="pm-admin-grow"></span><a class="pm-admin-back" href="account.html">My account ↗</a><button type="button" id="themeToggle" class="pm-admin-theme-btn" aria-label="Switch theme">◐</button></div></header>
+<main class="pm-status-wrap"><section class="pm-status-card" aria-live="polite">
+<span class="pm-status-flag">✦ ACCOUNT &amp; SAFETY</span><h1 id="statusTitle">Checking your account…</h1><p id="statusInfo">Retrieving your account status securely.</p>
+<div id="statusNotice" class="pm-status-notice" hidden><strong id="noticeTitle">Moderation notice</strong><p id="statusReason"></p></div>
+<p id="appealState" hidden></p>
+<form id="appealForm" class="pm-status-appeal" hidden><h2>Request a review</h2><p>Share what happened and why you believe this decision should be reconsidered. Your appeal will be reviewed by an authorised administrator.</p><label class="pm-status-label" for="appealText">Your appeal (20–1,000 characters)</label><textarea class="pm-status-input" id="appealText" required minlength="20" maxlength="1000" placeholder="Explain your appeal…"></textarea><button type="submit" class="pm-admin-primary pm-status-btn" id="appealSubmit">Submit appeal</button></form>
+<p id="appealResult" class="pm-status-alert" role="status"></p><a class="pm-status-link" id="statusBackLink" href="notifications.html">View notifications ↗</a> <button type="button" id="statusSignOut" class="pm-admin-primary pm-status-btn" hidden>Sign out</button>
+</section></main>
+<script src="config.js"></script><script src="api.js"></script>
+<script>
+(async()=>{
+ const $=id=>document.getElementById(id);
+ try{
+  await PM.backend.init();const c=PM.backend.requireClient();
+  const {data:auth,error:authError}=await c.auth.getUser();
+  if(authError||!auth?.user){$('statusTitle').textContent='Sign in required';$('statusInfo').textContent='Sign in to view account notices and appeal a moderation decision.';$('statusBackLink').href='account.html';$('statusBackLink').textContent='Sign in ↗';return;}
+  const {data,error}=await c.rpc('pm_my_moderation_status');if(error)throw error;
+  const status=data?.status;
+  const titles={active:'Your account is active',suspended:'Your account is suspended',disabled:'Your account is disabled',deactivated:'Your account is deactivated',missing:'Account not found'};
+  $('statusTitle').textContent=titles[status]||'Your account status';
+  $('statusInfo').textContent=status==='suspended'?'Access is temporarily restricted'+(data.until?' until '+new Date(data.until).toLocaleString('en-ZA'):'')+'. You can request a review below.':status==='disabled'?'Access to your Peermigo student account has been restricted. You can request a review below.':status==='active'?'You can continue using Peermigo. Any important moderation notices are shown below and on your Notifications page.':status==='deactivated'?'Your account is currently deactivated. You can reactivate it from Account Settings.':'Contact Peermigo support if you need help.';
+  if(data?.notice){$('statusNotice').hidden=false;const actions={warning:'Community guidelines warning',suspend:'Account suspension',disable:'Account restriction',reinstate:'Access reinstated',note_removed:'Note removed by moderation',note_restored:'Note restored'};$('noticeTitle').textContent=actions[data.notice.action]||'Moderation notice';$('statusReason').textContent=data.notice.reason||'Please review the latest account notice.';}
+  if(data?.appeal){$('appealState').hidden=false;$('appealState').textContent='Latest appeal: '+data.appeal.status+(data.appeal.reviewer_note?' — '+data.appeal.reviewer_note:'');}
+  if(['suspended','disabled'].includes(status)){
+   $('statusBackLink').href='contact.html';$('statusBackLink').textContent='Contact support ↗';$('statusSignOut').hidden=false;
+   if(!['new','reviewing'].includes(data?.appeal?.status)) $('appealForm').hidden=false;
+  }
+  $('statusSignOut').addEventListener('click',async()=>{try{await c.auth.signOut();location.replace('account.html');}catch(err){$('appealResult').textContent=err.message||'Sign-out unavailable.';}});
+  $('appealForm').addEventListener('submit',async event=>{
+   event.preventDefault();const button=$('appealSubmit'),message=$('appealText').value.trim();if(message.length<20||message.length>1000){$('appealResult').textContent='Enter 20–1,000 characters.';return;}
+   button.disabled=true;try{const {error}=await c.rpc('pm_submit_moderation_appeal',{p_message:message});if(error)throw error;$('appealResult').textContent='Your appeal was submitted for review.';$('appealForm').hidden=true;}catch(err){$('appealResult').textContent=err.message||'Could not submit appeal.';}finally{button.disabled=false;}
+  });
+ }catch(err){$('statusTitle').textContent='Status unavailable';$('statusInfo').textContent=err.message||'Please try again.';}
+})();
+</script>
+</body></html>

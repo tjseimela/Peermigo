@@ -378,7 +378,7 @@ PM.backend = {
     const prefs=await this.getAppPreferences();
     const enabledKinds=['groups','sessions','notes'].filter(category=>prefs[category]);
     const kinds=enabledKinds.map(category=>({groups:'group',sessions:'session',notes:'note'})[category]);
-    kinds.push('connect'); // Connection requests always appear in the in-app inbox.
+    kinds.push('connect', 'moderation'); // Essential moderation notices cannot be disabled by optional preferences.
     const {data,error}=await this.requireClient().from('notifications')
       .select('*').eq('user_id',this.user.id).eq('in_app_visible',true).in('kind',kinds)
       .order('created_at',{ascending:false}).limit(100);
