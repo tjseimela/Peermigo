@@ -42,6 +42,7 @@
    <button type="button" class="is-active" data-tab="overview">Overview</button>
    <button type="button" data-tab="reports">Reports <span id="reportTabCount" class="pm-admin-tab-count" hidden></span></button>
    <button type="button" data-tab="students">Students</button>
+   <button type="button" data-tab="moderation">Action history</button>
    <button type="button" data-tab="verification">Verification <span id="verifyTabCount" class="pm-admin-tab-count" hidden></span></button>
   </nav>
   <section id="panel-overview" class="pm-admin-panel">
@@ -72,9 +73,14 @@
   </section>
   <section id="panel-students" class="pm-admin-panel" hidden>
    <div class="pm-admin-section-title"><div><h2>Students</h2><p>All registered accounts, including profiles hidden from Find Peers.</p></div></div>
-   <div class="pm-admin-tools pm-admin-tools-students"><label class="pm-admin-sr-only" for="studentSearch">Search students</label><input id="studentSearch" type="search" placeholder="Search name, institution or course…" autocomplete="off" maxlength="80"><label class="pm-admin-sr-only" for="studentFilter">Filter students</label><select id="studentFilter" class="pm-admin-filter"><option value="all">All students</option><option value="hidden">Hidden accounts</option><option value="visible">Discoverable</option><option value="verified">Verified</option><option value="unverified">Not verified</option><option value="deactivated">Deactivated</option></select></div>
+   <div class="pm-admin-tools pm-admin-tools-students"><label class="pm-admin-sr-only" for="studentSearch">Search students</label><input id="studentSearch" type="search" placeholder="Search name, institution or course…" autocomplete="off" maxlength="80"><label class="pm-admin-sr-only" for="studentFilter">Filter students</label><select id="studentFilter" class="pm-admin-filter"><option value="all">All students</option><option value="hidden">Hidden accounts</option><option value="visible">Discoverable</option><option value="verified">Verified</option><option value="unverified">Not verified</option><option value="deactivated">Deactivated</option><option value="suspended">Suspended</option><option value="disabled">Disabled by moderation</option></select></div>
    <div class="pm-admin-table-wrap"><table class="pm-admin-table"><thead><tr><th>Student</th><th>Institution</th><th>Visibility</th><th>Verification</th><th></th></tr></thead><tbody id="studentRows"></tbody></table></div>
    <div class="pm-admin-pager"><button class="pm-admin-pager-button" id="studentsPrev" type="button">Previous</button><span id="studentsPagination"></span><button class="pm-admin-pager-button" id="studentsNext" type="button">Next</button></div>
+  </section>
+  <section id="panel-moderation" class="pm-admin-panel" hidden>
+   <div class="pm-admin-section-title"><div><h2>Moderation history</h2><p>Account warnings, suspensions, reinstatements and note removal actions with reasons and administrator records.</p></div></div>
+   <div id="moderationRows" class="pm-admin-cards" aria-live="polite"></div>
+   <div class="pm-admin-pager"><button class="pm-admin-pager-button" type="button" id="moderationPrev">Previous</button><span id="moderationPagination"></span><button class="pm-admin-pager-button" type="button" id="moderationNext">Next</button></div>
   </section>
   <section id="panel-verification" class="pm-admin-panel" hidden>
    <div class="pm-admin-section-title"><div><h2>Verification</h2><p>Review student requests and manage existing Verified badges.</p></div></div>
@@ -93,6 +99,7 @@
   <p id="adminModalDesc"></p>
   <form id="adminModalForm">
    <label for="adminModalReason">Reason / review notes <span aria-hidden="true">*</span></label>
+   <div id="adminModalDaysWrap" hidden><label for="adminModalDays">Suspension length (days)</label><input type="number" id="adminModalDays" min="1" max="90" value="7"></div>
    <textarea id="adminModalReason" maxlength="500" rows="4" placeholder="Record the reason for this decision…"></textarea>
    <div class="pm-admin-modal-actions"><button type="button" class="pm-admin-cancel" id="adminModalCancel">Cancel</button><button type="submit" class="pm-admin-primary" id="adminModalSubmit">Confirm</button></div>
   </form>
