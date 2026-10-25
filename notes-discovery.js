@@ -83,12 +83,22 @@
        if(r.error)throw r.error;
        authors=r.data||[];
      }
-     const byId=new Map(authors.filter(p=>p.discoverable!==false).map(p=>[p.id,p]));
+     // A note's public visibility is independent from Find Peers discoverability.
+     // Supabase profiles RLS can prevent us from reading hidden authors; never
+     // use that missing profile row as a reason to remove an authorised public note.
+     const byId=new Map(authors.map(p=>[p.id,p]));
      for(const note of batch){
-       if(note.author_id===db.identity()||blocked.has(note.author_id))continue;
-       const author=byId.get(note.author_id);
-       if(!author)continue; // Hidden, unavailable or blocked author; never show their note in Discover.
-       const enriched={...note,author};notes.push(enriched);noteCache.set(enriched.id,enriched);
+       if(blocked.has(note.author_id))continue;
+       const own=note.author_id===db.identity();
+       const author=byId.get(note.author_id)||(own?me:null);
+       // Respect hidden profile settings even if an existing chat permits
+       // this viewer to access the author's profile through another route.
+       const publiclyIdentifiable=own||(author && author.discoverable!==false);
+       const visibleAuthor=publiclyIdentifiable?author:{
+         full_name:'Peermigo student',institution:'',discoverable:false
+       };
+       const enriched={...note,author:visibleAuthor,authorProfileAvailable:!!publiclyIdentifiable};
+       notes.push(enriched);noteCache.set(enriched.id,enriched);
      }
    }catch(error){if(request===lastRequest){console.warn('Discover notes:',error);message('Unable to load public notes. Please retry.');}}
    finally{loading=false;$('pmNotesMore').disabled=false;draw();if(pendingReload){pendingReload=false;fetchBatch(true);}}
@@ -98,7 +108,8 @@
    const n=noteCache.get(id);if(!n)return;
    const reader=$('pmNoteReader');const content=$('pmNoteReaderContent');if(!reader||!content)return;
    const own=n.author_id===db.identity();
-   content.innerHTML=`<h2 id="pmNoteReaderTitle">${escapeHtml(n.topic)}</h2><p class="pm-reader-meta">${escapeHtml(window.PM.formatPersonName(n.author.full_name))} · ${escapeHtml(date(n.created_at))}</p><div class="pm-reader-body">${escapeHtml(n.body)}</div><div id="pmReaderImages" class="pm-reader-attachments"></div><div class="pm-reader-actions"><a href="student.html?id=${encodeURIComponent(n.author_id)}&note=${encodeURIComponent(id)}">View student profile ↗</a>${own?'':`<button type="button" data-report-note="${escapeHtml(id)}" aria-expanded="false">Report note</button>`}</div>${own?'':`<form class="pm-report-form" id="pmNoteReportForm" hidden><label for="pmReportReason">Reason</label><select id="pmReportReason" required><option value="">Select a reason</option><option value="spam">Spam</option><option value="inappropriate">Inappropriate content</option><option value="misleading">Misleading information</option><option value="other">Other</option></select><label for="pmReportDetails">Details (optional)</label><textarea id="pmReportDetails" rows="2" maxlength="500" placeholder="Add details if helpful"></textarea><button type="submit" class="btn btn-primary">Submit report</button></form>`}`;
+   const profileLink=n.authorProfileAvailable?`<a href="student.html?id=${encodeURIComponent(n.author_id)}&note=${encodeURIComponent(id)}">View student profile ↗</a>`:'';
+   content.innerHTML=`<h2 id="pmNoteReaderTitle">${escapeHtml(n.topic)}</h2><p class="pm-reader-meta">${escapeHtml(window.PM.formatPersonName(n.author.full_name))} · ${escapeHtml(date(n.created_at))}</p><div class="pm-reader-body">${escapeHtml(n.body)}</div><div id="pmReaderImages" class="pm-reader-attachments"></div><div class="pm-reader-actions">${profileLink}${own?'':`<button type="button" data-report-note="${escapeHtml(id)}" aria-expanded="false">Report note</button>`}</div>${own?'':`<form class="pm-report-form" id="pmNoteReportForm" hidden><label for="pmReportReason">Reason</label><select id="pmReportReason" required><option value="">Select a reason</option><option value="spam">Spam</option><option value="inappropriate">Inappropriate content</option><option value="misleading">Misleading information</option><option value="other">Other</option></select><label for="pmReportDetails">Details (optional)</label><textarea id="pmReportDetails" rows="2" maxlength="500" placeholder="Add details if helpful"></textarea><button type="submit" class="btn btn-primary">Submit report</button></form>`}`;
    reader.hidden=false;document.body.classList.add('pm-note-modal-open');$('pmNoteReaderClose')?.focus();
    try{await window.PM.ui.showFiles($('pmReaderImages'),'note',id,false);}catch(err){console.warn('Note images:',err.message);}
  }

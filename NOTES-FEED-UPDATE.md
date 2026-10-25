@@ -8,7 +8,7 @@
 ## Privacy and safety
 
 - Discover only retrieves notes whose `visibility` is `public` through Supabase RLS.
-- The feed excludes the current user's notes, blocked authors and authors with non-discoverable/inaccessible profiles.
+- The feed includes all RLS-authorised public notes (including your own and notes from authors hidden from Find Peers), while still excluding blocked authors. Hidden authors use a generic display label and have no profile link in the note reader.
 - Authors continue to control private/public visibility in My Notes.
 - The reader includes Report note. Reports use `public.pm_note_reports`, with authenticated INSERT-only access and RLS.
 - Search is limited to title/content matching. “For you” prioritises terms from the current student's modules/course within each fetched batch; it is not a semantic recommendation engine.
@@ -24,7 +24,7 @@ No further database SQL is required before deploying this ZIP.
 ## Tests
 
 - Existing matching and required-fields automated tests pass.
-- Headless browser mock exercises discover tabs, exclusion of private/hidden/blocked authors, reader, and report form.
+- Headless browser mock exercises discover tabs, exclusion of private/blocked notes and inclusion of public notes from hidden authors, reader, and report form.
 - Mobile 390px and desktop 1280px previews checked for horizontal overflow.
 - Actual live Supabase interactions with student accounts still require confirmation after deployment.
 
