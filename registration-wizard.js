@@ -101,6 +101,8 @@
    ['Institution',field('signupInstitution').value.trim()],
    [school?'School grade':'Programme',school?field('signupGrade').value:field('signupCourse').value.trim()],
    ['Subjects/modules',field('signupModules').value.trim()],
+   ['Confident in',((PM.signupLearning?.get().confident_modules)||[]).join(', ')||'Not selected'],
+   ['Need help with',((PM.signupLearning?.get().help_modules)||[]).join(', ')||'Not selected'],
    ['Study format',field('signupStudyMethod').selectedOptions[0]?.textContent||'—'],
    ['Campus',school?'Not applicable':field('signupCampus').value.trim()||'Not specified'],
    ['Find Peers visibility','On by default · change in Settings']

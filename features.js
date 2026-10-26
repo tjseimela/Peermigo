@@ -159,6 +159,9 @@
    const modulesContent=modules.length
     ?modules.map(x=>`<span>${esc(PM.formatStudyText(x))}</span>`).join('')
     :self?'<span>No subjects or modules added</span>':'<span>Not listed</span>';
+   const confident=Array.isArray(p.confident_modules)?p.confident_modules:[];
+   const needs=Array.isArray(p.help_modules)?p.help_modules:[];
+   const supportBox=(name,arr)=>arr.length?`<div><span class="pm-support-label">${name}</span><div class="pm-fact-tags">${arr.map(x=>`<span>${esc(PM.formatStudyText(x))}</span>`).join('')}</div></div>`:'';
    const aboutLinks=self?`<a class="pm-owner-inline-link" href="profile.html">${icon('edit')} Edit profile details</a>`:'';
    const notesIntro=self
     ?'<p>All your notes are shown here, including private notes that only you can see.</p>'
@@ -173,6 +176,7 @@
        <div class="pm-fact pm-fact-full"><span class="pm-fact-label">${esc(p.institution_type==='school'?'SCHOOL':'INSTITUTION')}</span><strong class="pm-fact-text">${esc(PM.formatStudyText(p.institution)||'Not added')}</strong></div>
        ${p.campus?`<div class="pm-fact pm-fact-full"><span class="pm-fact-label">CAMPUS</span><strong class="pm-fact-text">${esc(PM.formatStudyText(p.campus))}</strong></div>`:''}
        <div class="pm-fact pm-fact-full"><span class="pm-fact-label">${esc(p.institution_type==='school'?'SUBJECTS':'SUBJECTS / MODULES')}</span><div class="pm-fact-tags">${modulesContent}</div></div>
+       ${confident.length||needs.length?`<div class="pm-fact pm-fact-full pm-learning-profile-details">${supportBox('Confident in / can help with',confident)}${supportBox('Needs help with',needs)}</div>`:''}
        <div class="pm-fact"><span class="pm-fact-label">STUDY FORMAT</span><span class="pm-fact-pill">${esc(({campus:'On campus',virtual:'Online',hybrid:'Hybrid / both'})[p.study_method]||'Not specified')}</span></div>
        <div class="pm-fact"><span class="pm-fact-label">AVAILABILITY</span><span class="pm-fact-pill">${esc(({mornings:'Mornings',afternoons:'Afternoons',evenings:'Evenings',weekends:'Weekends',flexible:'Flexible'})[p.availability]||'Not specified')}</span></div>
      </div>

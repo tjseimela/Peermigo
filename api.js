@@ -34,6 +34,8 @@ PM.backend = {
         campus:studentDetails.campus,
         course:studentDetails.course,
         modules:studentDetails.modules,
+        confident_modules:studentDetails.confident_modules||[],
+        help_modules:studentDetails.help_modules||[],
         study_method:studentDetails.study_method,
         discoverable:studentDetails.discoverable
       }}
@@ -54,13 +56,13 @@ PM.backend = {
   async signOut(){const {error}=await this.requireClient().auth.signOut();if(error)throw error;this.user=null;},
   async profile(){if(!this.user)return null;const {data,error}=await this.requireClient().from('profiles').select('*').eq('id',this.user.id).maybeSingle();if(error)throw error;return data;},
   async saveProfile(p){
-    this.requireUser();const safe={id:this.user.id,full_name:PM.formatPersonName(p.full_name),given_names:p.given_names,surname:p.surname,institution_type:p.institution_type,institution:p.institution,campus:p.campus,course:p.course,modules:p.modules,availability:p.availability,study_method:p.study_method,about:p.about};
+    this.requireUser();const safe={id:this.user.id,full_name:PM.formatPersonName(p.full_name),given_names:p.given_names,surname:p.surname,institution_type:p.institution_type,institution:p.institution,campus:p.campus,course:p.course,modules:p.modules,confident_modules:p.confident_modules||[],help_modules:p.help_modules||[],availability:p.availability,study_method:p.study_method,about:p.about};
     const current=await this.profile();let result;if(current){const {id,...changes}=safe;result=await this.requireClient().from('profiles').update(changes).eq('id',this.user.id);}else{result=await this.requireClient().from('profiles').insert(safe);}if(result.error)throw result.error;
   },
   async peers(){
     this.requireUser();const all=[];const perPage=200;
     for(let offset=0;offset<6000;offset+=perPage){
-      const {data,error}=await this.requireClient().from('profiles').select('id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable,show_activity,last_seen_at').order('full_name').range(offset,offset+perPage-1);
+      const {data,error}=await this.requireClient().from('profiles').select('id,full_name,institution_type,institution,campus,course,modules,confident_modules,help_modules,availability,study_method,about,is_verified,avatar_path,discoverable,show_activity,last_seen_at').order('full_name').range(offset,offset+perPage-1);
       if(error)throw error;
       all.push(...(data||[]));if((data||[]).length<perPage)break;
     }
@@ -111,13 +113,14 @@ PM.backend = {
     const {data,error}=await this.requireClient().from('profiles').select('*').eq('id',id).maybeSingle();
     if(error)throw error;return data;
   },
-  async directoryPage({page=0,pageSize=18,search='',institution='',method='',availability='',sameCampus=false,sameCourse=false,sort='az',me=null,excludedIds=[]}={}){
+  async directoryPage({page=0,pageSize=18,search='',institution='',method='',availability='',sameCampus=false,sameCourse=false,supportOnly=false,sort='az',me=null,excludedIds=[]}={}){
     this.requireUser();
     const size=Math.max(6,Math.min(Number(pageSize)||18,36));
     const current=Math.max(0,Math.floor(Number(page)||0));
-    const fields='id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable,created_at';
+    const fields='id,full_name,institution_type,institution,campus,course,modules,confident_modules,help_modules,availability,study_method,about,is_verified,avatar_path,discoverable,created_at';
     const blocked=excludedIds.filter(id=>/^[0-9a-f-]{36}$/i.test(id));
     const term=String(search||'').normalize('NFKC').replace(/[^\p{L}\p{N} '\-]/gu,'').trim().slice(0,64);
+    if(supportOnly && !me?.help_modules?.length)return {rows:[],count:0};
     if(sameCampus && (!me?.institution || !me?.campus))return {rows:[],count:0};
     if(sameCourse && !me?.course)return {rows:[],count:0};
 
@@ -143,12 +146,12 @@ PM.backend = {
       return query;
     };
 
-    if(sort==='match'||sameCampus||sameCourse){
+    if(sort==='match'||sameCampus||sameCourse||supportOnly){
       // Include the viewer's matching inputs and all filters in the cache key.
       // The short cache lets page 2/3 reuse the same GLOBAL ranking.
-      const cacheKey=JSON.stringify({user:this.user.id,term,institution,method,availability,sameCampus,sameCourse,
+      const cacheKey=JSON.stringify({user:this.user.id,term,institution,method,availability,sameCampus,sameCourse,supportOnly,
         blocked:[...blocked].sort(),sort,me:me?{id:me.id,institution:me.institution,campus:me.campus,
-          modules:me.modules,availability:me.availability,study_method:me.study_method,course:me.course}:null});
+          modules:me.modules,help_modules:me.help_modules,confident_modules:me.confident_modules,availability:me.availability,study_method:me.study_method,course:me.course}:null});
       let saved=this._matchDirectoryCache;
       if(!saved || saved.key!==cacheKey || Date.now()-saved.savedAt>60000){
         const batchSize=500;
@@ -166,10 +169,12 @@ PM.backend = {
           if(sameCampus && !(PM.institutionKey(peer.institution)===PM.institutionKey(me.institution)
             && PM.campusKey(peer.campus)===PM.campusKey(me.campus)))return false;
           if(sameCourse && PM.MatchingV2.courseKey(peer.course)!==PM.MatchingV2.courseKey(me.course))return false;
+          if(supportOnly && !(PM.SubjectSupport?.support?.(peer,me)?.canHelp?.length||0))return false;
           return true;
         });
         const scoreById=new Map(selected.map(row=>[row.id,PM.displayStudentMatch(row,me)]));
-        selected.sort((a,b)=>(sort==='match'?(scoreById.get(b.id)-scoreById.get(a.id)):
+        const helpCount=new Map(selected.map(row=>[row.id,(PM.SubjectSupport?.support?.(row,me)?.canHelp?.length||0)]));
+        selected.sort((a,b)=>(sort==='match'?(supportOnly?((helpCount.get(b.id)-helpCount.get(a.id))||(scoreById.get(b.id)-scoreById.get(a.id))):((scoreById.get(b.id)-scoreById.get(a.id))||(helpCount.get(b.id)-helpCount.get(a.id)))):
           sort==='newest' ? String(b.created_at||'').localeCompare(String(a.created_at||'')):
           sort==='za' ? String(b.full_name||'').localeCompare(String(a.full_name||''),'en',{sensitivity:'base'}):
           String(a.full_name||'').localeCompare(String(b.full_name||''),'en',{sensitivity:'base'}))
@@ -192,7 +197,7 @@ PM.backend = {
   async recommendedDirectoryPeers(me,excludedIds=[]){
     this.requireUser();
     if(!me || !(me.course || (Array.isArray(me.modules)&&me.modules.length)))return [];
-    const fields='id,full_name,institution_type,institution,campus,course,modules,availability,study_method,about,is_verified,avatar_path,discoverable';
+    const fields='id,full_name,institution_type,institution,campus,course,modules,confident_modules,help_modules,availability,study_method,about,is_verified,avatar_path,discoverable';
     const blocked=new Set(excludedIds);
     const students=[];
     // Recommendations must compare students across institutions for online
@@ -209,8 +214,9 @@ PM.backend = {
       if(batch.length<batchSize)break;
       if(offset+batchSize>=6000)console.warn('Peermigo: client-side recommendation scan reached its 6,000-profile safety limit. Server-side matching is recommended at scale.');
     }
-    return students.filter(peer=>PM.matchDetails(peer,me).eligible)
+    return students.filter(peer=>PM.matchDetails(peer,me).eligible || (PM.SubjectSupport?.support?.(peer,me)?.canHelp?.length||0)>0)
       .sort((a,b)=>PM.scoreStudentMatch(b,me)-PM.scoreStudentMatch(a,me)
+        || (PM.SubjectSupport?.support?.(b,me)?.canHelp?.length||0)-(PM.SubjectSupport?.support?.(a,me)?.canHelp?.length||0)
         || String(a.id).localeCompare(String(b.id))).slice(0,60);
   },
   async profilesByIds(ids){

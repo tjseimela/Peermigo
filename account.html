@@ -31,7 +31,7 @@
 <script defer src="pm-dialogs.js"></script>
 <link rel="stylesheet" href="peermigo-refined.css"/>
 <link rel="stylesheet" href="peermigo-selects.css">
-</head>
+<link rel="stylesheet" href="subject-support.css"/></head>
 <body>
 <header class="site-header">
 <div class="container nav-shell">
@@ -67,7 +67,7 @@
 <div class="form-group hidden" id="signupGradeGroup"><label for="signupGrade">School grade <span aria-hidden="true">*</span></label><select disabled="" id="signupGrade"><option value="">Select your grade</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option></select><span class="field-hint">Peermigo is currently for students aged 18 or older, including school learners.</span></div>
 <div class="form-group" id="signupStudyMethodGroup"><label for="signupStudyMethod">Preferred study format <span aria-hidden="true">*</span></label><select data-signup-required="" id="signupStudyMethod" required><option value="">Select study format</option><option value="campus">On campus</option><option value="virtual">Online</option><option value="hybrid">Hybrid / both</option></select></div>
 <div class="form-group" id="signupCampusGroup"><label for="signupCampus">Campus <span id="signupCampusRequiredText" class="pm-optional">Optional</span></label><input id="signupCampus" maxlength="100" placeholder="e.g. Vanderbijlpark Campus" type="text"/></div>
-<div class="form-group" id="signupModulesGroup"><label for="signupModules" id="signupModulesLabel">Subjects or modules <span aria-hidden="true">*</span></label><input id="signupModules" required maxlength="320" placeholder="e.g. Web Development, Business Analysis" type="text"/><span class="field-hint" id="signupModulesHint">Enter at least one subject or module. Separate multiple entries with commas (up to 10).</span></div>
+<div class="form-group pm-subject-source" id="signupModulesGroup"><label for="signupModules" id="signupModulesLabel">Subjects or modules <span aria-hidden="true">*</span></label><input id="signupModules" required maxlength="320" placeholder="e.g. Web Development, Business Analysis" type="text"/><span class="field-hint" id="signupModulesHint">Enter at least one subject or module. Separate multiple entries with commas (up to 10). Start typing for suggestions.</span><div class="pm-learning-selector" id="signupLearningSelector"><div class="pm-learning-head"><h4>Your learning strengths &amp; needs <span class="pm-optional">Optional</span></h4><p>Choose from the subjects above. You can ask for help even if you don’t offer help with another subject.</p></div></div></div>
 <a aria-label="Learn why Peermigo asks for your information (opens in a new tab)" class="pm-why-link" href="why-we-ask.html" rel="noopener noreferrer" target="_blank"><svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-9h.01"></path></svg>Learn why we ask for your information <span aria-hidden="true">↗</span></a>
 
 <p class="pm-name-format-note">Use your real first name and surname (at least 2 letters each). Names are formatted consistently, for example <strong>John Doe</strong>.</p><div class="pm-signup-divider"><span>SECURE ACCOUNT DETAILS</span></div>
@@ -90,6 +90,6 @@
 </div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="institution-picker.js"></script><script defer src="required-match-fields.js"></script><script defer src="registration-wizard.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="password-visibility.js"></script><script defer src="peermigo-selects.js"></script>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer src="subject-support.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer="" src="saved.js"></script><script defer="" src="institution-picker.js"></script><script defer src="required-match-fields.js"></script><script defer src="registration-wizard.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer="" src="password-visibility.js"></script><script defer src="peermigo-selects.js"></script>
 </body>
 </html>

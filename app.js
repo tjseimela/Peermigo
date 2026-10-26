@@ -299,6 +299,7 @@
  window.setInterval(()=>{if(db.user&&document.visibilityState==='visible')refreshBadge()},60000);
  function setupInstitutionSuggestions(){const type=$('institutionType'),list=$('institutionSuggestions');if(!type||!list)return;const update=()=>{list.replaceChildren();for(const name of PM.INSTITUTIONS[type.value]||[]){const opt=document.createElement('option');opt.value=name;list.append(opt)}};type.addEventListener('change',update);update();return update;}
  async function initProfile(){const form=$('profileForm');if(!form)return;const suggestions=setupInstitutionSuggestions();
+  const learning=PM.SubjectSupport?.mount('modules','profileLearningSelector',{typeId:'institutionType'});
   for(const field of ['studentFirstName','studentSurname'])$(field)?.addEventListener('blur',()=>{$(field).value=PM.formatPersonName($(field).value)});
   const schoolGrade=$('profileGrade'),courseInput=$('course'),typeInput=$('institutionType');
   const updateProfileCourseGrade=()=>{
@@ -317,7 +318,7 @@
   };
   typeInput.addEventListener('change',updateProfileCourseGrade);
   $('studyMethod')?.addEventListener('change',updateProfileCampusRequirement);
-  const my=await getMe();if(my){const parts=PM.formatPersonName(my.full_name).split(/\s+/).filter(Boolean);const obj={studentFirstName:my.given_names||parts.slice(0,-1).join(' ')||parts[0]||'',studentSurname:my.surname||(parts.length>1?parts[parts.length-1]:''),institutionType:my.institution_type,institutionName:PM.formatStudyText(my.institution),campus:PM.formatStudyText(my.campus),course:PM.formatStudyText(my.course),modules:(my.modules||[]).map(PM.formatStudyText).join(', '),availability:my.availability,studyMethod:my.study_method,about:my.about};for(const [key,value]of Object.entries(obj))if($(key))$(key).value=value||'';if(my.institution_type==='school'&&/^Grade (8|9|10|11|12)$/.test(my.course||''))schoolGrade.value=my.course;suggestions?.();}updateProfileCourseGrade();updateProfileCampusRequirement();
+  const my=await getMe();if(my){const parts=PM.formatPersonName(my.full_name).split(/\s+/).filter(Boolean);const obj={studentFirstName:my.given_names||parts.slice(0,-1).join(' ')||parts[0]||'',studentSurname:my.surname||(parts.length>1?parts[parts.length-1]:''),institutionType:my.institution_type,institutionName:PM.formatStudyText(my.institution),campus:PM.formatStudyText(my.campus),course:PM.formatStudyText(my.course),modules:(my.modules||[]).map(PM.formatStudyText).join(', '),availability:my.availability,studyMethod:my.study_method,about:my.about};for(const [key,value]of Object.entries(obj))if($(key))$(key).value=value||'';if(my.institution_type==='school'&&/^Grade (8|9|10|11|12)$/.test(my.course||''))schoolGrade.value=my.course;suggestions?.();learning?.set(my);}updateProfileCourseGrade();updateProfileCampusRequirement();
   if(!db.user){feedback('profileFeedback','Sign in or create an account before saving your profile.');const link=document.createElement('a');link.href='account.html';link.textContent=' Open account →';$('profileFeedback').append(link);}
   if($('profilePrivacy'))$('profilePrivacy').textContent='Your profile is shared with signed-in members only. Your sign-in email is never published. Verification badges are awarded by an administrator.';
   form.addEventListener('submit',async e=>{e.preventDefault();if(!requireSignedIn())return;
@@ -331,7 +332,7 @@
     feedback('profileFeedback','First name and surname must each contain at least 2 letters (80 characters maximum combined).',true);
     (!firstName?$('studentFirstName'):$('studentSurname')).focus();return;
    }
-   const payload={full_name:PM.formatPersonName(newName),given_names:firstName,surname,institution_type:val('institutionType'),institution:PM.canonicalInstitution(val('institutionName'),val('institutionType')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
+   const payload={full_name:PM.formatPersonName(newName),given_names:firstName,surname,institution_type:val('institutionType'),institution:PM.canonicalInstitution(val('institutionName'),val('institutionType')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about'),...learning?.get()};
    const issue=PM.matchEssentialsValidation(payload);
    if(issue){
     const fieldMap={institution_type:'institutionType',institution:'institutionName',course:typeInput.value==='school'?'profileGrade':'course',campus:'campus',modules:'modules',study_method:'studyMethod'};
@@ -390,6 +391,7 @@
     const bits=[];
     if(quickFilter==='campus')bits.push('Same campus');
     if(quickFilter==='course')bits.push('Same course');
+    if(quickFilter==='help')bits.push('Can help with my subjects');
     if(val('institutionFilter'))bits.push('Institution: '+val('institutionFilter'));
     if(val('methodFilter'))bits.push('Study format filtered');
     if(val('timeFilter'))bits.push('Availability filtered');
@@ -425,7 +427,7 @@
   });
   const currentFilters=()=>({
    search:val('searchInput'),institution:val('institutionFilter'),method:val('methodFilter'),
-   availability:val('timeFilter'),sameCampus:quickFilter==='campus',sameCourse:quickFilter==='course',sort:val('sortFilter')||'match',
+   availability:val('timeFilter'),sameCampus:quickFilter==='campus',sameCourse:quickFilter==='course',supportOnly:quickFilter==='help',sort:val('sortFilter')||'match',
    me:meCache,excludedIds:blocked,page,pageSize:PAGE_SIZE
   });
   const paintSuggestions=()=>{
@@ -438,7 +440,8 @@
     if(t&&p.availability!==t)return false;
     if(same&&(!meCache?.campus||PM.campusKey(p.campus)!==PM.campusKey(meCache.campus)||PM.institutionKey(p.institution)!==PM.institutionKey(meCache.institution)))return false;
     if(courseOnly&&(!meCache?.course||PM.MatchingV2.courseKey(p.course)!==PM.MatchingV2.courseKey(meCache.course)))return false;
-    return PM.matchDetails(p,meCache).eligible;
+    if(quickFilter==='help'&&!PM.SubjectSupport.support(p,meCache).canHelp.length)return false;
+    return PM.matchDetails(p,meCache).eligible || PM.SubjectSupport.support(p,meCache).canHelp.length>0;
    }).sort((a,b)=>rankPeer(b,meCache)-rankPeer(a,meCache)).slice(0,6);
    grid.innerHTML=filtered.length?filtered.map(peerCard).join(''):'<p class="pm-compact-no-match full-span">No recommended peers yet.</p>';
    $('resultCount').textContent=String(filtered.length);
@@ -485,6 +488,7 @@
    const next=button.dataset.peerQuick;
    if(next==='campus'&&(!meCache?.institution||!meCache?.campus)){notify('Add your campus in Edit Profile to use this filter.');return;}
    if(next==='course'&&!meCache?.course){notify('Add your course or grade in Edit Profile to use this filter.');return;}
+   if(next==='help'&&!meCache?.help_modules?.length){notify('Select at least one “Need help” subject in Edit Profile first.');return;}
    quickFilter=next;
    if(next==='all'){for(const id of ['institutionFilter','methodFilter','timeFilter'])if($(id))$(id).value='';}
    if($('sameCampusOnly'))$('sameCampusOnly').checked=next==='campus';
@@ -567,6 +571,8 @@
   const availability=timeLabels[p.availability]||'Not set';
   const matchKnown=complete&&scoreDetails.showScore;
   const matchTier=score>=75?'match-high':score>=50?'match-mid':'match-low';
+  const support=PM.SubjectSupport.support(p,meCache);
+  const supportNotice=support.canHelp.length?`<div class="pm-support-badge ${support.mutual?'is-mutual':''}">${support.mutual?'↔ Mutual learning':'✓ Can help you with'}: ${esc(support.canHelp.slice(0,2).map(PM.formatStudyText).join(', '))}${support.canHelp.length>2?' +more':''}</div>`:'';
   const relation=db.connectionWith(connectionRows,p.id);
   const connection=PM.connectionAction(relation,db.identity());
   return `<article class="peer-card peer-card-v2 directory-card">
@@ -585,6 +591,7 @@
      <p class="directory-field-label">${subjectLabel}</p>
      ${(p.modules||[]).length?`<div class="directory-topics">${(p.modules||[]).slice(0,3).map(x=>`<span>${esc(PM.formatStudyText(x))}</span>`).join('')}${(p.modules||[]).length>3?`<span>+${p.modules.length-3} more</span>`:''}</div>`:'<p class="directory-subjects-empty">Not added yet</p>'}
    </div>
+   ${supportNotice}
    <div class="directory-preferences">
      <div class="directory-preference"><p class="directory-field-label">Study format</p><span class="directory-pref-value${!formatLabels[p.study_method]?' is-empty':''}">${esc(studyFormat)}</span></div>
      <div class="directory-preference"><p class="directory-field-label">Availability</p><span class="directory-pref-value${!timeLabels[p.availability]?' is-empty':''}">${esc(availability)}</span></div>
@@ -893,6 +900,7 @@
   $('signOutButton')?.addEventListener('click',async()=>{try{await db.signOut();location.href='account.html'}catch(e){handleError(e)}});
   const requiredFields=[...form.querySelectorAll('[data-signup-required]')];
   PM.signupWizard?.init();
+  PM.signupLearning=PM.SubjectSupport?.mount('signupModules','signupLearningSelector',{typeId:'signupInstitutionType'});
   const institutionType=$('signupInstitutionType'),institutionName=$('signupInstitution'),suggestions=$('signupInstitutionSuggestions');
   const updateSuggestions=()=>{if(!suggestions||!institutionType)return;suggestions.replaceChildren();for(const name of PM.INSTITUTIONS[institutionType.value]||[]){const opt=document.createElement('option');opt.value=name;suggestions.append(opt)}};
   let create=false,submitting=false;
@@ -1002,7 +1010,7 @@
       const fieldMap={institution_type:'signupInstitutionType',institution:'signupInstitution',course:school?'signupGrade':'signupCourse',campus:'signupCampus',modules:'signupModules',study_method:'signupStudyMethod'};
       feedback('authFeedback',issue.message,true);$(fieldMap[issue.field])?.focus();return;
     }
-    details={full_name:name,given_names:firstName,surname,...detailsForCheck,discoverable:true};
+    details={full_name:name,given_names:firstName,surname,...detailsForCheck,...PM.signupLearning?.get(),discoverable:true};
     if(!form.reportValidity())return;
    }
    const submit=$('authSubmit');submitting=true;submit.disabled=true;submit.textContent=create?'Creating your account…':'Signing in…';
