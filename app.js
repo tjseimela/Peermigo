@@ -328,7 +328,7 @@
    const surname=PM.formatPersonName(val('studentSurname'));
    const newName=[firstName,surname].filter(Boolean).join(' ');
    if(!firstName||!surname||!PM.validPersonName(firstName)||!PM.validPersonName(surname)||newName.length>80){
-    feedback('profileFeedback','Enter a valid first name and surname (80 characters maximum combined).',true);
+    feedback('profileFeedback','First name and surname must each contain at least 2 letters (80 characters maximum combined).',true);
     (!firstName?$('studentFirstName'):$('studentSurname')).focus();return;
    }
    const payload={full_name:PM.formatPersonName(newName),given_names:firstName,surname,institution_type:val('institutionType'),institution:PM.canonicalInstitution(val('institutionName'),val('institutionType')),campus:PM.formatStudyText(val('campus')),course,modules,availability:val('availability'),study_method:val('studyMethod'),about:val('about')};
@@ -892,6 +892,7 @@
   if(db.user){$('authLoggedIn').classList.remove('hidden');$('authLoggedOut').classList.add('hidden');$('authEmail').textContent=db.user.email||'';const target=safeNext();if(target){$('accountContinueLink').href=target;$('accountContinueLink').textContent='Continue where you left off →';}}
   $('signOutButton')?.addEventListener('click',async()=>{try{await db.signOut();location.href='account.html'}catch(e){handleError(e)}});
   const requiredFields=[...form.querySelectorAll('[data-signup-required]')];
+  PM.signupWizard?.init();
   const institutionType=$('signupInstitutionType'),institutionName=$('signupInstitution'),suggestions=$('signupInstitutionSuggestions');
   const updateSuggestions=()=>{if(!suggestions||!institutionType)return;suggestions.replaceChildren();for(const name of PM.INSTITUTIONS[institutionType.value]||[]){const opt=document.createElement('option');opt.value=name;suggestions.append(opt)}};
   let create=false,submitting=false;
@@ -938,6 +939,7 @@
    // Subjects are required for reliable matching.
    signupModules.disabled=!v;signupModules.required=v;
    updateSignupCourseGrade();
+   PM.signupWizard?.sync(v);
    $('authSubmit').textContent=v?'Create account →':'Sign in →';
    $('authPassword').autocomplete=v?'new-password':'current-password';
    $('authDemoNote').classList.toggle('hidden',!v);
@@ -959,6 +961,9 @@
   form.addEventListener('submit',async e=>{
    e.preventDefault();
    if(submitting)return;
+   if(create && PM.signupWizard && !PM.signupWizard.ready()){
+    PM.signupWizard.advance();return;
+   }
    if(!db.client){feedback('authFeedback','Unable to connect to the service. Please try again shortly.',true);return;}
    if(!create&&!form.reportValidity())return;
    const email=val('authEmailInput'),password=$('authPassword').value;
@@ -978,8 +983,8 @@
       (!firstName?$('signupFirstName'):$('signupSurname')).focus();return;
     }
     if(!PM.validPersonName(firstName)||!PM.validPersonName(surname)){
-      feedback('authFeedback','Use letters for your first name and surname. Spaces, apostrophes and hyphens are fine; avoid numbers or symbols.',true);
-      $('signupFirstName').focus();return;
+      feedback('authFeedback','First name and surname must each contain at least 2 letters. Spaces, apostrophes and hyphens are allowed.',true);
+      (!PM.validPersonName(firstName)?$('signupFirstName'):$('signupSurname')).focus();return;
     }
     if(name.length>80){
       feedback('authFeedback','Your first name and surname together must be 80 characters or fewer. Please use a shorter form of your name.',true);
@@ -997,7 +1002,7 @@
       const fieldMap={institution_type:'signupInstitutionType',institution:'signupInstitution',course:school?'signupGrade':'signupCourse',campus:'signupCampus',modules:'signupModules',study_method:'signupStudyMethod'};
       feedback('authFeedback',issue.message,true);$(fieldMap[issue.field])?.focus();return;
     }
-    details={full_name:name,given_names:firstName,surname,...detailsForCheck,discoverable:$('signupDiscoverable').checked};
+    details={full_name:name,given_names:firstName,surname,...detailsForCheck,discoverable:true};
     if(!form.reportValidity())return;
    }
    const submit=$('authSubmit');submitting=true;submit.disabled=true;submit.textContent=create?'Creating your account…':'Signing in…';

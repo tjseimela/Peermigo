@@ -1,0 +1,78 @@
+/* Progressive onboarding: required student matching details in a short guided flow. */
+.pm-signup-intro{border:1px solid #e8e3ff;border-radius:14px;background:#f8f6ff;padding:12px 15px;margin-bottom:19px}
+.pm-signup-kicker,.pm-wizard-overline{display:block;color:#6251c7;font-size:10px;font-weight:800;letter-spacing:.11em}
+.pm-signup-intro p{font-size:12px;line-height:1.55;color:#606c86;margin:7px 0 0}
+.pm-wizard-progress{margin:5px 0 23px}
+.pm-wizard-overline{margin-bottom:12px}
+.pm-wizard-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;align-items:start}
+.pm-wizard-marker{min-width:0}
+.pm-wizard-marker-line{height:7px;border-radius:30px;background:#e9eaed;margin-bottom:10px;transition:background .2s}
+.pm-wizard-marker.is-complete .pm-wizard-marker-line{background:#6dcb9d}
+.pm-wizard-marker.is-current .pm-wizard-marker-line{background:linear-gradient(90deg,#05af79,#a1eac4)}
+.pm-wizard-marker-label{display:flex;gap:5px;align-items:center;font-size:10px;color:#a2a8b8;min-width:0}
+.pm-wizard-marker-number{display:inline-grid;place-items:center;width:19px;height:19px;flex:none;background:#f0f1f4;border-radius:50%;font-weight:800;color:#b6bac5}
+.pm-wizard-marker.is-complete .pm-wizard-marker-number{background:#e3f7ed;color:#159c69}
+.pm-wizard-marker.is-current .pm-wizard-marker-number{background:#06af78;color:white;box-shadow:0 3px 7px #0da26f37}
+.pm-wizard-marker.is-current .pm-wizard-marker-text{color:#048e67;font-weight:800}
+.pm-wizard-marker.is-complete .pm-wizard-marker-text{color:#5c997e}
+.pm-wizard-panel{min-height:180px;animation:pm-wizard-in .2s ease-out}
+.pm-wizard-panel.hidden,.pm-wizard-controls.hidden,.pm-wizard-progress.hidden,.pm-signup-intro.hidden,.pm-wizard-account.hidden,.pm-wizard-credentials.hidden{display:none!important}
+.pm-wizard-account .pm-signup-name-group{margin-bottom:18px}
+.pm-wizard-controls{display:flex;justify-content:space-between;gap:10px;margin-top:10px}
+.pm-wizard-controls .btn{min-height:45px}
+.pm-wizard-controls .btn:last-child{margin-left:auto}
+.pm-wizard-summary{border:1px solid #e9e5f5;border-radius:15px;overflow:hidden;margin-bottom:16px}
+.pm-wizard-summary-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:13px 16px;border-bottom:1px solid #edeaf5;font-size:12px}
+.pm-wizard-summary-row:last-child{border-bottom:0}
+.pm-wizard-summary-row span{color:#7e8296;flex-shrink:0}
+.pm-wizard-summary-row strong{color:#252e49;text-align:right;font-weight:700;overflow-wrap:anywhere}
+.pm-wizard-confirm-note{color:#4b9071;background:#edfaf3;border:1px solid #cfecdd;padding:13px;border-radius:11px;line-height:1.6;font-size:12px}
+.pm-wizard-account .pm-name-format-note{font-size:11px;margin:0 0 15px;color:#80859b}
+@keyframes pm-wizard-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+html[data-theme="dark"] .pm-signup-intro{background:#272642;border-color:#454069}
+html[data-theme="dark"] .pm-signup-intro p{color:#bfc4dc}
+html[data-theme="dark"] .pm-wizard-marker-line{background:#374057}
+html[data-theme="dark"] .pm-wizard-marker-number{background:#35405b;color:#c0c8d9}
+html[data-theme="dark"] .pm-wizard-marker.is-current .pm-wizard-marker-number{background:#12a87a;color:white}
+html[data-theme="dark"] .pm-wizard-marker.is-complete .pm-wizard-marker-number{background:#193e35;color:#9fe9c5}
+html[data-theme="dark"] .pm-wizard-marker.is-current .pm-wizard-marker-text,html[data-theme="dark"] .pm-wizard-overline,html[data-theme="dark"] .pm-signup-kicker{color:#79dfb6}
+html[data-theme="dark"] .pm-wizard-marker.is-complete .pm-wizard-marker-text{color:#93c8ab}
+html[data-theme="dark"] .pm-wizard-summary{border-color:#3d4760}
+html[data-theme="dark"] .pm-wizard-summary-row{border-color:#34415e}
+html[data-theme="dark"] .pm-wizard-summary-row strong{color:#f1f4ff}
+html[data-theme="dark"] .pm-wizard-confirm-note{background:#1e3b36;border-color:#406e5a;color:#aff2ca}
+html[data-theme="dark"] .pm-wizard-account .pm-name-format-note{color:#adb7d3}
+@media(max-width:620px){.pm-wizard-marker-label{flex-direction:column;align-items:center;text-align:center;gap:3px;font-size:9px}.pm-wizard-track{gap:4px}.pm-wizard-summary-row{padding:11px;gap:8px}.pm-wizard-summary-row span{max-width:38%}.pm-wizard-marker-line{height:6px}.pm-wizard-controls .btn{font-size:12px;padding:12px}}
+@media(max-width:365px){.pm-wizard-marker-text{font-size:8px;letter-spacing:-.04em}}
+@media(prefers-reduced-motion:reduce){.pm-wizard-panel{animation:none}}
+
+/* Step 2 layout: remove the promo card and let the entire wizard fit a centered, wider form.
+   Step 1 (credentials) and regular sign-in keep the original layout. */
+html.pm-signup-active.pm-wizard-profile-step .auth-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:0;
+  width:100%;
+  max-width:880px;
+  margin-inline:auto;
+  align-items:start;
+}
+html.pm-signup-active.pm-wizard-profile-step .auth-aside{display:none!important}
+html.pm-signup-active.pm-wizard-profile-step .auth-card{
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  margin-inline:auto;
+  padding:clamp(22px,3.6vw,40px)!important;
+}
+html.pm-signup-active.pm-wizard-profile-step .auth-card .styled-form,
+html.pm-signup-active.pm-wizard-profile-step .pm-wizard-progress,
+html.pm-signup-active.pm-wizard-profile-step .pm-wizard-panel,
+html.pm-signup-active.pm-wizard-profile-step .pm-wizard-controls{
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+}
+html.pm-signup-active.pm-wizard-profile-step .pm-wizard-marker-label{min-width:0}
+/* Prevent the sticky Peermigo navigation from covering a wizard heading after Continue. */
+html.pm-signup-active.pm-wizard-profile-step #authTitle{scroll-margin-top:110px}
+@media(max-width:600px){
+  html.pm-signup-active.pm-wizard-profile-step .auth-layout{max-width:100%;width:calc(100% - 36px);}
+  html.pm-signup-active.pm-wizard-profile-step .auth-card{padding:23px 17px!important}
+}

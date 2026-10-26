@@ -108,7 +108,9 @@ PM.formatStudyText = value => {
 };
 PM.validPersonName = value => {
   const name=String(value||'').trim();
-  return name.length>=1 && name.length<=80 && /\p{L}/u.test(name) && /^[\p{L}\p{M}\s.'’\-]+$/u.test(name);
+  // Require at least two actual Unicode letters in each first name / surname.
+  // Punctuation and whitespace alone do not count toward the minimum.
+  return name.length<=80 && (name.match(/\p{L}/gu)||[]).length>=2 && /^[\p{L}\p{M}\s.'’\-]+$/u.test(name);
 };
 PM.profileCompletion = profile => {
   const p=profile||{};
