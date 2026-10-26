@@ -6,9 +6,9 @@
   const chat=document.querySelector('.messaging-layout');
   if(!field||!chat)return;
   function resizeComposer(){
-    field.style.height='54px';
+    field.style.height=window.innerWidth<=720?'54px':'48px';
     if(window.innerWidth<=720){field.style.height=Math.min(146,Math.max(54,field.scrollHeight))+'px';}
-    else field.style.height='';
+    else field.style.height=Math.min(144,Math.max(48,field.scrollHeight))+'px';
   }
   function updateViewport(){
     const viewport=window.visualViewport;

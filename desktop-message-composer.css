@@ -1,0 +1,114 @@
+/* Desktop-only private-message composer polish.
+   Uses the existing textarea, emoji picker, file input, and submit button.
+   Mobile chat remains controlled by peer-mobile-upgrade.css. */
+@media (min-width: 721px) {
+  body.pm-messages-page #messageForm {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 46px 46px auto;
+    align-items: end;
+    column-gap: 10px;
+    row-gap: 8px;
+    padding: 13px 16px 14px;
+    min-width: 0;
+    background: #fff;
+    border-top: 1px solid #eceef6;
+  }
+  body.pm-messages-page #messageForm #messageBody {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    height: 48px;
+    max-height: 144px;
+    padding: 13px 15px;
+    border: 1px solid #dfe3f0;
+    border-radius: 14px;
+    background: #f8f9fd;
+    color: #263153;
+    font: 500 14px/1.45 'DM Sans', sans-serif;
+    outline: 0;
+    resize: none;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    transition: border-color .17s ease, box-shadow .17s ease, background .17s ease;
+  }
+  body.pm-messages-page #messageForm #messageBody::placeholder { color: #888fa6; opacity: 1; }
+  body.pm-messages-page #messageForm #messageBody:focus {
+    background: #fff;
+    border-color: #8575f1;
+    box-shadow: 0 0 0 3px rgba(103,85,230,.12);
+  }
+  body.pm-messages-page #messageForm #messageBody:disabled { opacity: .7; cursor: not-allowed; }
+  body.pm-messages-page #messageForm .pm-emoji-toggle,
+  body.pm-messages-page #messageForm .attachment-picker {
+    box-sizing: border-box;
+    grid-row: 1;
+    width: 46px;
+    height: 48px;
+    min-width: 46px;
+    min-height: 48px!important;
+    padding: 0!important;
+    align-self: end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e0e4f2;
+    border-radius: 13px;
+    background: #fff;
+    color: #6054d9;
+    transition: border-color .17s ease, background .17s ease;
+  }
+  body.pm-messages-page #messageForm .pm-emoji-toggle { grid-column: 2; }
+  body.pm-messages-page #messageForm .attachment-picker { grid-column: 3; margin: 0; }
+  body.pm-messages-page #messageForm .pm-emoji-toggle:hover:not(:disabled),
+  body.pm-messages-page #messageForm .attachment-picker:hover {
+    transform: none;
+    border-color: #c2bcf8;
+    background: #f1efff;
+  }
+  body.pm-messages-page #messageForm #sendMessageBtn {
+    grid-column: 4;
+    grid-row: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: auto;
+    min-width: 100px;
+    min-height: 48px!important;
+    height: 48px;
+    padding: 0 18px!important;
+    align-self: end;
+    border-radius: 13px;
+    font: 800 13px/1 'Plus Jakarta Sans', sans-serif;
+    white-space: nowrap;
+  }
+  body.pm-messages-page #messageForm #sendMessageBtn .pm-send-icon { width: 17px; height: 17px; }
+  body.pm-messages-page #messageForm .picked-files { grid-column: 1/-1; grid-row: 2; }
+  html[data-theme="dark"] body.pm-messages-page #messageForm {
+    background: #151f34; border-top-color: #34405b;
+  }
+  html[data-theme="dark"] body.pm-messages-page #messageForm #messageBody {
+    background: #222d44; border-color: #404d6b; color: #f0f2ff;
+  }
+  html[data-theme="dark"] body.pm-messages-page #messageForm #messageBody::placeholder { color: #a3acc5; }
+  html[data-theme="dark"] body.pm-messages-page #messageForm #messageBody:focus {
+    background: #293653; border-color: #998cff; box-shadow: 0 0 0 3px rgba(155,140,255,.17);
+  }
+  html[data-theme="dark"] body.pm-messages-page #messageForm .pm-emoji-toggle,
+  html[data-theme="dark"] body.pm-messages-page #messageForm .attachment-picker {
+    background: #222e46; border-color: #44516f; color: #c5baff;
+  }
+  html[data-theme="dark"] body.pm-messages-page #messageForm .pm-emoji-toggle:hover:not(:disabled),
+  html[data-theme="dark"] body.pm-messages-page #messageForm .attachment-picker:hover {
+    background: #313a59; border-color: #8172b4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.pm-messages-page #messageForm #messageBody,
+  body.pm-messages-page #messageForm .pm-emoji-toggle,
+  body.pm-messages-page #messageForm .attachment-picker { transition: none; }
+}
