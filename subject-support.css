@@ -50,3 +50,20 @@ html[data-theme=dark] .directory-card .pm-card-learning-detail.is-help .pm-card-
   /* Preserve the name / match badge grid when names are long. */
   .directory-card .directory-main h3 .profile-name-link{display:block;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 }
+
+/* Optional, self-reported module codes under each learning subject */
+.pm-learning-row{flex-wrap:wrap}
+.pm-module-code-field{display:flex;align-items:center;gap:10px;flex-basis:100%;font-size:11px;font-weight:650;color:#63718b;min-width:0}
+.pm-module-code-input{width:min(220px,100%);min-width:0;border:1px solid #dce3ef;border-radius:9px;padding:9px 11px;background:#fff;color:#24344e;font:inherit;font-size:12px}
+.pm-module-code-input:focus-visible{outline:2px solid #7162e3;outline-offset:2px}
+html[data-theme=dark] .pm-module-code-field{color:#bbc8df}
+html[data-theme=dark] .pm-module-code-input{background:#182337;border-color:#40516a;color:#f4f6ff}
+@media(max-width:550px){.pm-module-code-field{align-items:stretch;flex-direction:column;gap:5px}.pm-module-code-input{width:100%}}
+/* Allow subject rows and optional code inputs to shrink within narrow phones. */
+.pm-learning-selector{width:100%;max-width:100%;box-sizing:border-box}
+.pm-learning-choices{min-width:0;grid-template-columns:minmax(0,1fr)}
+.pm-learning-row{min-width:0;max-width:100%;box-sizing:border-box}
+.pm-learning-actions{min-width:0;max-width:100%}
+.pm-module-code-field{min-width:0;max-width:100%;box-sizing:border-box}
+.pm-module-code-input{box-sizing:border-box;max-width:100%}
+@media(max-width:550px){.pm-module-code-field{flex-basis:auto;width:100%;align-self:stretch}.pm-module-code-field > span{width:100%}}

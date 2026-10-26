@@ -50,5 +50,5 @@ for(const a of [original,peer('b',['Web Development']),peer('b',['Web Developmen
 }
 assert.equal(Object.values(PM.MatchingV3.weights.campus).reduce((a,b)=>a+b,0),100);
 assert.equal(PM.MatchingV3.weights.campus.modules,56);
-assert.equal(PM.MatchingV3.version,'4.0.0');
+assert.equal(PM.MatchingV3.version,'4.2.0');
 console.log('PASS: Smart module matching handles aliases and levels, rejects false matches, and preserves score constraints');

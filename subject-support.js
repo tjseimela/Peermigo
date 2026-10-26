@@ -7,6 +7,7 @@
   tertiary:['Accounting','Accounting 1','Accounting 2','Algorithms','Applied Mathematics','Artificial Intelligence','Business Analysis','Business Communication','Business Information Systems','Business Management','Calculus','Chemistry','Cloud Computing','Computer Architecture','Computer Networks','Computer Science','Cybersecurity','Data Analytics','Data Structures','Database Management Systems','Database Systems','Databases','Discrete Mathematics','Economics','Education Studies','Engineering Mathematics','Entrepreneurship','Financial Accounting','Financial Management','Human Resource Management','Information Systems','Information Technology','Java Programming','Linear Algebra','Machine Learning','Marketing','Mathematics','Microeconomics','Networking','Operating Systems','Physics','Programming','Programming 1','Programming 2','Project Management','Python Programming','Research Methods','Software Development','Software Engineering','Statistics','Systems Analysis','Web Development','Web Development 1','Web Development 2']
  };
  const normal=x=>window.PM?.MatchingV3?.subjectKey?.(x)||String(x||'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+ const codeKey=x=>String(x||'').normalize('NFKC').toLocaleLowerCase('en-ZA').trim().replace(/\s+/g,' ');
  const split=value=>[...new Map(String(value||'').split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean).map(s=>[normal(s),s])).values()].slice(0,10);
  const validated=(arr,modules)=>{const byKey=new Map(modules.map(x=>[normal(x),x]));return [...new Set((Array.isArray(arr)?arr:[]).map(x=>byKey.get(normal(x))).filter(Boolean))].slice(0,10);};
  function support(peer,me){
@@ -27,13 +28,13 @@
  }
  function mount(inputId,rootId,{typeId}={}){
   const input=document.getElementById(inputId),root=document.getElementById(rootId);if(!input||!root)return null;
-  let confident=[],help=[],highlighted=-1;
+  let confident=[],help=[],codes={},highlighted=-1;
   const suggestions=document.createElement('div');suggestions.className='pm-subject-suggestions';suggestions.id=inputId+'Suggestions';suggestions.setAttribute('role','listbox');suggestions.hidden=true;
   const inputWrap=document.createElement('div');inputWrap.className='pm-subject-input-wrap';input.parentNode.insertBefore(inputWrap,input);inputWrap.append(input,suggestions);input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-controls',suggestions.id);input.setAttribute('aria-expanded','false');input.setAttribute('autocomplete','off');
   const choices=document.createElement('div');choices.className='pm-learning-choices';root.append(choices);
   const tips=document.createElement('p');tips.className='pm-learning-footnote';tips.textContent='These choices are optional and can be changed in Edit Profile. You can ask for help without offering to help anyone.';root.append(tips);
   const modules=()=>split(input.value);
-  const sync=()=>{const current=modules();confident=validated(confident,current);help=validated(help,current);render();};
+  const sync=()=>{const current=modules();confident=validated(confident,current);help=validated(help,current);const keys=new Set(current.map(codeKey));codes=Object.fromEntries(Object.entries(codes).filter(([key])=>keys.has(key)));render();};
   const render=()=>{
    const current=modules();choices.replaceChildren();
    if(!current.length){const note=document.createElement('p');note.className='pm-learning-empty';note.textContent='Add your subjects above to choose where you feel confident or need help.';choices.append(note);return;}
@@ -45,9 +46,16 @@
      const pressed=(kind==='confident'?confident:help).some(x=>normal(x)===normal(module));
      const b=document.createElement('button');b.type='button';b.className='pm-learning-chip '+kind+(pressed?' is-selected':'');b.textContent=text;b.dataset.kind=kind;b.dataset.module=module;b.setAttribute('aria-pressed',String(pressed));buttons.append(b);
     }
-    row.append(buttons);choices.append(row);
+    row.append(buttons);
+    const wrap=document.createElement('label');wrap.className='pm-module-code-field';
+    const title=document.createElement('span');title.textContent='Module code (optional)';wrap.append(title);
+    const inputCode=document.createElement('input');inputCode.type='text';inputCode.className='pm-module-code-input';
+    inputCode.maxLength=24;inputCode.autocomplete='off';inputCode.spellcheck=false;inputCode.placeholder='e.g. WEB32';
+    inputCode.setAttribute('aria-label','Optional module code for '+module);inputCode.value=codes[codeKey(module)]||'';
+    inputCode.dataset.codeFor=codeKey(module);wrap.append(inputCode);row.append(wrap);choices.append(row);
    });
   };
+  choices.addEventListener('input',event=>{const el=event.target.closest('input[data-code-for]');if(!el)return;const key=el.dataset.codeFor;const cleaned=el.value.trim().replace(/\s+/g,' ').slice(0,24);if(cleaned)codes[key]=cleaned;else delete codes[key];});
   choices.addEventListener('click',event=>{const b=event.target.closest('button[data-kind]');if(!b)return;
    const topic=modules().find(x=>normal(x)===normal(b.dataset.module));if(!topic)return;
    const key=normal(topic),kind=b.dataset.kind;
@@ -88,7 +96,7 @@
   });
   document.getElementById(typeId)?.addEventListener('change',()=>{hide();});
   render();
-  return {get(){const current=modules();return {confident_modules:validated(confident,current),help_modules:validated(help,current)};},set(data={}){confident=validated(data.confident_modules,modules());help=validated(data.help_modules,modules()).filter(x=>!confident.some(y=>normal(x)===normal(y)));render();},refresh:sync};
+  return {get(){const current=modules();const kept=Object.fromEntries(current.map(x=>[codeKey(x),codes[codeKey(x)]]).filter(([,v])=>Boolean(v)));return {confident_modules:validated(confident,current),help_modules:validated(help,current),module_codes:kept};},set(data={}){codes={};const stored=data.module_codes&&typeof data.module_codes==='object'&&!Array.isArray(data.module_codes)?data.module_codes:{};for(const m of modules()){const key=codeKey(m),value=stored[key];if(typeof value==='string')codes[key]=value.slice(0,24);}confident=validated(data.confident_modules,modules());help=validated(data.help_modules,modules()).filter(x=>!confident.some(y=>normal(x)===normal(y)));render();},refresh:sync};
  }
- window.PM.SubjectSupport={mount,split,validated,support,normal,SUBJECTS};
+ window.PM.SubjectSupport={mount,split,validated,support,normal,codeKey,SUBJECTS};
 })();

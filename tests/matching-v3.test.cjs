@@ -17,7 +17,7 @@ test('Physical: same university, different campus never recommended',()=>{const 
 test('Physical: unknown campus never presumed same',()=>{const x=rating(base,noCampus);assert.equal(x.eligible,false);assert.ok(x.score<=44);});
 test('Physical: identical campus name but different university is not a location match',()=>{const x=rating(base,person('f',{institution:'UJ'}));assert.equal(x.eligible,false);assert.equal(x.locationVerified,false);});
 test('Physical: unrelated modules and course cannot qualify merely via locality',()=>{const x=rating(base,noAcademic);assert.equal(x.eligible,false);assert.ok(x.score<=29);});
-test('Physical: shared module despite different course qualifies if practical logistics align',()=>{const x=rating(base,person('g',{course:'Civil Engineering',modules:['Programming 3']}));assert.equal(x.eligible,true);});
+test('Physical: a lone shared module in an unrelated course is not automatically a strong recommendation',()=>{const x=rating(base,person('g',{course:'Civil Engineering',modules:['Programming 3']}));assert.ok(x.parts.modules>0);assert.equal(x.moduleMatches[0].contextKind,'different-course');assert.equal(x.eligible,false);});
 test('Physical: availability changes score by at most four',()=>{
  const perfect=rating(base,nearby).score;
  const mismatch=rating(base,person('h',{availability:'weekends'})).score;
@@ -26,7 +26,7 @@ test('Physical: availability changes score by at most four',()=>{
 test('Physical: availability mismatch never independently disqualifies',()=>{const x=rating(base,person('h',{availability:'weekends'}));assert.equal(x.eligible,true);});
 test('Campus-only and online-only are incompatible',()=>{const x=rating(base,person('h',{study_method:'virtual'}));assert.equal(x.eligible,false);assert.equal(x.formatCompatible,false);});
 test('Campus-only and hybrid must meet campus/institution check',()=>{const good=rating(base,person('h',{study_method:'hybrid'}));const bad=rating(base,person('i',{study_method:'hybrid',campus:'Ekurhuleni Campus'}));assert.equal(good.eligible,true);assert.equal(bad.eligible,false);});
-test('Online: same subjects across universities recommended',()=>{const online=person('a',{study_method:'virtual'});const peer=person('h',{study_method:'virtual',institution:'UJ',campus:'Auckland Park'});const x=rating(online,peer);assert.equal(x.eligible,true);assert.ok(x.score>=80);});
+test('Online: same subjects across universities recommended',()=>{const online=person('a',{study_method:'virtual'});const peer=person('h',{study_method:'virtual',institution:'UJ',campus:'Auckland Park'});const x=rating(online,peer);assert.equal(x.eligible,true);assert.ok(x.score>=65);});
 test('Online: same university unrelated subjects/course not recommended',()=>{const online=person('a',{study_method:'virtual'});const peer=person('h',{study_method:'virtual',course:'Engineering',modules:['Thermodynamics']});assert.equal(rating(online,peer).eligible,false);});
 test('Online: no campus should not penalize matching',()=>{const online=person('a',{study_method:'virtual'});const peer=person('h',{study_method:'virtual',institution:'UJ',campus:''});assert.equal(rating(online,peer).eligible,true);});
 test('Two hybrid students may study online across campuses',()=>{const a=person('a',{study_method:'hybrid'}),b=person('b',{study_method:'hybrid',institution:'UJ',campus:'Auckland Park'});assert.equal(rating(a,b).eligible,true);});

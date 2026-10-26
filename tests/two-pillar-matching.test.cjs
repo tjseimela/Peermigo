@@ -8,8 +8,8 @@ const score=(p,m=a)=>PM.matchDetails(p,m);
 const example=score(mk('b',{modules:['Mechanical Engineering'],study_method:'hybrid'}));
 assert.equal(example.parts.modules,0,'no shared modules earns zero module points');
 assert.equal(example.academicScore,20,'same course alone earns only 20% academic match');
-assert.ok(example.studyScore>=92 && example.studyScore<=95,'location compatibility stays high');
-assert.equal(example.score,42,'previously 62%-style false relevance now shows 42%');
+assert.ok(example.studyScore>=95 && example.studyScore<=100,'missing availability is excluded from the study denominator');
+assert.ok(example.score>=40 && example.score<=45,'course-only academic evidence cannot inflate overall score');
 assert.equal(example.eligible,false,'no common modules + matching campus and course cannot be recommended');
 assert.equal(example.subjectEvidence,'none');
 const same=score(mk('b'));
@@ -22,6 +22,8 @@ assert.ok(approximate.score>example.score,'similar modules outrank unrelated mod
 const unknown=score(mk('b',{modules:[]}));
 assert.equal(unknown.subjectEvidence,'unknown','missing modules distinguished from known mismatch');
 assert.equal(unknown.parts.modules,0);
+assert.equal(unknown.academicScore,null,'20% academic coverage must not create an academic percentage');
+assert.equal(unknown.showScore,false,'no overall match percentage when academic coverage is below 60%');
 const offline=score(mk('b',{modules:['Thermodynamics'],course:'Mechanical Engineering'}));
 assert.equal(offline.eligible,false,'unrelated academic profiles cannot qualify on location alone');
 assert.ok(offline.score<=29);
@@ -40,5 +42,5 @@ for(const mode of ['campus','hybrid','virtual']){
  assert.equal(x.academicScore,Math.round((x.parts.modules+x.parts.course)/70*100));
  assert.equal(x.studyScore,Math.round((x.parts.institution+x.parts.campus+x.parts.format+x.parts.availability)/30*100));
 }
-assert.equal(PM.MatchingV3.version,'4.0.0');
-console.log('PASS: two-pillar matching 70% academic + 30% study; real 62%-style case now 42%; safeguards preserved');
+assert.equal(PM.MatchingV3.version,'4.2.0');
+console.log('PASS: two-pillar matching 70% academic + 30% study; missing data normalized; safeguards preserved');

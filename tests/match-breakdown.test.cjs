@@ -35,7 +35,7 @@ const equivalent={...peer,modules:['Maths']};
 const mathUser={...user,modules:['Mathematics']};
 context.window.PMMatchBreakdown.close();
 context.window.PMMatchBreakdown.open(equivalent,mathUser);
-assert.match(generatedMarkup,/Same or equivalent name/);
+assert.match(generatedMarkup,/Same or equivalent module name/);
 assert.ok(fs.readFileSync(path.join(root,'app.js'),'utf8').includes('data-match-breakdown'));
 assert.ok(fs.readFileSync(path.join(root,'matches.html'),'utf8').includes('match-breakdown.js'));
 const suspicious={...peer,full_name:'<script>alert(1)</script>'};

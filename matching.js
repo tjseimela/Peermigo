@@ -1,4 +1,4 @@
-/* Peermigo matching v4. Transparent two-pillar academic and study-compatibility heuristic.
+/* Peermigo matching v4.1. Evidence-aware academic and study compatibility heuristic.
  * We never infer protected traits; score is not a probability.
  * On-campus recommendations require the same institution and confirmed campus.
  * Academic relevance always matters; availability has minimal influence.
@@ -10,7 +10,8 @@ window.PM = window.PM || {};
  // Each context always devotes 70 points to academic relevance (80% modules,
  // 20% course) and 30 points to meeting feasibility. Keep availability <= 4
  // points, even for online students where schedule historically had greater weight.
- const ACADEMIC_WEIGHT=70, STUDY_WEIGHT=30;
+ const ACADEMIC_WEIGHT=70, STUDY_WEIGHT=30, MIN_COVERAGE=0.60;
+ const isPresent = value => String(value ?? '').trim().length > 0;
  const ACADEMIC_PARTS=Object.freeze({modules:56,course:14});
  const studyWeights = (institution,campus,format,availability) => {
   const reservedAvailability = Math.min(4, STUDY_WEIGHT*availability/(institution+campus+format+availability));
@@ -109,20 +110,43 @@ window.PM = window.PM || {};
     titleScore===1?'exact':'related-title';
   return {similarity,kind};
  };
- const sharedTopics = (a,b) => {
+ const codeKey=x=>String(x||'').normalize('NFKC').toLocaleLowerCase('en-ZA').trim().replace(/\s+/g,' ');
+ const normalCode=x=>String(x||'').normalize('NFKC').trim().toLocaleUpperCase('en-ZA').replace(/[^\p{L}\p{N}]/gu,'');
+ const sharedTopics = (a,b,context={}) => {
   const aa=labeledTopics(a),bb=labeledTopics(b),usedA=new Set(),usedB=new Set(),matches=[];
   const possible=[];
+  const courseA=isPresent(context.courseA)?context.courseA:'',courseB=isPresent(context.courseB)?context.courseB:'';
+  const coursesKnown=Boolean(courseA&&courseB);
+  const coursesSimilar=coursesKnown?courseSimilarity(courseA,courseB):null;
+  const institutionA=context.institutionA||'',institutionB=context.institutionB||'';
+  const sameInstitution=Boolean(institutionA&&institutionB&&PM.institutionKey(institutionA)===PM.institutionKey(institutionB));
+  const institutionsKnown=Boolean(institutionA&&institutionB);
+  const codesA=context.codesA&&typeof context.codesA==='object'?context.codesA:{};
+  const codesB=context.codesB&&typeof context.codesB==='object'?context.codesB:{};
   aa.forEach((x,i)=>bb.forEach((y,j)=>{
-   const {similarity,kind}=subjectSimilarity(x.key,y.key);
-   if(similarity>=0.2)possible.push({x,y,i,j,similarity,kind});
+   const base=subjectSimilarity(x.key,y.key);
+   if(base.similarity<0.2)return;
+   const codeA=String(codesA[codeKey(x.raw)]||'').trim(),codeB=String(codesB[codeKey(y.raw)]||'').trim();
+   const codesKnown=Boolean(codeA&&codeB),sameCode=codesKnown&&normalCode(codeA)===normalCode(codeB);
+   let factor=1,contextKind='name-only';
+   if(codesKnown&&sameInstitution&&sameCode){contextKind='shared-code';}
+   else if(codesKnown&&sameInstitution&&!sameCode){factor=0.45;contextKind='different-code';}
+   else if(coursesKnown&&coursesSimilar===0){factor=sameInstitution?0.60:0.48;contextKind='different-course';}
+   else if(coursesKnown&&coursesSimilar>0&&coursesSimilar<1){factor=0.85;contextKind='related-course';}
+   else if(coursesKnown&&coursesSimilar===1&&institutionsKnown&&!sameInstitution){factor=0.88;contextKind='different-institution';}
+   else if(!coursesKnown){contextKind='course-unknown';}
+   else if(codesKnown&&!sameCode){factor=0.82;contextKind='different-code-cross-institution';}
+   else if(codesKnown&&sameCode&&!sameInstitution){factor=0.90;contextKind='shared-code-cross-institution';}
+   else contextKind='matching-course';
+   const similarity=Number((base.similarity*factor).toFixed(4));
+   if(similarity>=0.2)possible.push({x,y,i,j,similarity,kind:base.kind,contextKind,codeA,codeB});
   }));
-  // One-to-one weighted matching prevents duplicates from inflating the score.
-  // Sort by quality first; a name cannot be reused for a second module.
   possible.sort((x,y)=>y.similarity-x.similarity||x.x.key.localeCompare(y.x.key)||x.y.key.localeCompare(y.y.key));
   for(const option of possible){
    if(usedA.has(option.i)||usedB.has(option.j))continue;
    usedA.add(option.i);usedB.add(option.j);
-   matches.push({topic:option.x.raw,peerTopic:option.y.raw,similarity:option.similarity,kind:option.kind});
+   matches.push({topic:option.x.raw,peerTopic:option.y.raw,similarity:option.similarity,kind:option.kind,
+    contextKind:option.contextKind,codeA:option.codeA,codeB:option.codeB});
   }
   const overlap=matches.reduce((total,m)=>total+m.similarity,0);
   const ratio=aa.length&&bb.length?2*overlap/(aa.length+bb.length):0;
@@ -170,7 +194,7 @@ window.PM = window.PM || {};
   const bothCampuses=Boolean(me.campus&&peer.campus);
   // Campus names can be identical at unrelated institutions. They never count alone.
   const sameCampus=Boolean(sameInstitution&&bothCampuses&&PM.campusKey(me.campus)===PM.campusKey(peer.campus));
-  const subjects=sharedTopics(me.modules,peer.modules);
+  const subjects=sharedTopics(me.modules,peer.modules,{courseA:me.course,courseB:peer.course,institutionA:me.institution,institutionB:peer.institution,codesA:me.module_codes,codesB:peer.module_codes});
   const subjectEvidence=!subjects.bothProvided?'unknown':subjects.matches.length?'overlap':'none';
   let course=courseSimilarity(me.course,peer.course);
   if(aType==='school'&&bType==='school'&&clean(me.course)!==clean(peer.course))course=0;
@@ -179,31 +203,51 @@ window.PM = window.PM || {};
   const academic=Boolean(subjects.matches.length||course>0);
   const context=contextFor(aMode,bMode);
   const weights=WEIGHTS[context];
-  const schedule=availabilityScore(clean(me.availability),clean(peer.availability));
-  const fmt=formatScore(aMode,bMode);
-  // School learners typically have no branch/campus. For schools, school identity
-  // itself supplies the location signal if both prefer in-person study.
+  const hasInstitution=isPresent(me.institution)&&isPresent(peer.institution);
   const isSchool=aType==='school'&&bType==='school';
+  // Missing values are UNKNOWN, never evidence of a mismatch. For school
+  // learners, the same school can stand in for a physical campus.
+  const known={
+    modules:subjects.bothProvided,
+    course:isPresent(me.course)&&isPresent(peer.course),
+    institution:hasInstitution,
+    campus:isSchool?hasInstitution:(hasInstitution&&bothCampuses),
+    format:Boolean(aMode&&bMode),
+    availability:isPresent(me.availability)&&isPresent(peer.availability)
+  };
+  const schedule=known.availability?availabilityScore(clean(me.availability),clean(peer.availability)):0;
+  const fmt=known.format?formatScore(aMode,bMode):0;
   const locationVerified=sameInstitution&&(sameCampus||isSchool);
   const parts={modules:subjects.score*weights.modules,course:course*weights.course,
     institution:(sameInstitution?1:0)*weights.institution,
     campus:(context==='campus'?(locationVerified?1:0):sameCampus?1:0)*weights.campus,
     format:fmt*weights.format,
     availability:schedule*weights.availability};
-  // Separate category percentages from the weighted points. These are comparable
-  // percentages inside each category, NOT standalone probabilities.
+  const sumKnown = keys => keys.reduce((total,k)=>total+(known[k]?weights[k]:0),0);
+  const academicKnown=sumKnown(['modules','course']);
+  const studyKnown=sumKnown(['institution','campus','format','availability']);
+  const academicCoverage=academicKnown/ACADEMIC_WEIGHT;
+  const studyCoverage=studyKnown/STUDY_WEIGHT;
+  const academicReady=academicCoverage+1e-9>=MIN_COVERAGE;
+  const studyReady=studyCoverage+1e-9>=MIN_COVERAGE;
   const academicPoints=parts.modules+parts.course;
   const studyPoints=parts.institution+parts.campus+parts.format+parts.availability;
-  const academicScore=Math.round(100*academicPoints/ACADEMIC_WEIGHT);
-  const studyScore=Math.round(100*studyPoints/STUDY_WEIGHT);
-  let score=Math.round(academicPoints+studyPoints);
+  // Normalize only compared factors, keeping categories at 70% / 30%.
+  // Do not display a numeric category or overall value if its evidence is thin.
+  const academicRate=academicReady?academicPoints/academicKnown:null;
+  const studyRate=studyReady?studyPoints/studyKnown:null;
+  const academicScore=academicReady?Math.round(100*academicRate):null;
+  const studyScore=studyReady?Math.round(100*studyRate):null;
+  const overallReady=academicReady&&studyReady;
+  let score=overallReady?Math.round(ACADEMIC_WEIGHT*academicRate+STUDY_WEIGHT*studyRate):0;
   score=Math.max(0,Math.min(100,score));
-  // No amount of same-campus logistics can turn unrelated subjects into a match.
-  if(!academic)score=Math.min(score,29);
-  if(gradeMismatch)score=Math.min(score,19);
-  // Physical study is not feasible when locations differ or cannot be verified.
-  // Surface these profiles in the directory but do not recommend them as campus peers.
-  if(context==='campus'&&!locationVerified)score=Math.min(score,44);
+  let scoreCapped=false;
+  if(overallReady){
+    // Hard guards still apply when the available evidence shows incompatibility.
+    if(!academic&&score>29){score=29;scoreCapped=true;}
+    if(gradeMismatch&&score>19){score=19;scoreCapped=true;}
+    if(context==='campus'&&!locationVerified&&score>44){score=44;scoreCapped=true;}
+  }
   const subjectsCount=subjects.matches.length;
   const signals=[];
   const exactCount=subjects.matches.filter(m=>m.kind==='exact'&&m.similarity===1).length;
@@ -214,15 +258,18 @@ window.PM = window.PM || {};
   if(sameCampus)signals.push('Same campus');
   else if(sameInstitution)signals.push('Same institution');
   if(aMode&&bMode)signals.push('Compatible study format');
-  if(schedule>=0.9&&me.availability&&peer.availability)signals.push('Similar availability');
+  if(known.availability&&schedule>=0.9)signals.push('Similar availability');
   const enough=Boolean((me.course||topics(me.modules).length)&&(peer.course||topics(peer.modules).length));
-  const showScore=validName(peer)&&enough;
+  const showScore=validName(peer)&&enough&&overallReady;
+  const insufficientData=!overallReady;
+  const overallCoverage=Math.round(100*(ACADEMIC_WEIGHT*academicCoverage+STUDY_WEIGHT*studyCoverage)/100);
+  const categoryCoverage={academic:Math.round(100*academicCoverage),study:Math.round(100*studyCoverage)};
   const eligible=showScore&&academic&&!gradeMismatch&&Boolean(aMode&&bMode)&&score>=45
     &&(context!=='campus'||locationVerified);
-  const reason=!academic?'No shared course or subjects':context==='campus'&&!locationVerified
+  const reason=insufficientData?'Not enough matching information yet':!academic?'No shared course or subjects':context==='campus'&&!locationVerified
     ?(sameInstitution?'Different or unconfirmed campuses':'Different institutions for on-campus study')
     :signals.slice(0,3).join(' · ')||'Limited shared details';
-  return {score,eligible,showScore,reason,academicScore,studyScore,academicWeight:ACADEMIC_WEIGHT,studyWeight:STUDY_WEIGHT,subjectEvidence,
+  return {score,eligible,showScore,insufficientData,overallReady,overallCoverage,categoryCoverage,known,scoreCapped,minimumCoverage:60,reason,academicScore,studyScore,academicWeight:ACADEMIC_WEIGHT,studyWeight:STUDY_WEIGHT,subjectEvidence,
     sharedModules:subjects.matches.filter(m=>m.kind==='exact'&&m.similarity===1).map(m=>m.topic),
     moduleMatches:subjects.matches,
     signals,parts,formatCompatible:true,studyContext:context,locationVerified};
@@ -232,7 +279,7 @@ window.PM = window.PM || {};
   const match=PM.matchDetails(peer,me);
   return match.showScore?match.score:0;
  };
- PM.MatchingV3={version:'4.0.0',weights:WEIGHTS,academicWeight:ACADEMIC_WEIGHT,studyWeight:STUDY_WEIGHT,subjectKey,courseKey,sharedTopics,contextFor};
+ PM.MatchingV3={version:'4.2.0',weights:WEIGHTS,minimumCoverage:MIN_COVERAGE,academicWeight:ACADEMIC_WEIGHT,studyWeight:STUDY_WEIGHT,subjectKey,courseKey,sharedTopics,contextFor};
  // Compatibility alias for existing directory filters and third-party widgets.
  PM.MatchingV2=PM.MatchingV3;
 })();

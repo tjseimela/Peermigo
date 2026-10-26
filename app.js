@@ -14,7 +14,7 @@
  const handleError=e=>{console.error(e);notify(e?.message||'Something went wrong. Please try again.')};
  const getMe=async()=>{try{return await db.profile()}catch(e){handleError(e);return null}};
  const requireSignedIn=()=>{if(!db.user){notify('Please sign in first.');location.href='account.html';return false}if(!db.client){notify('Check your Supabase connection.');return false}return true};
- const rankPeer=(p,me)=>PM.scoreStudentMatch(p,me);
+ const rankPeer=(p,me)=>{const d=PM.matchDetails(p,me);return (d.showScore?d.score:0)+(d.overallCoverage||0)/1000;};
  const matchReason=(p,me)=>PM.matchDetails(p,me).reason;
  const memberNav = `<a class="nav-link" data-page="index.html" href="index.html">Dashboard</a>
  <a class="nav-link" data-page="search.html" href="search.html">Search students & groups</a>
@@ -582,7 +582,7 @@
   const relation=db.connectionWith(connectionRows,p.id);
   const connection=PM.connectionAction(relation,db.identity());
   return `<article class="peer-card peer-card-v2 directory-card${supportNotice?' has-support-match':''}">
-   <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<button type="button" class="directory-status match-score ${matchTier}" data-match-breakdown="${esc(p.id)}" aria-label="${score}% match with ${esc(name)}. View score breakdown" title="View why you match with ${esc(name)}"><span class="match-number">${score}%</span><span class="match-label">match</span></button>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peermigo'}</span>`}</div>
+   <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<button type="button" class="directory-status match-score ${matchTier}" data-match-breakdown="${esc(p.id)}" aria-label="${score}% match with ${esc(name)}. View score breakdown" title="View why you match with ${esc(name)}"><span class="match-number">${score}%</span><span class="match-label">match</span></button>`:complete&&scoreDetails.insufficientData?`<button type="button" class="directory-status match-score match-pending" data-match-breakdown="${esc(p.id)}" aria-label="Not enough data to calculate a match with ${esc(name)}. View available match details" title="See which matching details are missing"><span class="match-label">Not enough</span><span class="match-label">data</span></button>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peermigo'}</span>`}</div>
    <div class="directory-main"><h3><a class="profile-name-link" href="student.html?id=${encodeURIComponent(p.id)}">${esc(name)}</a>${p.is_verified?`<span class="verified-label" title="Institution reviewed by administrator">${PM.icon('shield')} Verified</span>`:''}</h3></div>
    <div class="directory-desktop-summary" aria-label="Student summary">
      <p class="directory-desktop-summary-line"><span>${esc(PM.formatStudyText(p.course)||'Course not listed')}</span><span class="directory-summary-dot" aria-hidden="true"> · </span><span class="directory-summary-institution">${esc(PM.formatStudyText(p.institution)||'Institution not listed')}</span></p>
