@@ -1,4 +1,4 @@
-/* Peermigo matching v3.1. Transparent academic-fit and meeting-feasibility heuristic.
+/* Peermigo matching v4. Transparent two-pillar academic and study-compatibility heuristic.
  * We never infer protected traits; score is not a probability.
  * On-campus recommendations require the same institution and confirmed campus.
  * Academic relevance always matters; availability has minimal influence.
@@ -7,11 +7,22 @@
 window.PM = window.PM || {};
 (() => {
  const PM = window.PM;
- // Modules and courses dominate. Availability never contributes over four points.
+ // Each context always devotes 70 points to academic relevance (80% modules,
+ // 20% course) and 30 points to meeting feasibility. Keep availability <= 4
+ // points, even for online students where schedule historically had greater weight.
+ const ACADEMIC_WEIGHT=70, STUDY_WEIGHT=30;
+ const ACADEMIC_PARTS=Object.freeze({modules:56,course:14});
+ const studyWeights = (institution,campus,format,availability) => {
+  const reservedAvailability = Math.min(4, STUDY_WEIGHT*availability/(institution+campus+format+availability));
+  const othersTotal = institution+campus+format;
+  const share = (value) => othersTotal? (STUDY_WEIGHT-reservedAvailability)*value/othersTotal:0;
+  return Object.freeze({modules:ACADEMIC_PARTS.modules,course:ACADEMIC_PARTS.course,
+    institution:share(institution),campus:share(campus),format:share(format),availability:reservedAvailability});
+ };
  const WEIGHTS = Object.freeze({
-  online: Object.freeze({modules:54,course:30,institution:4,campus:0,format:8,availability:4}),
-  hybrid: Object.freeze({modules:47,course:30,institution:8,campus:6,format:5,availability:4}),
-  campus: Object.freeze({modules:36,course:30,institution:8,campus:20,format:2,availability:4})
+  online:studyWeights(4,0,8,4),
+  hybrid:studyWeights(8,6,5,4),
+  campus:studyWeights(8,20,2,4)
  });
  const clean = value => String(value ?? '').normalize('NFKC').toLocaleLowerCase('en-ZA')
    .replace(/&/g,' and ').replace(/[^\p{L}\p{N}]+/gu,' ').trim().replace(/\s+/g,' ');
@@ -160,6 +171,7 @@ window.PM = window.PM || {};
   // Campus names can be identical at unrelated institutions. They never count alone.
   const sameCampus=Boolean(sameInstitution&&bothCampuses&&PM.campusKey(me.campus)===PM.campusKey(peer.campus));
   const subjects=sharedTopics(me.modules,peer.modules);
+  const subjectEvidence=!subjects.bothProvided?'unknown':subjects.matches.length?'overlap':'none';
   let course=courseSimilarity(me.course,peer.course);
   if(aType==='school'&&bType==='school'&&clean(me.course)!==clean(peer.course))course=0;
   const gradeMismatch=aType==='school'&&bType==='school'&&/^grade \d+$/i.test(clean(me.course))
@@ -178,7 +190,13 @@ window.PM = window.PM || {};
     campus:(context==='campus'?(locationVerified?1:0):sameCampus?1:0)*weights.campus,
     format:fmt*weights.format,
     availability:schedule*weights.availability};
-  let score=Math.round(Object.values(parts).reduce((sum,value)=>sum+value,0));
+  // Separate category percentages from the weighted points. These are comparable
+  // percentages inside each category, NOT standalone probabilities.
+  const academicPoints=parts.modules+parts.course;
+  const studyPoints=parts.institution+parts.campus+parts.format+parts.availability;
+  const academicScore=Math.round(100*academicPoints/ACADEMIC_WEIGHT);
+  const studyScore=Math.round(100*studyPoints/STUDY_WEIGHT);
+  let score=Math.round(academicPoints+studyPoints);
   score=Math.max(0,Math.min(100,score));
   // No amount of same-campus logistics can turn unrelated subjects into a match.
   if(!academic)score=Math.min(score,29);
@@ -204,7 +222,7 @@ window.PM = window.PM || {};
   const reason=!academic?'No shared course or subjects':context==='campus'&&!locationVerified
     ?(sameInstitution?'Different or unconfirmed campuses':'Different institutions for on-campus study')
     :signals.slice(0,3).join(' · ')||'Limited shared details';
-  return {score,eligible,showScore,reason,
+  return {score,eligible,showScore,reason,academicScore,studyScore,academicWeight:ACADEMIC_WEIGHT,studyWeight:STUDY_WEIGHT,subjectEvidence,
     sharedModules:subjects.matches.filter(m=>m.kind==='exact'&&m.similarity===1).map(m=>m.topic),
     moduleMatches:subjects.matches,
     signals,parts,formatCompatible:true,studyContext:context,locationVerified};
@@ -214,7 +232,7 @@ window.PM = window.PM || {};
   const match=PM.matchDetails(peer,me);
   return match.showScore?match.score:0;
  };
- PM.MatchingV3={version:'3.1.0',weights:WEIGHTS,subjectKey,courseKey,sharedTopics,contextFor};
+ PM.MatchingV3={version:'4.0.0',weights:WEIGHTS,academicWeight:ACADEMIC_WEIGHT,studyWeight:STUDY_WEIGHT,subjectKey,courseKey,sharedTopics,contextFor};
  // Compatibility alias for existing directory filters and third-party widgets.
  PM.MatchingV2=PM.MatchingV3;
 })();

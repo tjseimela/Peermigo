@@ -1,5 +1,5 @@
-/* Peermigo: transparent score explanation for the Find Peers cards.
- * Uses PM.matchDetails and the existing v3 weights; explanations distinguish full and partial matches.
+/* Peermigo: two-pillar match explanation for Find Peers.
+ * Uses PM.matchDetails and distinguishes academic relevance from study logistics.
  */
 (() => {
   'use strict';
@@ -27,7 +27,8 @@
     switch (key) {
       case 'modules': {
         const matches=detail.moduleMatches || [];
-        if (!matches.length) return 'No matching or closely related subject names were identified.';
+        if (detail.subjectEvidence === 'unknown') return 'At least one student has not listed subjects/modules yet. Academic overlap is unknown, not necessarily absent.';
+        if (!matches.length) return 'No shared or closely related subjects were identified from the names both students provided.';
         const exact=matches.filter(m=>m.kind==='exact'&&m.similarity===1).length;
         const partial=matches.length-exact;
         return `${exact} exact/equivalent and ${partial} partial subject name match${matches.length===1?'':'es'}. Points reflect how many modules both students listed and how closely their names match.`;
@@ -74,7 +75,7 @@
     previousFocus = document.activeElement;
     originalOverflow = document.body.style.overflow;
     const name = PM.formatPersonName?.(profile.full_name) || profile.full_name || 'this student';
-    const factorRows = Object.keys(labels).filter(key => weights[key] > 0).map(key => {
+    const factorRow = key => {
       const max = weights[key], points = Math.min(max,Math.max(0,detail.parts[key] || 0));
       const percent = clamp(Math.round(points / max * 100));
       const pairs=key==='modules' && detail.moduleMatches?.length
@@ -90,11 +91,13 @@
         <p>${html(relevant(detail, profile, mine, key))}</p>
         ${pairs}
       </div>`;
-    }).join('');
+    };
+    const academicRows = ['modules','course'].map(factorRow).join('');
+    const studyRows = ['institution','campus','format','availability'].filter(key => weights[key] > 0).map(factorRow).join('');
     const total = Math.round(Object.values(detail.parts).reduce((sum,v) => sum + (Number(v) || 0),0));
     const capped = detail.score < total;
     const caveat = capped
-      ? `<div class="pm-match-cap" role="note"><strong>Why the total is limited</strong><p>${html(detail.reason)}. Peermigo limits the overall score when academic or in-person study requirements are not met, even if other factors score well.</p></div>` : '';
+      ? `<div class="pm-match-cap" role="note"><strong>Why the total is limited</strong><p>${html(detail.reason)}. The overall score has a safeguard for missing academic relevance, different grade levels, or incompatible in-person locations. The category scores show the underlying evidence before this limit.</p></div>` : '';
     const modeLabel = detail.studyContext === 'campus' ? 'On-campus study' : detail.studyContext === 'hybrid' ? 'Hybrid study' : 'Online study';
     const root = document.createElement('div');
     root.className='pm-match-overlay';
@@ -102,10 +105,27 @@
       <div class="pm-match-dialog-head"><span class="pm-match-eyebrow">PEERMIGO · MATCH INSIGHTS</span><button class="pm-match-close" type="button" aria-label="Close match breakdown">×</button></div>
       <h2 id="${id}">Why you match</h2>
       <p id="pm-match-subtitle" class="pm-match-subtitle">Your study compatibility with <strong>${html(name)}</strong>.</p>
-      <div class="pm-match-summary"><div><small>YOUR MATCH SCORE</small><strong>${detail.score}%</strong><span>${html(modeLabel)}</span></div><div class="pm-match-summary-copy">Calculated from both student profiles. See how each factor is weighted in your score.</div></div>
-      <div class="pm-match-factors">${factorRows}</div>
+      <div class="pm-match-summary"><div><small>OVERALL MATCH</small><strong>${detail.score}%</strong><span>${html(modeLabel)}</span></div><div class="pm-match-summary-copy">Your overall score combines <strong>70% academic match</strong> and <strong>30% study compatibility</strong>. Review each category below to understand your score.</div></div>
+      <div class="pm-match-pillars" aria-label="Two categories of your match score">
+        <div class="pm-match-pillar pm-match-pillar-academic">
+          <div class="pm-match-pillar-top"><span>ACADEMIC MATCH</span><span>70% of overall</span></div>
+          <strong>${detail.academicScore}%</strong>
+          <div class="pm-match-meter" role="progressbar" aria-label="Academic match ${detail.academicScore}%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${detail.academicScore}"><span style="width:${clamp(detail.academicScore)}%"></span></div>
+          <small>Subjects / modules and course</small>
+        </div>
+        <div class="pm-match-pillar pm-match-pillar-study">
+          <div class="pm-match-pillar-top"><span>STUDY COMPATIBILITY</span><span>30% of overall</span></div>
+          <strong>${detail.studyScore}%</strong>
+          <div class="pm-match-meter" role="progressbar" aria-label="Study compatibility ${detail.studyScore}%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${detail.studyScore}"><span style="width:${clamp(detail.studyScore)}%"></span></div>
+          <small>Institution, location and preferences</small>
+        </div>
+      </div>
+      <div class="pm-match-section-heading"><h3>Academic Match</h3><span>70 points maximum</span></div>
+      <div class="pm-match-factors">${academicRows}</div>
+      <div class="pm-match-section-heading"><h3>Study Compatibility</h3><span>30 points maximum</span></div>
+      <div class="pm-match-factors">${studyRows}</div>
       ${caveat}
-      <p class="pm-match-disclaimer">Scores estimate academic fit and study logistics—not probabilities or guarantees. Partial subject matches are based on name similarity, not confirmation that the material is identical. Course and subject relevance matter most; availability contributes at most 4 points.</p>
+      <p class="pm-match-disclaimer">Percentages reflect reported profile similarities, not probabilities or guarantees. Academic Match is based 80% on subjects/modules and 20% on course; its category contributes 70% overall. Study Compatibility contributes 30% overall. Missing subjects are unknown, not confirmed mismatches. Availability contributes at most 4 overall points.</p>
       <div class="pm-match-footer"><button class="pm-match-done" type="button">Got it</button></div>
     </section>`;
     root.addEventListener('click', e => { if(e.target === root || e.target.closest('.pm-match-close,.pm-match-done')) close(); });
