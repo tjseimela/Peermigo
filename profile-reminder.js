@@ -28,7 +28,7 @@
   if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
  }
  function makeDialog(status){
-  if(overlay||status.complete)return;
+  if(overlay||status.complete||PM.Onboarding?.checking||PM.Onboarding?.active)return;
   const key=userKey();
   const last=Number(safeStorage('local','get',key))||0;
   if(last&&now()-last<snoozeMs)return;

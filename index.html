@@ -31,6 +31,7 @@
 <script defer src="pm-dialogs.js"></script>
 <link rel="stylesheet" href="peermigo-refined.css"/>
 <link rel="stylesheet" href="peermigo-selects.css">
+<link rel="stylesheet" href="first-time-onboarding.css">
 </head>
 <body>
 <header class="site-header">
@@ -94,6 +95,22 @@
 <section class="member-home" id="memberHome" hidden aria-label="Student dashboard">
   <div class="container member-home-shell">
     <div class="member-topline"><span><span class="member-green-dot"></span> YOUR STUDENT SPACE</span><a href="student.html" class="member-profile-link">My profile <span aria-hidden="true">↗</span></a></div>
+    <section class="pm-onb-panel" id="pmOnboardingPanel" aria-label="Getting started with Peermigo" hidden>
+      <div class="pm-onb-panel-top">
+        <span class="pm-onb-mini-icon" aria-hidden="true">✦</span>
+        <div class="pm-onb-panel-heading"><span class="pm-onb-eyebrow">YOUR FIRST STEPS</span><h2>Make your first study connection.</h2><p>Explore your community at your own pace. Your progress is saved.</p></div>
+        <div class="pm-onb-panel-progress"><strong id="pmOnboardingCount">1 of 4</strong><span>steps complete</span></div>
+        <button id="pmOnboardingHide" class="pm-onb-hide" type="button" aria-label="Dismiss getting started guide" title="Dismiss this guide">×</button>
+      </div>
+      <div class="pm-onb-progress-track" aria-hidden="true"><span id="pmOnboardingBar"></span></div>
+      <div class="pm-onb-quicksteps">
+        <div class="pm-onb-quickstep is-done"><span class="pm-onb-step-icon">✓</span><span><strong>Academic profile created</strong><small>You're ready to explore</small></span></div>
+        <a class="pm-onb-quickstep" id="pmOnboardingStepPeers" href="matches.html"><span class="pm-onb-step-icon">1</span><span><strong>Discover your peers</strong><small>Explore students and compatible subjects</small></span><span class="pm-onb-go" aria-hidden="true">↗</span></a>
+        <a class="pm-onb-quickstep" id="pmOnboardingStepConnect" href="matches.html"><span class="pm-onb-step-icon">2</span><span><strong>Make a connection</strong><small>Send a request when someone looks like a fit</small></span><span class="pm-onb-go" aria-hidden="true">↗</span></a>
+        <a class="pm-onb-quickstep" id="pmOnboardingStepNotes" href="notes.html"><span class="pm-onb-step-icon">3</span><span><strong>Explore Notes Feed</strong><small>Learn something useful or share a note</small></span><span class="pm-onb-go" aria-hidden="true">↗</span></a>
+      </div>
+      <div class="pm-onb-panel-foot"><span>Not finding a relevant student yet? That's okay — start with Notes Feed while the community grows.</span><button id="pmOnboardingDismiss" type="button">Hide guide</button></div>
+    </section>
     <div class="member-hero-grid">
       <div class="member-hero-copy"><span class="member-greeting">✦ YOUR PEOPLE. YOUR PACE.</span><h1>Welcome back,<br/><span id="memberFirstName">student</span><span class="member-period">.</span></h1><p id="memberDescription">Your study circle, messages, notes and upcoming sessions are all just a click away.</p><div class="member-hero-actions"><a href="search.html" class="btn member-btn-main" aria-label="Search students and study groups">Search community <span aria-hidden="true">→</span></a><a href="notes.html#notesForm" class="btn member-btn-quiet">Write a note <span aria-hidden="true">↗</span></a></div><div class="member-institution"><span>⌂</span><span id="memberInstitution">Your student community</span></div></div>
       <div class="member-hero-card"><div class="member-hero-card-top"><span>YOUR COMMUNITY</span><span class="member-sparkle">✦</span></div><h2>Good things happen<br/>when we <em>connect.</em></h2><p>Find the right people, learn together and make every study session count.</p><div class="member-hero-graphic"><span class="member-orb member-orb-one">✦</span><span class="member-orb member-orb-two">♧</span><span class="member-orb member-orb-three">⌁</span><span class="member-orb member-orb-four">↗</span></div><div class="member-hero-card-foot">YOUR NEXT STUDY SESSION STARTS HERE <span>→</span></div></div>
@@ -106,6 +123,22 @@
     <div class="member-home-bottom"><div><span class="social-eyebrow">A LITTLE PROGRESS EVERY DAY</span><h3>Make this study day count.</h3><p>Browse your study circle, check your inbox, or take a moment to share something useful.</p></div><a class="btn btn-primary" href="matches.html">Find a study partner →</a></div>
   </div>
 </section>
+  <div class="pm-onb-backdrop" id="pmOnboardingModal" hidden>
+    <section class="pm-onb-modal" role="dialog" aria-modal="true" aria-labelledby="pmOnboardingTitle" aria-describedby="pmOnboardingIntro" tabindex="-1">
+      <div class="pm-onb-modal-top"><span class="pm-onb-logo" aria-hidden="true">✦</span><span class="pm-onb-badge">YOUR FIRST VISIT</span><button id="pmOnboardingClose" class="pm-onb-modal-x" type="button" aria-label="Close welcome guide">×</button></div>
+      <div class="pm-onb-modal-content"><span class="pm-onb-eyebrow">LET'S GET YOU CONNECTED</span>
+        <h2 id="pmOnboardingTitle">Welcome to Peermigo, <span id="pmOnboardingName">student</span><span class="pm-onb-orange">.</span></h2>
+        <p id="pmOnboardingIntro">Your study space is ready. Here's a simple way to get started — no pressure, no complicated setup.</p>
+        <div class="pm-onb-modal-steps"><div class="pm-onb-modal-step is-done"><span class="pm-onb-modal-circle">✓</span><div><strong>Your academic profile</strong><small>Created during registration</small></div><span class="pm-onb-ready">Ready</span></div>
+        <div class="pm-onb-modal-step"><span class="pm-onb-modal-circle">01</span><div><strong>Discover students</strong><small>Find peers studying similar subjects and courses</small></div></div>
+        <div class="pm-onb-modal-step"><span class="pm-onb-modal-circle">02</span><div><strong>Connect with someone</strong><small>Send your first connection request</small></div></div>
+        <div class="pm-onb-modal-step"><span class="pm-onb-modal-circle">03</span><div><strong>Explore Notes Feed</strong><small>Discover useful study ideas, even while your community grows</small></div></div></div>
+        <div class="pm-onb-gentle-note"><span aria-hidden="true">✧</span><span>There may not be many peers yet. You can still explore notes and invite classmates to join you.</span></div>
+        <div class="pm-onb-modal-buttons"><a href="matches.html" id="pmOnboardingGoPeers" class="pm-onb-primary">Find my peers <span aria-hidden="true">→</span></a><a href="notes.html" class="pm-onb-secondary" id="pmOnboardingGoNotes">Explore Notes Feed</a></div>
+        <button id="pmOnboardingLater" type="button" class="pm-onb-later">Maybe later — take me to the dashboard</button>
+      </div>
+    </section>
+  </div>
 </main>
 <footer class="site-footer">
   <div class="container footer-upper">
@@ -125,6 +158,6 @@
   </div>
 </footer>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer src="profile-reminder.js"></script><script defer src="peermigo-selects.js"></script>
+<script defer="" src="config.js"></script><script defer="" src="data.js"></script><script defer="" src="matching.js"></script><script defer="" src="api.js"></script><script defer="" src="features-api.js"></script><script defer="" src="icons.js"></script><script defer="" src="avatar-crop.js"></script><script defer="" src="features.js"></script><script defer src="saved.js"></script><script defer="" src="app.js"></script><script defer="" src="mobile-dock.js"></script><script defer src="first-time-onboarding.js"></script><script defer src="profile-reminder.js"></script><script defer src="peermigo-selects.js"></script>
 </body>
 </html>
