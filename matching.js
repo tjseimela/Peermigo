@@ -1,4 +1,4 @@
-/* Peermigo matching v3. Transparent academic-fit and meeting-feasibility heuristic.
+/* Peermigo matching v3.1. Transparent academic-fit and meeting-feasibility heuristic.
  * We never infer protected traits; score is not a probability.
  * On-campus recommendations require the same institution and confirmed campus.
  * Academic relevance always matters; availability has minimal influence.
@@ -19,7 +19,10 @@ window.PM = window.PM || {};
  const aliasText = raw => clean(raw)
    .replace(/\bweb dev\b/g,'web development')
    .replace(/\bsoftware dev\b/g,'software development')
-   .replace(/\bmaths\b/g,'mathematics')
+   .replace(/\b(?:maths|math|mathematics)\s+lit(?:eracy)?\b/g,'mathematical literacy')
+   .replace(/\bmathematics literacy\b/g,'mathematical literacy')
+   .replace(/\b(?:maths|math)\b/g,'mathematics')
+   .replace(/\bit\b/g,'information technology')
    .replace(/\bprograming\b/g,'programming')
    .replace(/\binfo tech\b/g,'information technology')
    .replace(/\bict\b/g,'information communication technology')
@@ -44,34 +47,71 @@ window.PM = window.PM || {};
    .replace(/\s+/g,' ').trim();
  const asModules = value => Array.isArray(value)?value:typeof value==='string'?value.split(/[,;\n]+/):[];
  const topics = value => unique(asModules(value).map(subjectKey).filter(s=>s.length>1));
- const levels = key => [...key.matchAll(/\b\d+[a-z]?\b/g)].map(m=>m[0]).sort().join(' ');
+ const labeledTopics = value => {
+  const seen=new Set();
+  return asModules(value).map(v=>({key:subjectKey(v),raw:String(v??'').trim()}))
+   .filter(item=>{if(item.key.length<=1||seen.has(item.key))return false;seen.add(item.key);return true;});
+ };
+ // Preserve meaningful module numbering (3.2 -> [3,2]) separately from
+ // the subject title. A missing level is not an exact course match.
+ const parseSubject = key => {
+  const s=subjectKey(key);
+  const match=s.match(/(?:^|\s)(?:(?:level|lvl|semester|sem|part|year|unit|grade)\s+)?(\d+[a-z]?(?:\s+\d+[a-z]?)?)$/);
+  const title=(match?s.slice(0,match.index):s).trim();
+  const level=match?match[1].split(/\s+/).filter(Boolean):[];
+  return {title,level};
+ };
  const minorWords = new Set(['of','and','the','to','in','for','a','an','introduction','fundamentals','basic','basics']);
  const significant = key => unique(key.split(' ').filter(x=>x.length>1&&!minorWords.has(x)));
+ const sameLevel = (a,b) => a.length===b.length && a.every((v,i)=>v===b[i]);
+ const levelFactor = (a,b) => {
+  if(sameLevel(a,b))return {factor:1,kind:'exact'};
+  if(!a.length||!b.length)return {factor:0.68,kind:'missing-level'};
+  // Same year/major but unknown minor level ("Web Development 3" vs "3.2").
+  if(a[0]===b[0]&&a.length!==b.length&&a.slice(0,Math.min(a.length,b.length))
+    .every((v,i)=>v===b[i]))return {factor:0.62,kind:'missing-level'};
+  // Different parts in the same year may cover related material but are NOT equal.
+  if(a.length>1&&b.length>1&&a[0]===b[0]&&a[1]!==b[1])return {factor:0.26,kind:'different-part'};
+  // Programming 1 and Programming 2, or 2.2 vs 3.2, should not count.
+  return {factor:0,kind:'different-level'};
+ };
  const subjectSimilarity = (a,b) => {
-  if(a===b)return 1;
-  // Never equate Programming 1 and Programming 2.
-  if(levels(a)!==levels(b))return 0;
-  const ta=significant(a),tb=significant(b);
-  if(!ta.length||!tb.length)return 0;
-  const shared=ta.filter(t=>tb.includes(t)).length;
-  const similarity=shared/Math.max(ta.length,tb.length);
-  // Exact topic wording with a redundant qualifier can be a strong match.
-  return similarity>=0.8 && shared>=2 ? similarity*0.9 : 0;
+  const pa=parseSubject(a),pb=parseSubject(b);
+  if(!pa.title||!pb.title)return {similarity:0,kind:'unrelated'};
+  const levels=levelFactor(pa.level,pb.level);
+  if(!levels.factor)return {similarity:0,kind:levels.kind};
+  let titleScore=0;
+  if(pa.title===pb.title){titleScore=1;}
+  else{
+   const ta=significant(pa.title),tb=significant(pb.title);
+   const shared=ta.filter(t=>tb.includes(t)).length;
+   const ratio=shared/Math.max(ta.length,tb.length,1);
+   const subset=shared===Math.min(ta.length,tb.length);
+   // Two distinctive words must overlap; do not infer similarity from a generic
+   // term ("Science", "Systems", "Management", etc.) alone.
+   if(shared>=2&&ratio>=0.8)titleScore=0.9*ratio;
+   else if(shared>=2&&subset&&ratio>=0.6)titleScore=0.7*ratio;
+  }
+  const similarity=Number((titleScore*levels.factor).toFixed(4));
+  const kind=levels.kind==='different-part'?'different-part':
+    levels.kind==='missing-level'?'missing-level':
+    titleScore===1?'exact':'related-title';
+  return {similarity,kind};
  };
  const sharedTopics = (a,b) => {
-  const aa=topics(a),bb=topics(b),usedA=new Set(),usedB=new Set(),matches=[];
+  const aa=labeledTopics(a),bb=labeledTopics(b),usedA=new Set(),usedB=new Set(),matches=[];
   const possible=[];
   aa.forEach((x,i)=>bb.forEach((y,j)=>{
-   const similarity=subjectSimilarity(x,y);
-   if(similarity>=0.72)possible.push({x,y,i,j,similarity});
+   const {similarity,kind}=subjectSimilarity(x.key,y.key);
+   if(similarity>=0.2)possible.push({x,y,i,j,similarity,kind});
   }));
-  // Best one-to-one matches first: prevents repeated or near-duplicate module
-  // names artificially inflating scores and keeps the measure symmetric.
-  possible.sort((x,y)=>y.similarity-x.similarity||x.x.localeCompare(y.x)||x.y.localeCompare(y.y));
+  // One-to-one weighted matching prevents duplicates from inflating the score.
+  // Sort by quality first; a name cannot be reused for a second module.
+  possible.sort((x,y)=>y.similarity-x.similarity||x.x.key.localeCompare(y.x.key)||x.y.key.localeCompare(y.y.key));
   for(const option of possible){
    if(usedA.has(option.i)||usedB.has(option.j))continue;
    usedA.add(option.i);usedB.add(option.j);
-   matches.push({topic:option.x,peerTopic:option.y,similarity:option.similarity});
+   matches.push({topic:option.x.raw,peerTopic:option.y.raw,similarity:option.similarity,kind:option.kind});
   }
   const overlap=matches.reduce((total,m)=>total+m.similarity,0);
   const ratio=aa.length&&bb.length?2*overlap/(aa.length+bb.length):0;
@@ -148,7 +188,10 @@ window.PM = window.PM || {};
   if(context==='campus'&&!locationVerified)score=Math.min(score,44);
   const subjectsCount=subjects.matches.length;
   const signals=[];
-  if(subjectsCount)signals.push(`${subjectsCount} shared subject${subjectsCount===1?'':'s'}`);
+  const exactCount=subjects.matches.filter(m=>m.kind==='exact'&&m.similarity===1).length;
+  const relatedCount=subjectsCount-exactCount;
+  if(exactCount)signals.push(`${exactCount} shared subject${exactCount===1?'':'s'}`);
+  if(relatedCount)signals.push(`${relatedCount} similar subject${relatedCount===1?'':'s'}`);
   if(course)signals.push(course===1?'Same course':'Related course');
   if(sameCampus)signals.push('Same campus');
   else if(sameInstitution)signals.push('Same institution');
@@ -161,7 +204,9 @@ window.PM = window.PM || {};
   const reason=!academic?'No shared course or subjects':context==='campus'&&!locationVerified
     ?(sameInstitution?'Different or unconfirmed campuses':'Different institutions for on-campus study')
     :signals.slice(0,3).join(' · ')||'Limited shared details';
-  return {score,eligible,showScore,reason,sharedModules:subjects.matches.map(m=>m.topic),
+  return {score,eligible,showScore,reason,
+    sharedModules:subjects.matches.filter(m=>m.kind==='exact'&&m.similarity===1).map(m=>m.topic),
+    moduleMatches:subjects.matches,
     signals,parts,formatCompatible:true,studyContext:context,locationVerified};
  };
  PM.scoreStudentMatch=(peer,me)=>PM.matchDetails(peer,me).score;
@@ -169,7 +214,7 @@ window.PM = window.PM || {};
   const match=PM.matchDetails(peer,me);
   return match.showScore?match.score:0;
  };
- PM.MatchingV3={version:'3.0.0',weights:WEIGHTS,subjectKey,courseKey,sharedTopics,contextFor};
+ PM.MatchingV3={version:'3.1.0',weights:WEIGHTS,subjectKey,courseKey,sharedTopics,contextFor};
  // Compatibility alias for existing directory filters and third-party widgets.
  PM.MatchingV2=PM.MatchingV3;
 })();

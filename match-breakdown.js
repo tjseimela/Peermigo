@@ -1,12 +1,12 @@
 /* Peermigo: transparent score explanation for the Find Peers cards.
- * Uses PM.matchDetails and the existing v3 weights, without changing ranking.
+ * Uses PM.matchDetails and the existing v3 weights; explanations distinguish full and partial matches.
  */
 (() => {
   'use strict';
   const html = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clamp = value => Math.max(0, Math.min(100, value));
   const labels = {
-    modules: 'Shared subjects / modules', course: 'Course similarity',
+    modules: 'Shared / related subjects and modules', course: 'Course similarity',
     institution: 'Same institution', campus: 'Campus compatibility',
     format: 'Preferred study format', availability: 'Compatible availability'
   };
@@ -14,12 +14,24 @@
   let previousFocus = null;
   let originalOverflow = '';
   const id = 'pm-match-breakdown-title';
+  const describeModule = m => {
+    switch(m.kind){
+      case 'exact': return 'Same or equivalent name · full name credit';
+      case 'missing-level': return 'Level / part not fully specified · partial credit';
+      case 'different-part': return 'Different parts at the same level · low partial credit';
+      default: return 'Similar title, not confirmed identical · partial credit';
+    }
+  };
   const display = value => Number(value).toLocaleString('en-ZA', { maximumFractionDigits: 1 });
   const relevant = (detail, profile, mine, key) => {
     switch (key) {
-      case 'modules': return detail.sharedModules?.length
-        ? `${detail.sharedModules.length} shared subject${detail.sharedModules.length === 1 ? '' : 's'}: ${detail.sharedModules.slice(0,3).map(topic => window.PM.formatStudyText?.(topic) || topic).join(', ')}${detail.sharedModules.length > 3 ? ' and more' : ''}.`
-        : 'No confidently matching subjects or modules were identified.';
+      case 'modules': {
+        const matches=detail.moduleMatches || [];
+        if (!matches.length) return 'No matching or closely related subject names were identified.';
+        const exact=matches.filter(m=>m.kind==='exact'&&m.similarity===1).length;
+        const partial=matches.length-exact;
+        return `${exact} exact/equivalent and ${partial} partial subject name match${matches.length===1?'':'es'}. Points reflect how many modules both students listed and how closely their names match.`;
+      }
       case 'course': return detail.parts.course > 0
         ? `Your courses or grades are ${detail.parts.course >= (window.PM.MatchingV3.weights[detail.studyContext].course - .001) ? 'the same' : 'closely related'}.`
         : 'Different courses or insufficient information to compare them.';
@@ -65,10 +77,18 @@
     const factorRows = Object.keys(labels).filter(key => weights[key] > 0).map(key => {
       const max = weights[key], points = Math.min(max,Math.max(0,detail.parts[key] || 0));
       const percent = clamp(Math.round(points / max * 100));
+      const pairs=key==='modules' && detail.moduleMatches?.length
+        ? `<div class="pm-module-comparisons" aria-label="Matching subject names">${detail.moduleMatches.slice(0,4).map(m=>{
+            const left=PM.formatStudyText?.(m.topic) || m.topic;
+            const right=PM.formatStudyText?.(m.peerTopic) || m.peerTopic;
+            const both=String(left).toLocaleLowerCase()===String(right).toLocaleLowerCase();
+            return `<div class="pm-module-pair"><div class="pm-module-names"><span>${html(left)}</span>${both?'':`<span class="pm-module-arrow" aria-hidden="true">↔</span><span>${html(right)}</span>`}</div><span class="pm-module-kind ${m.kind==='exact'?'is-exact':'is-partial'}">${html(describeModule(m))}</span></div>`;
+          }).join('')}${detail.moduleMatches.length>4?`<small>+ ${detail.moduleMatches.length-4} more compared</small>`:''}</div>` : '';
       return `<div class="pm-match-factor">
         <div class="pm-match-factor-head"><strong>${html(labels[key])}</strong><span>${html(display(points))} <small>/ ${html(display(max))} pts</small></span></div>
         <div class="pm-match-meter" role="progressbar" aria-label="${html(labels[key])}: ${html(display(points))} of ${html(display(max))} points" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${points}"><span style="width:${percent}%"></span></div>
         <p>${html(relevant(detail, profile, mine, key))}</p>
+        ${pairs}
       </div>`;
     }).join('');
     const total = Math.round(Object.values(detail.parts).reduce((sum,v) => sum + (Number(v) || 0),0));
@@ -85,7 +105,7 @@
       <div class="pm-match-summary"><div><small>YOUR MATCH SCORE</small><strong>${detail.score}%</strong><span>${html(modeLabel)}</span></div><div class="pm-match-summary-copy">Calculated from both student profiles. See how each factor is weighted in your score.</div></div>
       <div class="pm-match-factors">${factorRows}</div>
       ${caveat}
-      <p class="pm-match-disclaimer">Scores are estimates of academic fit and study logistics, not probabilities or guarantees. Shared subjects and courses carry most of the weight. Availability contributes at most 4 points.</p>
+      <p class="pm-match-disclaimer">Scores estimate academic fit and study logistics—not probabilities or guarantees. Partial subject matches are based on name similarity, not confirmation that the material is identical. Course and subject relevance matter most; availability contributes at most 4 points.</p>
       <div class="pm-match-footer"><button class="pm-match-done" type="button">Got it</button></div>
     </section>`;
     root.addEventListener('click', e => { if(e.target === root || e.target.closest('.pm-match-close,.pm-match-done')) close(); });

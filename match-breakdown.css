@@ -46,3 +46,14 @@ html[data-theme='dark'] .pm-match-cap strong,html[data-theme='dark'] .pm-match-c
 @media(max-width:600px){.pm-match-overlay{padding:0;align-items:flex-end}.pm-match-dialog{border-radius:24px 24px 0 0;width:100%;padding:22px 21px max(25px,env(safe-area-inset-bottom));max-height:90dvh;animation:pm-match-mobile .2s ease-out}@keyframes pm-match-mobile{from{opacity:.5;transform:translateY(35px)}to{opacity:1;transform:translateY(0)}}}
 @media(max-width:360px){.pm-match-summary{grid-template-columns:1fr;gap:9px}.pm-match-summary-copy{border-left:0;padding:0;border-top:1px solid #d8d1f2;padding-top:9px}}
 @media(prefers-reduced-motion:reduce){.pm-match-dialog,.directory-card button.directory-status.match-score{animation:none;transition:none}}
+
+/* Explain exactly which entered subjects earned full or partial module credit. */
+.pm-module-comparisons{display:grid;gap:7px;margin-top:10px}
+.pm-module-pair{border:1px solid var(--pm-match-edge);border-radius:11px;padding:9px 11px;background:rgba(100,85,220,.035)}
+.pm-module-names{display:flex;flex-wrap:wrap;gap:5px 8px;align-items:center;font-size:12px;font-weight:700;line-height:1.4;color:var(--pm-match-ink);overflow-wrap:anywhere}
+.pm-module-arrow{color:#7566d4;font-weight:800}
+.pm-module-kind{font-size:10px;display:inline-block;margin-top:4px;line-height:1.45;color:#876022;font-weight:600}
+.pm-module-kind.is-exact{color:#248063}
+html[data-theme='dark'] .pm-module-pair{background:rgba(160,145,240,.09)}
+html[data-theme='dark'] .pm-module-kind{color:#f1d69e}
+html[data-theme='dark'] .pm-module-kind.is-exact{color:#8cdec6}

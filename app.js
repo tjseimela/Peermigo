@@ -571,17 +571,24 @@
   const availability=timeLabels[p.availability]||'Not set';
   const matchKnown=complete&&scoreDetails.showScore;
   const matchTier=score>=75?'match-high':score>=50?'match-mid':'match-low';
+  // Full self-reported learning subjects stay behind the expandable card.
+  // The compact summary only displays a personalised support match when relevant.
+  const confidentModules=Array.isArray(p.confident_modules)?p.confident_modules.filter(Boolean):[];
+  const helpModules=Array.isArray(p.help_modules)?p.help_modules.filter(Boolean):[];
+  const learningDetails=(label,items,kind)=>items.length?`<div class="pm-card-learning-detail is-${kind}"><p class="directory-field-label">${label}</p><div class="pm-card-learning-tags">${items.map(x=>`<span>${esc(PM.formatStudyText(x))}</span>`).join('')}</div></div>`:'';
+  const learningExpanded=confidentModules.length||helpModules.length?`<div class="pm-card-learning-expanded" aria-label="Learning strengths and help needs">${learningDetails('Confident in / can help with',confidentModules,'confident')}${learningDetails('Needs help with',helpModules,'help')}</div>`:'';
   const support=PM.SubjectSupport.support(p,meCache);
   const supportNotice=support.canHelp.length?`<div class="pm-support-badge ${support.mutual?'is-mutual':''}">${support.mutual?'↔ Mutual learning':'✓ Can help you with'}: ${esc(support.canHelp.slice(0,2).map(PM.formatStudyText).join(', '))}${support.canHelp.length>2?' +more':''}</div>`:'';
   const relation=db.connectionWith(connectionRows,p.id);
   const connection=PM.connectionAction(relation,db.identity());
-  return `<article class="peer-card peer-card-v2 directory-card">
+  return `<article class="peer-card peer-card-v2 directory-card${supportNotice?' has-support-match':''}">
    <div class="peer-card-top"><a href="student.html?id=${encodeURIComponent(p.id)}" class="directory-avatar-link" aria-label="View ${esc(name)} profile">${PM.ui.avatar(name,p.avatar_path,'card-avatar')}</a>${matchKnown?`<button type="button" class="directory-status match-score ${matchTier}" data-match-breakdown="${esc(p.id)}" aria-label="${score}% match with ${esc(name)}. View score breakdown" title="View why you match with ${esc(name)}"><span class="match-number">${score}%</span><span class="match-label">match</span></button>`:`<span class="directory-status ${complete?'is-complete':'is-new'}">${complete?'Student profile':'New to Peermigo'}</span>`}</div>
    <div class="directory-main"><h3><a class="profile-name-link" href="student.html?id=${encodeURIComponent(p.id)}">${esc(name)}</a>${p.is_verified?`<span class="verified-label" title="Institution reviewed by administrator">${PM.icon('shield')} Verified</span>`:''}</h3></div>
    <div class="directory-desktop-summary" aria-label="Student summary">
      <p class="directory-desktop-summary-line"><span>${esc(PM.formatStudyText(p.course)||'Course not listed')}</span><span class="directory-summary-dot" aria-hidden="true"> · </span><span class="directory-summary-institution">${esc(PM.formatStudyText(p.institution)||'Institution not listed')}</span></p>
      <p class="directory-desktop-bio">${esc(String(p.about||'').trim()||'No introduction added yet.')}</p>
    </div>
+   ${supportNotice}
    <div class="directory-expandable" id="peer-details-${esc(p.id)}"><div class="directory-detail-grid">
      <div class="directory-detail"><p class="directory-field-label">${courseLabel}</p><p class="directory-detail-value${!p.course?' is-empty':''}">${esc(PM.formatStudyText(p.course)||'Not added yet')}</p></div>
      <div class="directory-detail"><p class="directory-field-label">Institution</p><p class="directory-detail-value directory-institution${!p.institution?' is-empty':''}">${esc(PM.formatStudyText(p.institution)||'Not added yet')}</p></div>
@@ -591,7 +598,7 @@
      <p class="directory-field-label">${subjectLabel}</p>
      ${(p.modules||[]).length?`<div class="directory-topics">${(p.modules||[]).slice(0,3).map(x=>`<span>${esc(PM.formatStudyText(x))}</span>`).join('')}${(p.modules||[]).length>3?`<span>+${p.modules.length-3} more</span>`:''}</div>`:'<p class="directory-subjects-empty">Not added yet</p>'}
    </div>
-   ${supportNotice}
+   ${learningExpanded}
    <div class="directory-preferences">
      <div class="directory-preference"><p class="directory-field-label">Study format</p><span class="directory-pref-value${!formatLabels[p.study_method]?' is-empty':''}">${esc(studyFormat)}</span></div>
      <div class="directory-preference"><p class="directory-field-label">Availability</p><span class="directory-pref-value${!timeLabels[p.availability]?' is-empty':''}">${esc(availability)}</span></div>

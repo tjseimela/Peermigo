@@ -1,0 +1,54 @@
+// Academic module variants: synonyms, levels, safety bounds and no duplication.
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const PM={};const env={window:{PM},PM,console};vm.createContext(env);
+for(const f of ['data.js','matching.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),env,{filename:f});
+const pair=(a,b)=>PM.MatchingV3.sharedTopics([a],[b]);
+const single=(a,b)=>pair(a,b).matches[0];
+const equal=(a,b)=>{const match=single(a,b);assert.ok(match,`${a} should match ${b}`);assert.equal(match.similarity,1);assert.equal(match.kind,'exact');};
+const partial=(a,b,k)=>{const match=single(a,b);assert.ok(match,`${a} should partially match ${b}`);assert.ok(match.similarity>0&&match.similarity<1,JSON.stringify(match));assert.equal(match.kind,k);};
+const none=(a,b)=>assert.equal(pair(a,b).matches.length,0,`${a} should NOT match ${b}`);
+equal('Maths','Mathematics');equal('Math','MATHEMATICS');equal('Web Dev 3.2','Web Development 3.2');equal('Mathematical Literacy','Maths Literacy');equal('IT','Information Technology');
+partial('Web Development 3.2','Web Development','missing-level');
+partial('Web Development 3','Web Development 3.2','missing-level');
+partial('Web Development 3.1','Web Development 3.2','different-part');
+partial('Web Development','Mobile Web Development','related-title');
+none('Web Development 3.2','Web Development 2.2');
+none('Programming 1','Programming 2');
+none('Maths Literacy','Mathematics');
+none('Computer Science','Data Science');
+none('Software Testing','Software Development');
+none('Business Management','Project Management');
+none('Web Development','Database Systems');
+none('English','Engineering');
+const m1=pair('Web Development 3.2','Web Development');
+const m2=pair('Web Development','Web Development 3.2');
+assert.equal(m1.score,m2.score,'symmetrical pair score');
+const multi=PM.MatchingV3.sharedTopics(['Web Development 3.2','Maths','Database Systems'],['Web Development','Mathematics','Physics']);
+assert.equal(multi.matches.length,2);
+assert.equal(multi.matches.find(m=>m.kind==='missing-level').similarity,.68);
+assert.equal(multi.matches.find(m=>m.topic==='Maths').similarity,1);
+const noDuplicates=PM.MatchingV3.sharedTopics(['Web Dev 3.2','Web Development 3.2'],['Web Development 3.2']);
+assert.equal(noDuplicates.matches.length,1);
+const original={id:'a',full_name:'Student Example',institution_type:'university',institution:'VUT',campus:'Vanderbijlpark Campus',course:'Diploma in IT',modules:['Web Development 3.2'],study_method:'campus',availability:'evenings'};
+const peer=(id,modules)=>({...original,id,modules,full_name:'Another Example'});
+const exact=PM.matchDetails(peer('b',['Web Development 3.2']),original);
+const approximate=PM.matchDetails(peer('b',['Web Development']),original);
+const related=PM.matchDetails(peer('b',['Web Development 3.1']),original);
+const unrelated=PM.matchDetails(peer('b',['Chemistry']),original);
+assert.ok(exact.parts.modules>approximate.parts.modules && approximate.parts.modules>related.parts.modules);
+assert.equal(unrelated.parts.modules,0);
+assert.ok(approximate.parts.modules>0,'partially matching titles contribute points');
+assert.equal(approximate.sharedModules.length,0,'partial matches must not masquerade as exact');
+assert.equal(approximate.moduleMatches[0].kind,'missing-level');
+assert.equal(exact.moduleMatches[0].kind,'exact');
+for(const a of [original,peer('b',['Web Development']),peer('b',['Web Development 3.1'])])for(const b of [original,peer('c',['Maths'])]){
+ const x=PM.matchDetails(a,b),y=PM.matchDetails(b,a);
+ if(a.id!==b.id){assert.equal(x.score,y.score);assert.ok(x.score>=0&&x.score<=100);}
+}
+assert.equal(Object.values(PM.MatchingV3.weights.campus).reduce((a,b)=>a+b,0),100);
+assert.equal(PM.MatchingV3.weights.campus.modules,36);
+assert.equal(PM.MatchingV3.version,'3.1.0');
+console.log('PASS: Smart module matching handles aliases and levels, rejects false matches, and preserves score constraints');

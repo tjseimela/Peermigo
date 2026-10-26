@@ -29,3 +29,24 @@ html[data-theme=dark] .pm-learning-chip.confident.is-selected{background:#17543d
 html[data-theme=dark] .pm-learning-chip.help.is-selected{background:#173d60;border-color:#699fdb;color:#d9eeff}
 html[data-theme=dark] .pm-support-badge{background:#15513b;color:#bdf4d5}
 html[data-theme=dark] .pm-support-badge.is-mutual{background:#24466a;color:#d7e9ff}
+
+/* Compact student cards show an academic-support badge only when relevant to the viewer.
+   Full self-reported strengths/needs remain inside the expanded details. */
+.directory-card > .pm-support-badge{align-self:flex-start;margin:2px 0 14px;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.directory-card .pm-card-learning-expanded{display:grid;gap:12px;padding:13px 0 14px;margin:0 0 12px;border-top:1px solid #edf0f7}
+.directory-card .pm-card-learning-detail{min-width:0}
+.directory-card .pm-card-learning-tags{display:flex;gap:6px;flex-wrap:wrap}
+.directory-card .pm-card-learning-tags span{display:inline-flex;max-width:100%;padding:6px 9px;border-radius:8px;font-size:10px;font-weight:650;line-height:1.4;overflow-wrap:anywhere;background:#def7eb;color:#0b6b4a}
+.directory-card .pm-card-learning-detail.is-help .pm-card-learning-tags span{background:#e7f1ff;color:#215fa6}
+html[data-theme=dark] .directory-card .pm-card-learning-expanded{border-color:#3d4b65}
+html[data-theme=dark] .directory-card .pm-card-learning-tags span{background:#17543d;color:#c6ffe3}
+html[data-theme=dark] .directory-card .pm-card-learning-detail.is-help .pm-card-learning-tags span{background:#173d60;color:#d9eeff}
+@media(max-width:720px){
+  .directory-card.has-support-match > .pm-support-badge{grid-column:1/-1;grid-row:2;justify-self:start;align-self:start;margin:10px 0 0;max-width:100%}
+  .directory-card.has-support-match .peer-card-actions{grid-row:3}
+  .directory-card.has-support-match .directory-expandable{grid-row:4}
+}
+@media(max-width:720px){
+  /* Preserve the name / match badge grid when names are long. */
+  .directory-card .directory-main h3 .profile-name-link{display:block;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+}
