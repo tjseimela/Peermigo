@@ -8,7 +8,7 @@
  const allowed=new Set(['discovered_peers_at','opened_notes_at','connected_at']);
  const now=()=>new Date().toISOString();
  let owner=null, state=null, busy=false, focusBefore=null, latest=0;
- const guide={checking:false,active:false};
+ const guide={checking:false,active:false,justWelcomed:false};
  PM.Onboarding=guide;
  const hasAll=s=>Boolean(s?.discovered_peers_at&&s?.opened_notes_at&&s?.connected_at);
  const stepsDone=s=>1+['discovered_peers_at','opened_notes_at','connected_at'].filter(k=>s?.[k]).length;
@@ -133,12 +133,19 @@
      if(request!==latest||!db.user||owner!==db.identity())return;
      await saveField('welcome_seen_at');
      const name=(me?.given_names||me?.full_name||'student').trim().split(/\s+/)[0];
+     guide.justWelcomed=true;
+     window.dispatchEvent(new Event('pm-onboarding-opened'));
      showDialog(name);
     }
     paint();
    }
   }catch(error){console.warn('Peermigo getting-started unavailable:',error.message);}
-  finally{if(request===latest)guide.checking=false;}
+  finally{
+   if(request===latest){
+    guide.checking=false;
+    if(route==='index.html'&&db.user)window.dispatchEvent(new Event('pm-onboarding-finished'));
+   }
+  }
  }
  // Track a real request only after the backend confirms a successful write.
  if(typeof db.sendConnectionRequest==='function'){
@@ -152,6 +159,6 @@
  events();
  window.addEventListener('pm-ready',()=>{void begin();});
  window.addEventListener('pm-auth-changed',()=>{
-  if(!db.user){latest++;owner=null;state=null;closeDialog();const panel=$('pmOnboardingPanel');if(panel)panel.hidden=true;guide.checking=false;}
+  if(!db.user){latest++;owner=null;state=null;guide.justWelcomed=false;closeDialog();const panel=$('pmOnboardingPanel');if(panel)panel.hidden=true;guide.checking=false;}
  });
 })();

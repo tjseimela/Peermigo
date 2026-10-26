@@ -4,12 +4,14 @@
  const PM=window.PM;
  const db=PM?.backend;
  const mount=document.getElementById('pmProfileProgress');
+ const isHome=(location.pathname.split('/').pop()||'index.html').toLowerCase()==='index.html';
+ const waitForWelcome=()=>isHome&&Boolean(PM?.Onboarding);
  if(!PM||!db||!mount)return;
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const snoozeDays=7;
  const snoozeMs=snoozeDays*24*60*60*1000;
  const now=()=>Date.now();
- let overlay=null,previousFocus=null;
+ let overlay=null,previousFocus=null,reminderStamped=false;
  const userKey=()=>`pm.profile-reminder.v1.${db.identity()}`;
  const cardKey=()=>`pm.profile-banner-closed.v1.${db.identity()}`;
  const safeStorage=(which,op,key,value)=>{
@@ -21,8 +23,10 @@
   const focusId={photo:'avatarForm',name:'studentName',institution:'institutionName',course:'course',modules:'modules',format:'studyMethod',availability:'availability',about:'about'}[key]||'profileForm';
   return 'profile.html#'+focusId;
  };
- function closeDialog(){
+ function closeDialog(preempted=false){
   if(!overlay)return;
+  if(preempted&&reminderStamped)safeStorage('local','remove',userKey());
+  reminderStamped=false;
   overlay.remove();overlay=null;
   document.body.classList.remove('pm-profile-reminder-open');
   if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
@@ -33,6 +37,7 @@
   const last=Number(safeStorage('local','get',key))||0;
   if(last&&now()-last<snoozeMs)return;
   safeStorage('local','set',key,String(now()));
+  reminderStamped=true;
   previousFocus=document.activeElement;
   overlay=document.createElement('div');
   overlay.className='pm-profile-dialog-backdrop';
@@ -84,8 +89,14 @@
    if(showPopup&&!status.complete)makeDialog(status);
   }catch(error){console.warn('Profile reminder could not check profile:',error.message);}
  }
- window.addEventListener('pm-ready',()=>refresh({showPopup:true}));
+ // On Home, wait for first-time onboarding to decide whether to display a welcome.
+ // The profile prompt can otherwise win the async sign-in race and overlap it.
+ window.addEventListener('pm-ready',()=>refresh({showPopup:!waitForWelcome()}));
+ window.addEventListener('pm-onboarding-finished',()=>{
+  if(isHome)void refresh({showPopup:!PM.Onboarding?.justWelcomed});
+ });
+ window.addEventListener('pm-onboarding-opened',()=>closeDialog(true));
  window.addEventListener('pm-profile-saved',()=>refresh());
  window.addEventListener('pm-profile-photo-changed',()=>refresh());
- window.addEventListener('pm-auth-changed',()=>{if(!db.user){closeDialog();mount.hidden=true;}else refresh({showPopup:true})});
+ window.addEventListener('pm-auth-changed',()=>{if(!db.user){closeDialog();mount.hidden=true;}else refresh({showPopup:!waitForWelcome()})});
 })();
