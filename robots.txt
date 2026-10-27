@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peermigo.co.za/sitemap.xml
