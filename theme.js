@@ -1,27 +1,45 @@
-/* Peermigo theme: apply before paint and persist locally across pages. */
+/* Peermigo appearance: apply before paint and persist across all pages. */
 (() => {
-  const key = 'peer-match-theme';
-  let theme = 'light';
-  try { theme = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch (_) {}
-  const apply = (value) => {
-    theme = value === 'dark' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    const color = document.querySelector('meta[name="theme-color"]');
-    if (color) color.content = theme === 'dark' ? '#11162a' : '#f7f9fc';
-    const button = document.getElementById('themeToggle');
-    if (button) {
-      button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      button.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      button.setAttribute('aria-pressed', String(theme === 'dark'));
-    }
+  const storageKey = 'peer-match-theme';
+  const readSavedTheme = () => {
+    try { return localStorage.getItem(storageKey) === 'dark' ? 'dark' : 'light'; }
+    catch (_) { return 'light'; }
   };
-  apply(theme);
+
+  let currentTheme = readSavedTheme();
+
+  const applyTheme = (value) => {
+    currentTheme = value === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) themeColor.content = currentTheme === 'dark' ? '#11162a' : '#f7f9fc';
+
+    document.querySelectorAll('[data-theme-choice]').forEach((control) => {
+      const selected = control.getAttribute('data-theme-choice') === currentTheme;
+      control.setAttribute('aria-pressed', String(selected));
+      control.classList.toggle('is-selected', selected);
+    });
+  };
+
+  const setTheme = (value) => {
+    const nextTheme = value === 'dark' ? 'dark' : 'light';
+    try { localStorage.setItem(storageKey, nextTheme); } catch (_) {}
+    applyTheme(nextTheme);
+  };
+
+  // Expose a small API for the Settings appearance controls.
+  window.PeermigoTheme = Object.freeze({
+    get: () => currentTheme,
+    set: setTheme
+  });
+
+  applyTheme(currentTheme);
+
   document.addEventListener('DOMContentLoaded', () => {
-    apply(theme);
-    document.getElementById('themeToggle')?.addEventListener('click', () => {
-      const next = theme === 'dark' ? 'light' : 'dark';
-      try { localStorage.setItem(key, next); } catch (_) {}
-      apply(next);
+    applyTheme(currentTheme);
+    document.querySelectorAll('[data-theme-choice]').forEach((control) => {
+      control.addEventListener('click', () => setTheme(control.getAttribute('data-theme-choice')));
     });
   });
 })();

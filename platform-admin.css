@@ -7,7 +7,6 @@ html[data-theme="dark"] .pm-platform-admin{--pm-ad-bg:#111720;--pm-ad-card:#1d25
 .pm-admin-brand b{color:#574ae9}.pm-admin-brand .brand-dot{color:#efac79}.pm-admin-brand .brand-symbol{height:35px;width:35px;flex:none}
 .pm-admin-brand-sep{height:22px;width:1px;background:var(--pm-ad-border);margin-left:7px}.pm-admin-console-label{font-size:12px;font-weight:700;color:var(--pm-ad-muted);white-space:nowrap}
 .pm-admin-grow{flex:1}.pm-admin-back{font-size:12px;color:var(--pm-ad-muted);font-weight:700;text-decoration:none}.pm-admin-back:hover{color:var(--pm-ad-accent)}
-.pm-admin-theme-btn{height:40px;width:40px;border:1px solid var(--pm-ad-border);color:var(--pm-ad-ink);border-radius:11px;background:var(--pm-ad-card);cursor:pointer;font-size:20px}
 .pm-admin-shell{max-width:1220px;margin:auto;padding:39px 30px 100px}
 .pm-admin-gate{border:1px solid var(--pm-ad-border);background:var(--pm-ad-card);padding:55px 30px;border-radius:18px;max-width:510px;text-align:center;margin:60px auto 0;box-shadow:0 8px 30px #11182708}
 .pm-admin-gate-icon{height:56px;width:56px;margin:0 auto 17px;border-radius:16px;background:var(--pm-ad-soft);color:var(--pm-ad-accent);font-size:30px;display:grid;place-items:center}

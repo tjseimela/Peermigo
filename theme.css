@@ -1,14 +1,6 @@
 /* Shared appearance controls: light is the default, saved dark mode spans all pages. */
-.theme-toggle{height:42px;width:42px;min-width:42px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid #e6e8f1;background:#fff;color:#555c7d;border-radius:12px;transition:background .2s,border-color .2s,color .2s,transform .2s}
-.theme-toggle:hover{color:#5348e8;background:#f1f0ff;border-color:#d9d5fa;transform:translateY(-1px)}
-.theme-toggle:focus-visible,.forgot-link:focus-visible,.recovery-back:focus-visible{outline:3px solid #8f87f9;outline-offset:3px}
-.theme-toggle .theme-sun{display:none}
-html[data-theme="dark"] .theme-toggle .theme-sun{display:block}
-html[data-theme="dark"] .theme-toggle .theme-moon{display:none}
 .nav-shell{gap:clamp(10px,1.5vw,22px)}
 .main-nav{gap:clamp(8px,1.5vw,25px)}
-@media(max-width:1020px){.nav-shell .theme-toggle{margin-left:auto}.main-nav{gap:0}}
-@media(max-width:440px){.nav-shell{gap:8px}.theme-toggle{height:40px;width:40px;min-width:40px}.brand{font-size:22px}}
 /* Recovery page and account link */
 .auth-utility{display:flex;justify-content:flex-end;margin:-6px 0 19px}
 .forgot-link,.recovery-back{font-weight:800;color:#5c4cda;font-size:12px;transition:color .2s}
@@ -32,8 +24,6 @@ html[data-theme="dark"] .site-footer .brand-accent{color:#b7b3ff}
 html[data-theme="dark"] .nav-link{color:#c0c8e0}
 html[data-theme="dark"] .nav-link:hover,html[data-theme="dark"] .nav-link.active,html[data-theme="dark"] .nav-account{color:#b8aeff}
 html[data-theme="dark"] .nav-account:hover{color:#fff}
-html[data-theme="dark"] .menu-toggle,html[data-theme="dark"] .theme-toggle{background:#1d2740;color:#d1d8ef;border-color:#35405b}
-html[data-theme="dark"] .theme-toggle:hover{background:#34315d;color:#e7e1ff}
 html[data-theme="dark"] .mode-banner.is-live{background:#14352e;color:#a6f0d1;border-color:#215844}
 html[data-theme="dark"] .mode-banner.is-live #modeLabel,html[data-theme="dark"] .mode-banner.is-live .mode-link{color:#7de5b5}
 html[data-theme="dark"] .mode-banner:not(.is-live){background:#242744}
@@ -85,4 +75,3 @@ html[data-theme="dark"] .same-school-btn{background:#262a49;color:#c5bfff}
 html[data-theme="dark"] .same-school-btn.is-active,html[data-theme="dark"] .same-school-btn:hover{background:#5147e8;color:#fff}
 html[data-theme="dark"] .site-footer{background:#0c1121}
 @media(max-width:1020px){html[data-theme="dark"] .main-nav{background:#1a2338;box-shadow:0 24px 40px #0006}}
-@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
