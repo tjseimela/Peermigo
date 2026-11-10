@@ -16,11 +16,6 @@
 .pm-why-hero{padding-block:clamp(20px,3vw,32px)!important}
 .pm-settings-intro{padding-block:clamp(16px,2vw,24px)!important}
 /* Premium solid crescent, while preserving the original sun graphic and behavior. */
-.site-header .theme-toggle{isolation:isolate}
-.site-header .theme-toggle .theme-moon{width:23px;height:23px;color:#4e40c7;filter:drop-shadow(0 1px 1px rgba(97,70,187,.13));transform-origin:center}
-.site-header .theme-toggle:hover .theme-moon{transform:rotate(-8deg) scale(1.05)}
-html[data-theme="dark"] .site-header .theme-toggle .theme-moon{display:none}
-html[data-theme="dark"] .site-header .theme-toggle .theme-sun{display:block}
 @media(max-width:600px){
  .pm-workspace-page>.app-section:first-child{padding-top:16px}
  .pm-workspace-page .app-intro h2{font-size:clamp(21px,6vw,28px)}
@@ -29,7 +24,6 @@ html[data-theme="dark"] .site-header .theme-toggle .theme-sun{display:block}
  .pm-why-hero{padding-block:17px!important}
  .pm-faq-hero-grid{padding-top:18px!important;padding-bottom:18px!important}
 }
-@media(prefers-reduced-motion:reduce){.site-header .theme-toggle .theme-moon{transition:none}}
 
 /* Find Peers already has its own advanced peer filters. On phones, avoid a duplicate top search. */
 @media(max-width:720px){

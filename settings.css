@@ -135,3 +135,34 @@ html[data-theme="dark"] .pm-settings-subpage .pm-email-note{color:#b4c0d6}
 }
 /* Settings is a focused in-app area, not a marketing/landing page. */
 main.pm-settings-page ~ footer.site-footer{display:none}
+
+/* Appearance preference lives in Settings instead of the global page header. */
+.pm-appearance-section{padding:0 0 10px}
+.pm-appearance-panel{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:20px 22px;overflow:visible}
+.pm-appearance-copy{display:flex;align-items:center;gap:14px;min-width:0}
+.pm-appearance-icon{width:43px;height:43px;flex:none;display:grid;place-items:center;border-radius:13px;background:#f1efff;color:#6554e1}
+.pm-appearance-icon svg{width:21px;height:21px}
+.pm-appearance-copy h2{font:800 15px/1.35 var(--font-head,"Plus Jakarta Sans",sans-serif);letter-spacing:-.03em;color:#292c4a;margin:0 0 4px}
+.pm-appearance-copy p{font-size:11px;line-height:1.55;color:#798099;margin:0}
+.pm-appearance-options{display:flex;align-items:center;gap:5px;flex:none;padding:4px;border:1px solid #e5e6f0;border-radius:13px;background:#f7f7fc}
+.pm-appearance-choice{min-width:76px;min-height:37px;padding:8px 13px;border:1px solid transparent;border-radius:9px;background:transparent;color:#69708a;font:700 11px/1.2 'DM Sans',sans-serif;cursor:pointer;transition:background .16s,border-color .16s,color .16s,box-shadow .16s}
+.pm-appearance-choice:hover{background:#eeecff;color:#5545cb}
+.pm-appearance-choice:focus-visible{outline:3px solid #9b8ff3;outline-offset:2px}
+.pm-appearance-choice.is-selected{background:#fff;border-color:#e1defa;color:#5545cb;box-shadow:0 2px 7px rgba(55,47,116,.08)}
+html[data-theme="dark"] .pm-appearance-panel{background:#1d273e;border-color:#394562;box-shadow:none}
+html[data-theme="dark"] .pm-appearance-icon{background:#302c51;color:#b4aaff}
+html[data-theme="dark"] .pm-appearance-copy h2{color:#eef0ff}
+html[data-theme="dark"] .pm-appearance-copy p{color:#a8b4d0}
+html[data-theme="dark"] .pm-appearance-options{background:#172238;border-color:#3a4662}
+html[data-theme="dark"] .pm-appearance-choice{color:#b4bfd8}
+html[data-theme="dark"] .pm-appearance-choice:hover{background:#302c51;color:#d5ccff}
+html[data-theme="dark"] .pm-appearance-choice.is-selected{background:#38335f;border-color:#62599a;color:#e4deff;box-shadow:none}
+@media(max-width:600px){
+  .pm-appearance-section{padding:0 0 8px}
+  .pm-appearance-panel{align-items:flex-start;flex-direction:column;gap:15px;padding:17px 15px;border-radius:16px}
+  .pm-appearance-copy{gap:11px}
+  .pm-appearance-icon{width:39px;height:39px;border-radius:11px}
+  .pm-appearance-options{width:100%}
+  .pm-appearance-choice{flex:1;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){.pm-appearance-choice{transition:none}}

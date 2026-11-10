@@ -47,10 +47,9 @@ html[data-theme="dark"] .pm-search-view-all{color:#b9afff;border-color:#39445f}
 @media(max-width:1080px){.pm-top-label{display:none}.pm-top-link{width:43px;height:43px}.pm-top-link.is-active::after{bottom:-4px}.pm-top-hub{gap:8px}.pm-global-search{max-width:330px}}
 @media(max-width:800px){
  html.pm-member-header .site-header{height:auto;min-height:106px}
- html.pm-member-header .nav-shell{display:grid;grid-template-columns:minmax(0,1fr) 40px 40px;grid-template-rows:42px 46px;gap:6px 8px;padding-top:8px;padding-bottom:9px;height:auto}
+ html.pm-member-header .nav-shell{display:grid;grid-template-columns:minmax(0,1fr) 40px;grid-template-rows:42px 46px;gap:6px 8px;padding-top:8px;padding-bottom:9px;height:auto}
  html.pm-member-header .nav-shell>.brand{grid-row:1;grid-column:1;min-width:0}
- html.pm-member-header .nav-shell>.theme-toggle{grid-column:2;grid-row:1;margin:0}
- html.pm-member-header .nav-shell>.menu-toggle{grid-column:3;grid-row:1;display:flex;margin:0}
+ html.pm-member-header .nav-shell>.menu-toggle{grid-column:2;grid-row:1;display:flex;margin:0}
  html.pm-member-header .pm-top-hub{grid-row:2;grid-column:1/-1;display:flex;gap:7px;margin:0;width:100%}
  html.pm-member-header .pm-global-search{max-width:none;min-width:0;flex:1 1 auto}
  html.pm-member-header .pm-search-input-wrap{height:43px}
